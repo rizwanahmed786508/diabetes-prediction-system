@@ -2,21 +2,19 @@
 
 🩺 Diabetes Prediction System using Machine Learning
 
- Project Overview
+📌 Project Overview
 
-The **Diabetes Prediction System** is a Machine Learning-based web/desktop application designed to predict whether a person is likely to have diabetes based on medical diagnostic data. The system analyzes patient health parameters and provides an early prediction to assist in preventive healthcare decisions.
+This project predicts whether a patient is likely to have diabetes based on medical diagnostic measurements using Machine Learning techniques. The model is trained on the PIMA Indians Diabetes Dataset and can assist in early diabetes risk assessment.
 
 This project demonstrates the application of **Data Science and Machine Learning techniques** in healthcare for early disease detection.
 
 ---
 
 🎯 Objectives
-
-* To build a predictive model for diabetes detection.
-* To analyze patient medical data using data science techniques.
-* To compare multiple machine learning algorithms for best accuracy.
-* To develop a simple interface for prediction (GUI/Web App if included).
-
+Analyze diabetes-related medical data.
+Build a machine learning model for diabetes prediction.
+Evaluate model performance using classification metrics.
+Provide predictions based on patient health information.
 ---
 
 📊 Dataset
