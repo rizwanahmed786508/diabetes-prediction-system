@@ -19,7 +19,7 @@ Provide predictions based on patient health information.
 
 📊 Dataset
 
-* Source: PIMA Indians Diabetes Dataset (or your dataset name)
+* Source: PIMA Indians Diabetes Dataset 
 * Features include:
 
   * Glucose Level
