@@ -135,7 +135,3 @@ This project is for academic and educational purposes.
 
 ---
 
-If you want, I can also:
-✔ Make it **more attractive with badges + GitHub styling**
-✔ Add **screenshots section (GUI/plots)**
-✔ Or convert it into a **perfect FYP report format (Word/PDF)**
