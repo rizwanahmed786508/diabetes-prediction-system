@@ -11,10 +11,10 @@ This project demonstrates the application of **Data Science and Machine Learning
 ---
 
 🎯 Objectives
-Analyze diabetes-related medical data.
-Build a machine learning model for diabetes prediction.
-Evaluate model performance using classification metrics.
-Provide predictions based on patient health information.
+* Analyze diabetes-related medical data.
+* Build a machine learning model for diabetes prediction.
+* Evaluate model performance using classification metrics.
+* Provide predictions based on patient health information.
 ---
 
 📊 Dataset
