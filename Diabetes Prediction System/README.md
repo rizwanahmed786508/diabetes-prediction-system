@@ -77,6 +77,8 @@ The model performance was evaluated using:
 * F1-Score
 
 ---
+##  Images
+![alt text](confusion_matrix.png) ![alt text](correlation_graph.png) ![alt text](count_plot.png) ![alt text](dashboard.png)
 
 ## 🚀 How to Run the Project
 
