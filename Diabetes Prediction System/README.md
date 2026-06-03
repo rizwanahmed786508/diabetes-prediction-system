@@ -1,37 +1,46 @@
-# 🩺 Diabetes Prediction Using Machine Learning
+# 🩺 Diabetes Prediction System Using Machine Learning
+
+A machine learning-based application designed to predict the likelihood of diabetes using patient medical data. This project applies data preprocessing, exploratory data analysis (EDA), machine learning classification techniques, and a graphical user interface (GUI) to provide predictions in a user-friendly manner.
+
+---
 
 ## 📌 Project Overview
 
-This project predicts whether a patient is likely to have diabetes based on medical diagnostic measurements using Machine Learning techniques. The model is trained on the PIMA Indians Diabetes Dataset and can assist in early diabetes risk assessment.
+Diabetes is one of the most common chronic diseases worldwide. Early prediction can help patients seek timely medical attention and reduce health risks.
+
+This project uses the **PIMA Indians Diabetes Dataset** and machine learning algorithms to predict whether a patient is diabetic based on several medical attributes.
 
 ---
 
 ## 🎯 Objectives
 
 * Analyze diabetes-related medical data.
-* Build a machine learning model for diabetes prediction.
-* Evaluate model performance using classification metrics.
-* Provide predictions based on patient health information.
+* Build and train machine learning classification models.
+* Evaluate model performance using standard metrics.
+* Provide an easy-to-use GUI for diabetes prediction.
+* Demonstrate the practical application of machine learning in healthcare.
 
 ---
 
-## 📊 Dataset
+## 📊 Dataset Information
 
-The project uses the **PIMA Indians Diabetes Dataset**, which contains diagnostic measurements such as:
+The project uses the **PIMA Indians Diabetes Dataset**, which contains the following features:
 
-* Pregnancies
-* Glucose Level
-* Blood Pressure
-* Skin Thickness
-* Insulin
-* BMI
-* Diabetes Pedigree Function
-* Age
-* Outcome (Diabetic / Non-Diabetic)
+| Feature                  | Description                       |
+| ------------------------ | --------------------------------- |
+| Pregnancies              | Number of pregnancies             |
+| Glucose                  | Plasma glucose concentration      |
+| BloodPressure            | Diastolic blood pressure          |
+| SkinThickness            | Triceps skin fold thickness       |
+| Insulin                  | 2-Hour serum insulin              |
+| BMI                      | Body Mass Index                   |
+| DiabetesPedigreeFunction | Diabetes hereditary score         |
+| Age                      | Age of patient                    |
+| Outcome                  | Diabetes status (0 = No, 1 = Yes) |
 
 ---
 
-## ⚙️ Technologies Used
+## 🛠️ Technologies Used
 
 * Python
 * Pandas
@@ -40,35 +49,51 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains diagnosti
 * Seaborn
 * Scikit-learn
 * Joblib
-* Jupyter Notebook
+* Tkinter (GUI)
 
 ---
 
-## 🔬 Machine Learning Workflow
+## 🧠 Machine Learning Workflow
 
-1. Data Loading
-2. Data Exploration and Analysis
-3. Data Preprocessing
+1. Data Collection
+2. Data Cleaning & Preprocessing
+3. Exploratory Data Analysis (EDA)
 4. Feature Scaling
-5. Train-Test Split
-6. Model Training
-7. Model Evaluation
-8. Diabetes Prediction
-9. Model Saving and Deployment Preparation
+5. Model Training
+6. Model Evaluation
+7. GUI Development
+8. Prediction & Deployment
 
 ---
 
-## 🤖 Model Used
+## 📈 Exploratory Data Analysis
 
-### Logistic Regression
+### Correlation Heatmap
 
-Logistic Regression was used as the primary classification algorithm to predict whether a patient has diabetes based on input features.
+![Correlation Heatmap](images/heatmap.png)
+
+### Dataset Distribution
+
+![Dataset Distribution](images/distribution.png)
 
 ---
 
-## 📈 Model Evaluation
+## 🤖 Model Training
 
-The model performance was evaluated using:
+The dataset was divided into training and testing sets.
+
+Algorithms used:
+
+* Logistic Regression
+* Random Forest Classifier *(optional future enhancement)*
+
+Feature scaling was performed using **StandardScaler** to improve model performance.
+
+---
+
+## 📊 Model Evaluation
+
+Evaluation metrics:
 
 * Accuracy Score
 * Confusion Matrix
@@ -76,22 +101,40 @@ The model performance was evaluated using:
 * Recall
 * F1-Score
 
----
-##  Images
-![alt text](confusion_matrix.png) ![alt text](correlation_graph.png) ![alt text](count_plot.png) ![alt text](dashboard.png)
+### Confusion Matrix
 
-## 🚀 How to Run the Project
+![Confusion Matrix](images/confusion_matrix.png)
+
+### Model Accuracy
+
+**Accuracy: 75.32%**
+
+> Update this value according to your latest trained model.
+
+---
+
+## 🖥️ Graphical User Interface (GUI)
+
+The application includes a user-friendly GUI where users can enter medical information and receive a diabetes prediction instantly.
+
+### Application Interface
+
+![GUI Screenshot](images/gui.png)
+
+---
+
+## 🚀 Installation & Usage
 
 ### Clone Repository
 
 ```bash
-git clone https://github.com/rizwanahmed786508/diabetes-prediction-ml.git
+git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
 ```
 
 ### Navigate to Project Directory
 
 ```bash
-cd diabetes-prediction-ml
+cd diabetes-prediction-system
 ```
 
 ### Install Dependencies
@@ -100,46 +143,47 @@ cd diabetes-prediction-ml
 pip install -r requirements.txt
 ```
 
-### Run Jupyter Notebook
+### Run Application
 
 ```bash
-jupyter notebook
+python app.py
 ```
-
-Open the notebook and run all cells.
 
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```text
-diabetes-prediction-ml/
+diabetes-prediction-system/
 │
 ├── data/
 │   └── diabetes.csv
 │
+├── images/
+│   ├── gui.png
+│   ├── heatmap.png
+│   └── confusion_matrix.png
+│
+├── notebooks/
+│   └── diabetes_prediction.ipynb
+│
 ├── models/
 │   └── diabetes_model.pkl
 │
-├── diabetes_prediction.ipynb
-│   
-│
-├
-│
 ├── requirements.txt
 ├── README.md
+└── app.py
 ```
 
 ---
 
 ## 🔮 Future Improvements
 
-* Random Forest Implementation
-* K-Nearest Neighbors (KNN)
 * Hyperparameter Tuning
+* Additional Classification Models
 * Streamlit Web Application
+* Cloud Deployment
 * Deep Learning-Based Prediction
-* Model Deployment on Cloud
 
 ---
 
@@ -147,7 +191,11 @@ diabetes-prediction-ml/
 
 **Rizwan Ahmed**
 
-Software Engineering Student | Data Science & Machine Learning Enthusiast
+Software Engineering Student | Machine Learning & Data Science Enthusiast
 
 GitHub: https://github.com/rizwanahmed786508
-LinkedIn: https://linkedin.com/in/rizwanahmed78
+
+---
+
+
+
