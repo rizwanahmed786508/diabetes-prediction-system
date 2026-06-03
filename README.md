@@ -148,9 +148,8 @@ diabetes-prediction-system/
 │   ├── heatmap.png
 │   └── confusion_matrix.png
 │
-├── notebooks/
-│   └── diabetes_prediction.ipynb
-│
+├── diabetes_prediction.ipynb
+│    
 ├── models/
 │   └── diabetes_model.pkl
 │
