@@ -1,135 +1,202 @@
 # diabetes-prediction-system
 
-🩺 Diabetes Prediction System using Machine Learning
+# 🩺 Diabetes Prediction System Using Machine Learning
 
-📌 Project Overview
-
-This project predicts whether a patient is likely to have diabetes based on medical diagnostic measurements using Machine Learning techniques. The model is trained on the PIMA Indians Diabetes Dataset and can assist in early diabetes risk assessment.
-
-This project demonstrates the application of **Data Science and Machine Learning techniques** in healthcare for early disease detection.
+A machine learning-based application designed to predict the likelihood of diabetes using patient medical data. This project applies data preprocessing, exploratory data analysis (EDA), machine learning classification techniques, and a graphical user interface (GUI) to provide predictions in a user-friendly manner.
 
 ---
 
-🎯 Objectives
+## 📌 Project Overview
+
+Diabetes is one of the most common chronic diseases worldwide. Early prediction can help patients seek timely medical attention and reduce health risks.
+
+This project uses the **PIMA Indians Diabetes Dataset** and machine learning algorithms to predict whether a patient is diabetic based on several medical attributes.
+
+---
+
+## 🎯 Objectives
+
 * Analyze diabetes-related medical data.
-* Build a machine learning model for diabetes prediction.
-* Evaluate model performance using classification metrics.
-* Provide predictions based on patient health information.
----
-
-📊 Dataset
-
-* Source: PIMA Indians Diabetes Dataset 
-* Features include:
-
-  * Glucose Level
-  * Blood Pressure
-  * Insulin Level
-  * BMI
-  * Age
-  * Skin Thickness
-* Target: `Outcome (0 = Non-Diabetic, 1 = Diabetic)`
+* Build and train machine learning classification models.
+* Evaluate model performance using standard metrics.
+* Provide an easy-to-use GUI for diabetes prediction.
+* Demonstrate the practical application of machine learning in healthcare.
 
 ---
 
-⚙️ Technologies Used
+## 📊 Dataset Information
 
-* Python 🐍
-* NumPy
+The project uses the **PIMA Indians Diabetes Dataset**, which contains the following features:
+
+| Feature                  | Description                       |
+| ------------------------ | --------------------------------- |
+| Pregnancies              | Number of pregnancies             |
+| Glucose                  | Plasma glucose concentration      |
+| BloodPressure            | Diastolic blood pressure          |
+| SkinThickness            | Triceps skin fold thickness       |
+| Insulin                  | 2-Hour serum insulin              |
+| BMI                      | Body Mass Index                   |
+| DiabetesPedigreeFunction | Diabetes hereditary score         |
+| Age                      | Age of patient                    |
+| Outcome                  | Diabetes status (0 = No, 1 = Yes) |
+
+---
+
+## 🛠️ Technologies Used
+
+* Python
 * Pandas
+* NumPy
+* Matplotlib
+* Seaborn
 * Scikit-learn
-* Matplotlib / Seaborn
-* Jupyter Notebook / VS Code
-* Tkinter / Flask (if GUI/Web included)
+* Joblib
+* Tkinter (GUI)
 
 ---
 
-## 🤖 Machine Learning Models Used
-
-* Logistic Regression
-* Decision Tree Classifier
-* Random Forest Classifier
-* Support Vector Machine (SVM)
-
----
-
-📈 Project Workflow
+## 🧠 Machine Learning Workflow
 
 1. Data Collection
-2. Data Preprocessing & Cleaning
+2. Data Cleaning & Preprocessing
 3. Exploratory Data Analysis (EDA)
-4. Feature Selection
+4. Feature Scaling
 5. Model Training
 6. Model Evaluation
-7. Prediction System Development
+7. GUI Development
+8. Prediction & Deployment
 
 ---
 
-## 🏆 Model Performance
+## 📈 Exploratory Data Analysis
 
-| Model               | Accuracy |
-| ------------------- | -------- |
-| Logistic Regression | ~75%     |
-| Decision Tree       | ~78%     |
-| Random Forest       | ~80%     |
-| SVM                 | ~76%     |
+### Correlation Heatmap
 
-*(Update values based on your actual results)*
+![Correlation Heatmap](images/heatmap.png)
+
+### Dataset Distribution
+
+![Dataset Distribution](images/distribution.png)
 
 ---
 
-🖥️ How to Run the Project
+## 🤖 Model Training
 
-1️⃣ Clone the repository
+The dataset was divided into training and testing sets.
+
+Algorithms used:
+
+* Logistic Regression
+* Random Forest Classifier *(optional future enhancement)*
+
+Feature scaling was performed using **StandardScaler** to improve model performance.
+
+---
+
+## 📊 Model Evaluation
+
+Evaluation metrics:
+
+* Accuracy Score
+* Confusion Matrix
+* Precision
+* Recall
+* F1-Score
+
+### Confusion Matrix
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+### Model Accuracy
+
+**Accuracy: 75.32%**
+
+> Update this value according to your latest trained model.
+
+---
+
+## 🖥️ Graphical User Interface (GUI)
+
+The application includes a user-friendly GUI where users can enter medical information and receive a diabetes prediction instantly.
+
+### Application Interface
+
+![GUI Screenshot](images/gui.png)
+
+---
+
+## 🚀 Installation & Usage
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
 ```
 
-2️⃣ Install dependencies
+### Navigate to Project Directory
+
+```bash
+cd diabetes-prediction-system
+```
+
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3️⃣ Run the application
+### Run Application
 
 ```bash
-python main.py
+python app.py
 ```
 
 ---
 
+## 📂 Project Structure
 
+```text
+diabetes-prediction-system/
+│
+├── data/
+│   └── diabetes.csv
+│
+├── images/
+│   ├── gui.png
+│   ├── heatmap.png
+│   └── confusion_matrix.png
+│
+├── notebooks/
+│   └── diabetes_prediction.ipynb
+│
+├── models/
+│   └── diabetes_model.pkl
+│
+├── requirements.txt
+├── README.md
+└── app.py
+```
 
 ---
 
-📌 Results
+## 🔮 Future Improvements
 
-The trained model successfully predicts diabetes risk with reasonable accuracy and can assist in early medical screening. Random Forest performed the best among all tested models.
-
----
-
-🚀 Future Improvements
-
-* Deploy as a web application (Flask/Django)
-* Improve accuracy using Deep Learning
-* Add real-time patient data input system
-* Cloud deployment (AWS/Heroku)
+* Hyperparameter Tuning
+* Additional Classification Models
+* Streamlit Web Application
+* Cloud Deployment
+* Deep Learning-Based Prediction
 
 ---
 
 ## 👨‍💻 Author
 
 **Rizwan Ahmed**
-Software Engineering Student
-Interested in Data Science, Machine Learning, and AI
+
+Software Engineering Student | Machine Learning & Data Science Enthusiast
+
+GitHub: https://github.com/rizwanahmed786508
 
 ---
 
-📜 License
-
-This project is for academic and educational purposes.
-
----
 
