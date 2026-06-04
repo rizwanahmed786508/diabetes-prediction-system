@@ -72,11 +72,11 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ### Correlation Heatmap
 
-![Correlation Heatmap](/Diabetes Prediction System/heatmap.png)
+![Correlation Heatmap](images/heatmap.png)
 
 ### Dataset Distribution
 
-![Dataset Distribution](Diabetes Prediction System/images/distribution.png)
+![Dataset Distribution](images/distribution.png)
 
 ---
 
