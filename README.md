@@ -68,7 +68,17 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ---
 
+## 📈 Exploratory Data Analysis
 
+### Correlation Heatmap
+
+![Correlation Heatmap](images/heatmap.png)
+
+### Dataset Distribution
+
+![Dataset Distribution](images/distribution.png)
+
+---
 
 ## 🤖 Model Training
 
@@ -77,7 +87,8 @@ The dataset was divided into training and testing sets.
 Algorithms used:
 
 * Logistic Regression
-* Random Forest Classifier *(optional future enhancement)*
+* Random Forest Classifier
+* KNN
 
 Feature scaling was performed using **StandardScaler** to improve model performance.
 
@@ -93,12 +104,17 @@ Evaluation metrics:
 * Recall
 * F1-Score
 
+### Confusion Matrix
+
+![Confusion Matrix](images/confusion_matrix.png)
 
 ### Model Accuracy
 
-**Accuracy: 75.32%**
+**Logistic Regression Accuracy: 0.7532467532467533
+Random Forest Accuracy: 0.7597402597402597
+KNN Accuracy: 0.6948051948051948*
 
-> Update this value according to your latest trained model.
+
 
 ---
 
@@ -106,6 +122,11 @@ Evaluation metrics:
 
 The application includes a user-friendly GUI where users can enter medical information and receive a diabetes prediction instantly.
 
+### Application Interface
+
+![GUI Screenshot](images/gui.png)
+
+---
 
 ## 🚀 Installation & Usage
 
@@ -137,6 +158,8 @@ python app.py
 
 ## 📂 Project Structure
 
+## 📂 Project Structure
+
 ```text
 diabetes-prediction-system/
 │
@@ -148,7 +171,7 @@ diabetes-prediction-system/
 │   ├── heatmap.png
 │   └── confusion_matrix.png
 │
-├── diabetes_prediction.ipynb
+├── Diabetes_Prediction.ipynb
 │    
 ├── models/
 │   └── diabetes_model.pkl
@@ -163,7 +186,6 @@ diabetes-prediction-system/
 ## 🔮 Future Improvements
 
 * Hyperparameter Tuning
-* Additional Classification Models
 * Streamlit Web Application
 * Cloud Deployment
 * Deep Learning-Based Prediction
@@ -179,4 +201,5 @@ Software Engineering Student | Machine Learning & Data Science Enthusiast
 GitHub: https://github.com/rizwanahmed786508
 
 ---
+
 
