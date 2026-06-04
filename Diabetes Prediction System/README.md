@@ -85,7 +85,8 @@ The dataset was divided into training and testing sets.
 Algorithms used:
 
 * Logistic Regression
-* Random Forest Classifier *(optional future enhancement)*
+* Random Forest Classifier
+* KNN
 
 Feature scaling was performed using **StandardScaler** to improve model performance.
 
@@ -107,9 +108,11 @@ Evaluation metrics:
 
 ### Model Accuracy
 
-**Accuracy: 75.32%**
+**Logistic Regression Accuracy: 0.7532467532467533
+Random Forest Accuracy: 0.7597402597402597
+KNN Accuracy: 0.6948051948051948*
 
-> Update this value according to your latest trained model.
+
 
 ---
 
@@ -166,7 +169,7 @@ diabetes-prediction-system/
 │   ├── heatmap.png
 │   └── confusion_matrix.png
 │
-├── diabetes_prediction.ipynb
+├── Diabetes_Prediction.ipynb
 │    
 ├── models/
 │   └── diabetes_model.pkl
@@ -181,7 +184,6 @@ diabetes-prediction-system/
 ## 🔮 Future Improvements
 
 * Hyperparameter Tuning
-* Additional Classification Models
 * Streamlit Web Application
 * Cloud Deployment
 * Deep Learning-Based Prediction
