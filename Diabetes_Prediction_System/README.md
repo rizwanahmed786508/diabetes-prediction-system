@@ -176,7 +176,8 @@ diabetes-prediction-system/
 ├── Diabetes_Prediction.ipynb
 │    
 ├── models/
-│   └── diabetes_model.pkl
+│   └── Diabetes_Model.pkl
+|   └── diabetes_scaler.pkl
 │
 ├── requirements.txt
 ├── README.md
