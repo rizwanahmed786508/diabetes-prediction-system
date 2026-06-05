@@ -72,11 +72,11 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ### Correlation Heatmap
 
-![Correlation Heatmap](./Diabetes%20Prediction%20System/images/heatmap.png)
+![Correlation Heatmap](images/heatmap.png)
 
 ### Dataset Distribution
 
-![Dataset Distribution](./Diabetes%20Prediction%20System/images/distribution.png)
+![Dataset Distribution](images/distribution.png)
 
 ---
 
@@ -106,7 +106,7 @@ Evaluation metrics:
 
 ### Confusion Matrix
 
-![Confusion Matrix](./Diabetes%20Prediction%20System/images/confusion_matrix.png)
+![Confusion Matrix](images/confusion_matrix.png)
 
 ### Model Accuracy
 
@@ -125,7 +125,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 
 ### Application Interface
 
-![GUI Screenshot](./Diabetes%20Prediction%20System/images/gui.png)
+![GUI Screenshot](images/gui.png)
 
 ---
 
