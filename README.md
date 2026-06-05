@@ -1,3 +1,5 @@
+![Python](https://img.shields.io/badge/Python-3.8+-blue) 
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
 # diabetes-prediction-system
 
 # 🩺 Diabetes Prediction System Using Machine Learning
