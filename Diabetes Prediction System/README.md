@@ -1,3 +1,5 @@
+# diabetes-prediction-system
+
 # 🩺 Diabetes Prediction System Using Machine Learning
 
 A machine learning-based application designed to predict the likelihood of diabetes using patient medical data. This project applies data preprocessing, exploratory data analysis (EDA), machine learning classification techniques, and a graphical user interface (GUI) to provide predictions in a user-friendly manner.
@@ -70,11 +72,11 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ### Correlation Heatmap
 
-![Correlation Heatmap](images/heatmap.png)
+![Correlation Heatmap](./Diabetes%20Prediction%20System/images/heatmap.png)
 
 ### Dataset Distribution
 
-![Dataset Distribution](images/distribution.png)
+![Dataset Distribution](./Diabetes%20Prediction%20System/images/distribution.png)
 
 ---
 
@@ -104,14 +106,15 @@ Evaluation metrics:
 
 ### Confusion Matrix
 
-![Confusion Matrix](images/confusion_matrix.png)
+![Confusion Matrix](./Diabetes%20Prediction%20System/images/confusion_matrix.png)
 
 ### Model Accuracy
 
-**Logistic Regression Accuracy: 0.7532467532467533
-Random Forest Accuracy: 0.7597402597402597
-KNN Accuracy: 0.6948051948051948*
-
+| Model | Accuracy |
+|--------|----------|
+| Logistic Regression | 75.32% |
+| Random Forest | 75.97% |
+| K-Nearest Neighbors (KNN) | 69.48% |
 
 
 ---
@@ -122,7 +125,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 
 ### Application Interface
 
-![GUI Screenshot](images/gui.png)
+![GUI Screenshot](./Diabetes%20Prediction%20System/images/gui.png)
 
 ---
 
@@ -153,8 +156,6 @@ python app.py
 ```
 
 ---
-
-## 📂 Project Structure
 
 ## 📂 Project Structure
 
@@ -199,6 +200,5 @@ Software Engineering Student | Machine Learning & Data Science Enthusiast
 GitHub: https://github.com/rizwanahmed786508
 
 ---
-
 
 
