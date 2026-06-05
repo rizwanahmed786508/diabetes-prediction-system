@@ -112,7 +112,7 @@ Evaluation metrics:
 
 ### Model Accuracy
 
-![ROC-AUC](https://img.shields.io/badge/ROC--AUC-87%25-brightgreen)
+![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen)
 
 | Model | Accuracy |
 |--------|----------|
