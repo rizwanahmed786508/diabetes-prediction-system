@@ -32,24 +32,13 @@ with col2:
     dpf = st.number_input("Diabetes Pedigree", 0.0, 3.0, 0.5, 0.01)
     age = st.number_input("Age", 1, 120, 30)
 
-    # Ye 5 extra features - tune training me add kiye honge
-    # Agar tere pas alag hain to naam change kar de
-    gender_num = 0 if gender == "Male" else 1
-    bmi_category = st.selectbox("BMI Category", ["Normal", "Overweight", "Obese"])
-    bmi_cat_num = {"Normal":0, "Overweight":1, "Obese":2}[bmi_category]
-
-    age_group = st.selectbox("Age Group", ["Young", "Middle", "Senior"])
-    age_group_num = {"Young":0, "Middle":1, "Senior":2}[age_group]
-
-    glucose_level = st.selectbox("Glucose Level Cat", ["Normal", "High"])
-    glucose_cat_num = {"Normal":0, "High":1}[glucose_level]
-
+  
 if st.button("🔍 Predict Risk", use_container_width=True, type="primary"):
     try:
         # 13 features ka array - ORDER IMPORTANT HAI
         features = np.array([[
             pregnancies, glucose, bp, skin, insulin, bmi, dpf, age,
-            gender_num, bmi_cat_num, age_group_num, glucose_cat_num, 0 # 13th feature dummy
+         
         ]])
 
         features_scaled = scaler.transform(features)
