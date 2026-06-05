@@ -3,7 +3,7 @@ import numpy as np
 import joblib
 
 # Load model and scaler
-model = joblib.load("diabetes_model.pkl")
+model = joblib.load("model/diabetes_model.pkl")
 scaler = joblib.load("scaler.pkl")
 
 st.title("🩺 Diabetes Prediction System")
