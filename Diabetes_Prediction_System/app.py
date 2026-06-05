@@ -3,9 +3,13 @@ import numpy as np
 import joblib
 
 # Load model and scaler
-model = joblib.load("model/diabetes_model.pkl")
-scaler = joblib.load("model/scaler.pkl")
+import os
+import joblib
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "model", "diabetes_model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "model", "scaler.pkl"))
 st.title("🩺 Diabetes Prediction System")
 
 st.write("Enter patient details below:")
