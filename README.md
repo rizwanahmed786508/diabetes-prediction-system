@@ -141,10 +141,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
 ```
 
-### Navigate to Project Directory
 
-```bash
-cd diabetes-prediction-system
 ```
 
 ### Install Dependencies
@@ -153,10 +150,12 @@ cd diabetes-prediction-system
 pip install -r requirements.txt
 ```
 
-### Run Application
-
+## 🚀 Run Locally
 ```bash
-python app.py
+git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
+cd diabetes-prediction-system
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
 ---
