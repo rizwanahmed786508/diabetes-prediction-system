@@ -189,9 +189,9 @@ diabetes-prediction-system/
 ## 🔮 Future Improvements
 
 * Hyperparameter Tuning
-* Streamlit Web Application
-* Cloud Deployment
 * Deep Learning-Based Prediction
+* Database Integration
+* Bette UI/UX Design 
 
 ---
 
