@@ -1,144 +1,77 @@
 import streamlit as st
-import numpy as np
 import joblib
-
-# Page Configuration
-st.set_page_config(
-    page_title="Diabetes Prediction System",
-    page_icon="🩺",
-    layout="centered"
-)
-
-# Load Model and Scaler
+import numpy as np
 import os
 
+# Page setup - modern look
+st.set_page_config(page_title="Diabetes Predictor AI", page_icon="🩺", layout="centered")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Model + Scaler load with safe path
+try:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(BASE_DIR, "model", "diabetes_model.pkl")
+    scaler_path = os.path.join(BASE_DIR, "model", "scaler.pkl")
 
-model = joblib.load(os.path.join(BASE_DIR, "model", "diabetes_model.pkl"))
-scaler = joblib.load(os.path.join(BASE_DIR, "model", "scaler.pkl"))
+    model = joblib.load(model_path)
+    scaler = joblib.load(scaler_path)
+except Exception as e:
+    st.error(f"Model load nahi hua: {e}")
+    st.stop()
 
-# Header
 st.title("🩺 Diabetes Prediction System")
-st.markdown("### Predict Diabetes Risk Using Machine Learning")
+st.markdown("**Patient ki details daalo, AI 2 second me risk bata dega**")
 
-st.divider()
+# Step 1: Gender
+gender = st.radio("**Gender select karo:**", ["Female", "Male"], horizontal=True, key="gender")
 
-# Gender Selection
-gender = st.radio(
-    "Select Patient Gender",
-    ["Male", "Female"],
-    horizontal=True
-)
-
-st.subheader("Patient Information")
-
-# Two-column layout
+# Step 2: Input fields - 2 columns
 col1, col2 = st.columns(2)
 
-# Pregnancy logic
-if gender == "Female":
-    pregnancies = st.number_input(
-        "Pregnancies",
-        min_value=0,
-        max_value=20,
-        value=0
-    )
-else:
-    pregnancies = 0
-    st.info("Pregnancies automatically set to 0 for male patients.")
-
 with col1:
-    glucose = st.number_input(
-        "Glucose Level",
-        min_value=0,
-        max_value=300,
-        value=120
-    )
-
-    skin_thickness = st.number_input(
-        "Skin Thickness",
-        min_value=0,
-        max_value=100,
-        value=20
-    )
-
-    bmi = st.number_input(
-        "BMI",
-        min_value=0.0,
-        max_value=70.0,
-        value=25.0
-    )
-
-    age = st.number_input(
-        "Age",
-        min_value=1,
-        max_value=120,
-        value=30
-    )
+    glucose = st.number_input("Glucose Level", min_value=0, max_value=300, value=120, step=1)
+    bp = st.number_input("Blood Pressure", min_value=0, max_value=200, value=70, step=1)
+    skin = st.number_input("Skin Thickness", min_value=0, max_value=100, value=25, step=1)
+    insulin = st.number_input("Insulin", min_value=0, max_value=1000, value=0, step=1)
 
 with col2:
-    blood_pressure = st.number_input(
-        "Blood Pressure",
-        min_value=0,
-        max_value=200,
-        value=70
-    )
+    bmi = st.number_input("BMI", min_value=0.0, max_value=70.0, value=28.0, step=0.1, format="%.1f")
+    dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, max_value=3.0, value=0.5, step=0.01, format="%.2f")
+    age = st.number_input("Age", min_value=1, max_value=120, value=30, step=1)
 
-    insulin = st.number_input(
-        "Insulin",
-        min_value=0,
-        max_value=900,
-        value=85
-    )
-
-    diabetes_pedigree = st.number_input(
-        "Diabetes Pedigree Function",
-        min_value=0.0,
-        max_value=3.0,
-        value=0.35
-    )
-
-st.divider()
-
-# Prediction Button
-if st.button("🔍 Predict Diabetes", use_container_width=True):
-
-    input_data = np.array([
-        [
-            pregnancies,
-            glucose,
-            blood_pressure,
-            skin_thickness,
-            insulin,
-            bmi,
-            diabetes_pedigree,
-            age
-        ]
-    ])
-
-    # Scale Input
-    input_scaled = scaler.transform(input_data)
-
-    # Prediction
-    prediction = model.predict(input_scaled)
-
-    # Probability
-    probability = model.predict_proba(input_scaled)[0][1]
-
-    st.subheader("Prediction Result")
-
-    if prediction[0] == 1:
-        st.error("⚠️ High Risk of Diabetes")
+    # Pregnancies logic
+    if gender == "Male":
+        pregnancies = 0
+        st.info("👨 Male selected → Pregnancies auto = 0")
     else:
-        st.success("✅ Low Risk of Diabetes")
+        pregnancies = st.number_input("Pregnancies", min_value=0, max_value=20, value=1, step=1)
 
-    st.write(f"**Risk Probability:** {probability:.2%}")
+# Predict button
+if st.button("🔍 Predict Risk", use_container_width=True, type="primary"):
 
-    st.progress(float(probability))
+    try:
+        # Features ko float me convert + correct order
+        features = np.array([[float(pregnancies), float(glucose), float(bp),
+                              float(skin), float(insulin), float(bmi),
+                              float(dpf), float(age)]])
 
-st.divider()
+        # Scaling
+        features_scaled = scaler.transform(features)
 
-st.caption(
-    "This prediction is generated using a Machine Learning model trained on the Pima Indians Diabetes Dataset."
-)
+        # Prediction
+        prediction = model.predict(features_scaled)[0]
+        prob = model.predict_proba(features_scaled)[0][1]
+
+        # Result show
+        st.divider()
+        if prediction == 1:
+            st.error(f"⚠️ **Diabetic Risk Detected**")
+            st.metric(label="Risk Probability", value=f"{prob*100:.1f}%")
+            st.warning("Doctor se consult karna recommended hai")
+        else:
+            st.success(f"✅ **No Diabetes Risk**")
+            st.metric(label="Safe Probability", value=f"{(1-prob)*100:.1f}%")
+            st.balloons()
+
+    except Exception as e:
+        st.error(f"Prediction me error: {e}")
+        st.code(f"Features used: {features}")
