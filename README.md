@@ -74,11 +74,11 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ### Correlation Heatmap
 
-![Correlation Heatmap](./Diabetes_Prediction_System/images/heatmap.png)
+![Correlation Heatmap](Diabetes_Prediction_System/images/heatmap.png)
 
 ### Dataset Distribution
 
-![Dataset Distribution](./Diabetes_Prediction_System/images/distribution.png)
+![Dataset Distribution](Diabetes_Prediction_System/images/distribution.png)
 
 ---
 
@@ -108,7 +108,7 @@ Evaluation metrics:
 
 ### Confusion Matrix
 
-![Confusion Matrix](./Diabetes_Prediction_System/images/confusion_matrix.png)
+![Confusion Matrix](Diabetes_Prediction_System/images/confusion_matrix.png)
 
 ### Model Accuracy
 
