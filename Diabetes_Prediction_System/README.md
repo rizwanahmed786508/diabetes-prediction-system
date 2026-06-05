@@ -130,7 +130,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 ### Application Interface
 
 ![GUI Screenshot](images/gui.png)
-
+![GUI Screenshot](images/gui2.png)
 ---
 
 ## 🚀 Installation & Usage
