@@ -110,10 +110,11 @@ Evaluation metrics:
 
 ### Model Accuracy
 
-**Logistic Regression Accuracy: 0.7532467532467533
-Random Forest Accuracy: 0.7597402597402597
-KNN Accuracy: 0.6948051948051948*
-
+| Model | Accuracy |
+|--------|----------|
+| Logistic Regression | 75.32% |
+| Random Forest | 75.97% |
+| K-Nearest Neighbors (KNN) | 69.48% |
 
 
 ---
@@ -155,8 +156,6 @@ python app.py
 ```
 
 ---
-
-## 📂 Project Structure
 
 ## 📂 Project Structure
 
