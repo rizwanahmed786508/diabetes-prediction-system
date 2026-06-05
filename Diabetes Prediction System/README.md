@@ -1,3 +1,5 @@
+![Python](https://img.shields.io/badge/Python-3.8+-blue) 
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
 # diabetes-prediction-system
 
 # 🩺 Diabetes Prediction System Using Machine Learning
@@ -76,7 +78,7 @@ The project uses the **PIMA Indians Diabetes Dataset**, which contains the follo
 
 ### Dataset Distribution
 
-![Dataset Distribution](images/distribution.png)
+![Dataset Distribution]images/distribution.png)
 
 ---
 
@@ -110,6 +112,8 @@ Evaluation metrics:
 
 ### Model Accuracy
 
+![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen)
+
 | Model | Accuracy |
 |--------|----------|
 | Logistic Regression | 75.32% |
@@ -137,10 +141,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
 ```
 
-### Navigate to Project Directory
 
-```bash
-cd diabetes-prediction-system
 ```
 
 ### Install Dependencies
@@ -149,10 +150,12 @@ cd diabetes-prediction-system
 pip install -r requirements.txt
 ```
 
-### Run Application
-
+## 🚀 Run Locally
 ```bash
-python app.py
+git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
+cd diabetes-prediction-system
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
 ---
