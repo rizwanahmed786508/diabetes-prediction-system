@@ -35,7 +35,7 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
-*, html, body { box-sizing: border-box; }
+*, html, body { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #F0F4F8 !important;
@@ -43,8 +43,20 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     color: #1a2332 !important;
 }
 
+/* Remove ALL Streamlit default spacing */
 [data-testid="stAppViewContainer"] > .main { padding: 0 !important; }
-[data-testid="stMainBlockContainer"] { padding: 0 !important; max-width: 100% !important; }
+[data-testid="stMainBlockContainer"] {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+[data-testid="stVerticalBlock"] { gap: 0 !important; }
+[data-testid="stVerticalBlockBorderWrapper"] { padding: 0 !important; }
+[data-testid="stHorizontalBlock"] { gap: 0 !important; padding: 0 !important; }
+[data-testid="column"] { padding: 0 !important; overflow: hidden; }
+[data-testid="column"] > [data-testid="stVerticalBlock"] { gap: 0 !important; }
+[data-testid="column"] > [data-testid="stVerticalBlock"] > div { padding: 0 !important; }
+
 section[data-testid="stSidebar"] { display: none !important; }
 footer, #MainMenu, header { visibility: hidden !important; }
 [data-testid="stDecoration"] { display: none !important; }
@@ -53,7 +65,7 @@ footer, #MainMenu, header { visibility: hidden !important; }
 .top-nav {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
-    padding: 14px 32px;
+    padding: 12px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -61,39 +73,65 @@ footer, #MainMenu, header { visibility: hidden !important; }
     top: 0;
     z-index: 100;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    width: 100%;
 }
-.nav-brand { display: flex; align-items: center; gap: 12px; }
-.nav-icon { width: 38px; height: 38px; background: linear-gradient(135deg,#2563eb,#0ea5e9);
-    border-radius: 10px; display:flex; align-items:center; justify-content:center;
-    font-size:18px; }
-.nav-title { font-size: 1.15rem; font-weight: 700; color: #0f172a; line-height:1.2; }
-.nav-sub { font-size: 0.72rem; color: #64748b; font-weight: 400; }
-.nav-right { display:flex; align-items:center; gap:10px; }
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-icon { width: 34px; height: 34px; background: linear-gradient(135deg,#2563eb,#0ea5e9);
+    border-radius: 9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.nav-title { font-size: 1rem; font-weight: 700; color: #0f172a; line-height:1.2; }
+.nav-sub { font-size: 0.68rem; color: #64748b; font-weight: 400; }
+.nav-right { display:flex; align-items:center; gap:8px; }
 .nav-badge { background:#f1f5f9; border:1px solid #e2e8f0; border-radius:20px;
-    padding:5px 14px; font-size:0.78rem; color:#475569; font-weight:500; }
-.nav-avatar { width:34px; height:34px; background:linear-gradient(135deg,#7c3aed,#a78bfa);
+    padding:4px 12px; font-size:0.72rem; color:#475569; font-weight:500; }
+.nav-avatar { width:32px; height:32px; background:linear-gradient(135deg,#7c3aed,#a78bfa);
     border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:14px; color:white; font-weight:700; }
+    font-size:13px; color:white; font-weight:700; flex-shrink:0; }
+
+/* ── COLUMN PANELS ── */
+.left-panel {
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    padding: 18px 16px;
+    min-height: calc(100vh - 60px);
+}
+.mid-panel {
+    background: #F0F4F8;
+    padding: 18px 16px;
+    min-height: calc(100vh - 60px);
+}
+.right-panel {
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    padding: 18px 16px;
+    min-height: calc(100vh - 60px);
+}
+@media (max-width: 900px) {
+    .left-panel, .mid-panel, .right-panel {
+        min-height: auto; border: none;
+        border-bottom: 1px solid #e2e8f0; padding: 16px 12px;
+    }
+    .nav-badge { display: none; }
+    .nav-title { font-size: 0.88rem; }
+}
 
 /* ── LAYOUT ── */
-.dashboard { display:grid; grid-template-columns:300px 1fr 300px; gap:0;
-    min-height: calc(100vh - 67px); }
-.panel { padding: 20px 18px; }
+.dashboard { width:100%; }
+.panel { padding: 18px 16px; }
 .panel-left { background:#ffffff; border-right:1px solid #e2e8f0; }
-.panel-mid { background:#F0F4F8; padding: 20px 22px; }
-.panel-right { background:#ffffff; border-left:1px solid #e2e8f0; }
+.panel-mid  { background:#F0F4F8; }
+.panel-right{ background:#ffffff; border-left:1px solid #e2e8f0; }
 
 /* ── CARDS ── */
 .card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.card-header { font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:4px; }
-.card-sub { font-size:0.72rem; color:#94a3b8; margin-bottom:14px; }
+.card-header { font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:2px; }
+.card-sub { font-size:0.7rem; color:#94a3b8; margin-bottom:10px; }
 
 /* ── PATIENT PANEL ── */
 .patient-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; padding-bottom:14px;
@@ -105,28 +143,33 @@ footer, #MainMenu, header { visibility: hidden !important; }
 
 /* ── Number inputs ── */
 div[data-testid="stNumberInput"] {
-    margin-bottom: 4px !important;
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}
+div[data-testid="stNumberInput"] > div {
+    margin-bottom: 0px !important;
 }
 div[data-testid="stNumberInput"] label,
 div[data-testid="stNumberInput"] label p {
-    font-size: 0.78rem !important;
+    font-size: 0.74rem !important;
     font-weight: 500 !important;
     color: #475569 !important;
-    margin-bottom: 3px !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
 }
 div[data-testid="stNumberInput"] input {
     background: #f8fafc !important;
     border: 1.5px solid #e2e8f0 !important;
-    border-radius: 8px !important;
+    border-radius: 7px !important;
     color: #0f172a !important;
-    font-size: 0.88rem !important;
+    font-size: 0.85rem !important;
     font-weight: 600 !important;
-    padding: 7px 10px !important;
-    height: 36px !important;
+    padding: 5px 8px !important;
+    height: 32px !important;
 }
 div[data-testid="stNumberInput"] input:focus {
     border-color: #2563eb !important;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1) !important;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important;
     outline: none !important;
 }
 
@@ -482,7 +525,7 @@ left, mid, right = st.columns([1.05, 1.6, 1.05])
 
 with left:
     st.markdown("""
-    <div class="panel-left" style="min-height:calc(100vh - 67px); padding:20px 18px;">
+    <div class="left-panel">
     <div class="patient-header">
       <div class="patient-icon">👤</div>
       <div>
@@ -528,7 +571,7 @@ with left:
 # MIDDLE PANEL — Results
 # ════════════════════════════════════════════════════════════════════
 with mid:
-    st.markdown('<div style="padding:20px 22px; background:#F0F4F8; min-height:calc(100vh - 67px);">', unsafe_allow_html=True)
+    st.markdown('<div class="mid-panel">', unsafe_allow_html=True)
 
     if predict_clicked:
         # ── Compute prediction ──
@@ -721,7 +764,7 @@ with mid:
 # RIGHT PANEL — Explanation + Probability + Quick Actions
 # ════════════════════════════════════════════════════════════════════
 with right:
-    st.markdown('<div style="padding:20px 18px; background:#ffffff; min-height:calc(100vh - 67px); border-left:1px solid #e2e8f0;">', unsafe_allow_html=True)
+    st.markdown('<div class="right-panel">', unsafe_allow_html=True)
 
     res = st.session_state.last_result
 
