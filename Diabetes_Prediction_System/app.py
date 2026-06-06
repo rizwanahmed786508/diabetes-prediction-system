@@ -212,6 +212,26 @@ st.markdown("""
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
 
+    /* ── Mobile: number input values & labels visibility fix ── */
+    @media (max-width: 768px) {
+        /* Input values — white, bold, readable */
+        div[data-testid="stNumberInput"] input {
+            color: #FFFFFF !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            background: rgba(0, 180, 255, 0.05) !important;
+            border: 1px solid rgba(0, 180, 255, 0.25) !important;
+            border-radius: 8px !important;
+        }
+        /* Field labels */
+        div[data-testid="stNumberInput"] label,
+        div[data-testid="stNumberInput"] label p {
+            color: #E0E0E0 !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+    }
+
     /* Reset button — ghost style, separate from Predict */
     [data-testid="stButton"][key="reset_btn"] > button,
     button[kind="secondary"] {
