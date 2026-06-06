@@ -474,7 +474,7 @@ if predict_clicked:
         elif rank == 2:
             bar_colors.append("#ff6b35")    # 3rd — orange
         else:
-            bar_colors.append("rgba(80,110,160,0.45)")
+            bar_colors.append("#2a4a7a")
 
     # Build matplotlib figure (dark themed)
     fig, ax = plt.subplots(figsize=(8, 3.8))
