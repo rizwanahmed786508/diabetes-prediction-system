@@ -212,23 +212,32 @@ st.markdown("""
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
 
-    /* ── Mobile: number input values & labels visibility fix ── */
+    /* ── Number input: value, placeholder, label, focus ── */
+    div[data-testid="stNumberInput"] input {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        background: #1E1E1E !important;
+        border: 1px solid rgba(0, 180, 255, 0.25) !important;
+        border-radius: 8px !important;
+    }
+    div[data-testid="stNumberInput"] input::placeholder {
+        color: #B0B0B0 !important;
+        font-weight: 400 !important;
+    }
+    div[data-testid="stNumberInput"] input:focus {
+        border: 1px solid #00D4FF !important;
+        box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15) !important;
+        outline: none !important;
+    }
+    div[data-testid="stNumberInput"] label,
+    div[data-testid="stNumberInput"] label p {
+        color: #E0E0E0 !important;
+        font-weight: 500 !important;
+    }
     @media (max-width: 768px) {
-        /* Input values — white, bold, readable */
         div[data-testid="stNumberInput"] input {
-            color: #FFFFFF !important;
-            font-size: 16px !important;
-            font-weight: 700 !important;
-            background: rgba(0, 180, 255, 0.05) !important;
-            border: 1px solid rgba(0, 180, 255, 0.25) !important;
-            border-radius: 8px !important;
-        }
-        /* Field labels */
-        div[data-testid="stNumberInput"] label,
-        div[data-testid="stNumberInput"] label p {
-            color: #E0E0E0 !important;
-            font-weight: 500 !important;
-            font-size: 14px !important;
+            font-size: 17px !important;
         }
     }
 
