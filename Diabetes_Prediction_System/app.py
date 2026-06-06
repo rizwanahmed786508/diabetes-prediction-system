@@ -119,24 +119,22 @@ footer, #MainMenu, header { visibility: hidden !important; }
 .left-panel {
     background: #ffffff;
     border-right: 1px solid #e2e8f0;
-    padding: 18px 16px;
-    min-height: calc(100vh - 60px);
+    padding: 16px 14px;
 }
 .mid-panel {
     background: #F0F4F8;
-    padding: 18px 16px;
-    min-height: calc(100vh - 60px);
+    padding: 16px 14px;
 }
 .right-panel {
     background: #ffffff;
     border-left: 1px solid #e2e8f0;
-    padding: 18px 16px;
-    min-height: calc(100vh - 60px);
+    padding: 16px 14px;
 }
 @media (max-width: 900px) {
     .left-panel, .mid-panel, .right-panel {
-        min-height: auto; border: none;
-        border-bottom: 1px solid #e2e8f0; padding: 16px 12px;
+        border: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 12px;
     }
     .nav-badge { display: none; }
     .nav-title { font-size: 0.88rem; }
@@ -378,6 +376,23 @@ div[data-testid="stTextArea"] label { font-size:0.78rem !important; color:#47556
 .acc-val { font-size:0.95rem; font-weight:700; color:#0f172a; }
 .acc-label { font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; }
 
+/* Mobile: force Streamlit columns to stack vertically */
+@media screen and (max-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+        flex-wrap: wrap !important;
+    }
+    [data-testid="column"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    /* Hide right panel on mobile to save space */
+    [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(3) .right-panel {
+        display: none;
+    }
+}
+
 /* spinner override */
 [data-testid="stSpinner"] { display:none !important; }
 </style>
@@ -567,7 +582,7 @@ st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 # ════════════════════════════════════════════════════════════════════
 # LEFT PANEL — Patient Inputs
 # ════════════════════════════════════════════════════════════════════
-left, mid, right = st.columns([1.05, 1.6, 1.05])
+left, mid, right = st.columns([1, 1.5, 1], gap="small")
 
 with left:
     st.markdown("""
@@ -665,14 +680,12 @@ with mid:
     res = st.session_state.last_result
 
     if res is None:
-        # ── Empty state ──
         st.markdown("""
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-             height:60vh;text-align:center;">
-          <div style="font-size:64px;margin-bottom:16px">🩺</div>
-          <div style="font-size:1.2rem;font-weight:700;color:#0f172a;margin-bottom:8px">Ready to Analyze</div>
-          <div style="font-size:0.85rem;color:#94a3b8;max-width:300px">
-            Enter patient clinical data on the left and click <b>Predict Risk</b> to get the AI assessment.
+        <div style="text-align:center;padding:24px 16px;color:#94a3b8;">
+          <div style="font-size:40px;margin-bottom:10px">🩺</div>
+          <div style="font-size:0.95rem;font-weight:700;color:#0f172a;margin-bottom:6px">Ready to Analyze</div>
+          <div style="font-size:0.8rem;color:#94a3b8;">
+            Fill patient data and click <b>Predict Risk</b>
           </div>
         </div>
         """, unsafe_allow_html=True)
