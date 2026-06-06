@@ -659,7 +659,7 @@ with st.sidebar:
 
     feedback_text = st.text_area(
         "Share your feedback",
-        placeholder="App kaisi lagi? Koi suggestion ho to yahan likhein...",
+        placeholder="Write your feedback or suggestions here...",
         height=100,
         label_visibility="collapsed",
         key="feedback_text"
