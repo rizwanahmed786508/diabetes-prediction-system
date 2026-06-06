@@ -567,7 +567,7 @@ def generate_pdf(patient_data, prediction, diabetic_prob, nondiabetic_prob,
     story.append(dtbl)
     story.append(Spacer(1, 10))
     story.append(Paragraph(
-        "Diabetes Prediction System &nbsp;•&nbsp; Built with Streamlit + Scikit-learn",
+        "Diabetes Prediction System &nbsp;•&nbsp; Developed By Rizwan Ahmed",
         S("ft", fontSize=7, textColor=C_MUTED, alignment=TA_CENTER, leading=10)
     ))
 
@@ -877,16 +877,6 @@ if predict_clicked:
     st.markdown(f"""
     <div style="font-size:0.72rem;color:rgba(120,160,220,0.55);margin-top:8px;line-height:1.6">
         📌 {method_note}
-    </div>
-    <div style="background:rgba(0,180,255,0.05);border:1px solid rgba(0,180,255,0.15);
-         border-radius:10px;padding:12px 16px;margin-top:14px;font-size:0.8rem;
-         color:rgba(160,200,255,0.8);line-height:1.7">
-        🎓 <b style="color:#00b4ff">Interview Tip:</b>
-        <b>Glucose</b> & <b>BMI</b> consistently rank highest across all three models —
-        they have the strongest clinical correlation with diabetes onset.
-        Random Forest importances are most reliable (model-native), while LR coefficients
-        show linear contribution, and KNN uses correlation as a proxy since it has no
-        built-in feature importance mechanism.
     </div>
     """, unsafe_allow_html=True)
 
