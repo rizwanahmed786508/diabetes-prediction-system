@@ -203,6 +203,25 @@ st.markdown("""
 
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
+
+    /* Reset button — ghost style, separate from Predict */
+    [data-testid="stButton"][key="reset_btn"] > button,
+    button[kind="secondary"] {
+        background: transparent !important;
+        border: 1px solid rgba(0, 180, 255, 0.35) !important;
+        color: #00b4ff !important;
+        padding: 6px 16px !important;
+        font-size: 0.78rem !important;
+        letter-spacing: 1px !important;
+        border-radius: 8px !important;
+        margin-top: 0 !important;
+        width: auto !important;
+    }
+    button[kind="secondary"]:hover {
+        background: rgba(0, 180, 255, 0.08) !important;
+        box-shadow: 0 0 12px rgba(0, 180, 255, 0.2) !important;
+        transform: none !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -310,47 +329,70 @@ with st.sidebar:
         </div>
         """, unsafe_allow_html=True)
 
+# ─── Session State Defaults ──────────────────────────────────────────────────
+DEFAULTS = {
+    "pregnancies": 1, "glucose": 120, "blood_pressure": 70,
+    "skin_thickness": 20, "insulin": 80, "bmi": 28.5,
+    "dpf": 0.350, "age": 30,
+}
+for k, v in DEFAULTS.items():
+    if k not in st.session_state:
+        st.session_state[k] = v
+
+def reset_form():
+    for k, v in DEFAULTS.items():
+        st.session_state[k] = v
+
 # ─── Input Form ──────────────────────────────────────────────────────────────
 st.markdown('<div class="card">', unsafe_allow_html=True)
-st.markdown('<div class="section-label">📋 Patient Clinical Data</div>', unsafe_allow_html=True)
+
+# Header row: label left, Reset button right
+hcol1, hcol2 = st.columns([3, 1])
+with hcol1:
+    st.markdown('<div class="section-label" style="margin-bottom:0">📋 Patient Clinical Data</div>', unsafe_allow_html=True)
+with hcol2:
+    st.button("↺ Reset", on_click=reset_form, key="reset_btn",
+              help="Reset all inputs to default values")
+
+st.markdown("<div style='margin-top:16px'></div>", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
 with col1:
     pregnancies = st.number_input(
-        "🤱 Pregnancies", min_value=0, max_value=20, value=1, step=1,
-        help="Number of times pregnant"
+        "🤱 Pregnancies", min_value=0, max_value=20, step=1,
+        key="pregnancies", help="Number of times pregnant"
     )
     glucose = st.number_input(
-        "🩸 Glucose (mg/dL)", min_value=0, max_value=300, value=120,
-        help="Plasma glucose concentration (2-hour oral glucose tolerance test)"
+        "🩸 Glucose (mg/dL)", min_value=0, max_value=300,
+        key="glucose", help="Plasma glucose concentration (2-hour oral glucose tolerance test)"
     )
     blood_pressure = st.number_input(
-        "💓 Blood Pressure (mmHg)", min_value=0, max_value=200, value=70,
-        help="Diastolic blood pressure"
+        "💓 Blood Pressure (mmHg)", min_value=0, max_value=200,
+        key="blood_pressure", help="Diastolic blood pressure"
     )
     skin_thickness = st.number_input(
-        "📏 Skin Thickness (mm)", min_value=0, max_value=100, value=20,
-        help="Triceps skin fold thickness"
+        "📏 Skin Thickness (mm)", min_value=0, max_value=100,
+        key="skin_thickness", help="Triceps skin fold thickness"
     )
 
 with col2:
     insulin = st.number_input(
-        "💉 Insulin (μU/mL)", min_value=0, max_value=900, value=80,
-        help="2-Hour serum insulin"
+        "💉 Insulin (μU/mL)", min_value=0, max_value=900,
+        key="insulin", help="2-Hour serum insulin"
     )
     bmi = st.number_input(
-        "⚖️ BMI (kg/m²)", min_value=0.0, max_value=70.0, value=28.5, step=0.1,
-        help="Body Mass Index"
+        "⚖️ BMI (kg/m²)", min_value=0.0, max_value=70.0, step=0.1,
+        key="bmi", help="Body Mass Index"
     )
     dpf = st.number_input(
         "🧬 Diabetes Pedigree Function", min_value=0.0, max_value=3.0,
-        value=0.35, step=0.001, format="%.3f",
-        help="Diabetes heredity score based on family history"
+        step=0.001, format="%.3f",
+        key="dpf", help="Diabetes heredity score based on family history"
     )
     age = st.number_input(
-        "🎂 Age (years)", min_value=1, max_value=120, value=30,
-        help="Patient age in years"
+        "🎂 Age (years)", min_value=1, max_value=120,
+        key="age", help="Patient age in years"
     )
 
 st.markdown('</div>', unsafe_allow_html=True)
