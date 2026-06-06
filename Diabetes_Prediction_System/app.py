@@ -653,6 +653,49 @@ with st.sidebar:
         </div>
         """, unsafe_allow_html=True)
 
+    # ── Feedback Section ──────────────────────────────────────────────────────
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="section-label">💬 Feedback</div>', unsafe_allow_html=True)
+
+    feedback_text = st.text_area(
+        "Share your feedback",
+        placeholder="App kaisi lagi? Koi suggestion ho to yahan likhein...",
+        height=100,
+        label_visibility="collapsed",
+        key="feedback_text"
+    )
+
+    feedback_mailto = (
+        "mailto:rizwanmb310@gmail.com"
+        "?subject=Diabetes%20Prediction%20App%20-%20Feedback"
+        f"&body={feedback_text.replace(' ', '%20').replace('\n', '%0A') if feedback_text else ''}"
+    )
+
+    st.markdown(f"""
+    <a href="{feedback_mailto}" target="_blank" style="text-decoration:none">
+        <div style="
+            background: linear-gradient(135deg, #003322, #006644);
+            border: 1px solid rgba(0,200,100,0.35);
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #00ee77;
+            cursor: pointer;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        ">
+            📧 Send Feedback
+        </div>
+    </a>
+    <div style="font-size:0.68rem;color:rgba(120,160,200,0.45);
+         text-align:center;margin-top:6px;line-height:1.5">
+        rizwanmb310@gmail.com
+    </div>
+    """, unsafe_allow_html=True)
+
 # ─── Session State Defaults ──────────────────────────────────────────────────
 DEFAULTS = {
     "pregnancies": 1, "glucose": 120, "blood_pressure": 70,
