@@ -131,6 +131,7 @@ The application includes a user-friendly GUI where users can enter medical infor
 
 ![GUI Screenshot](Diabetes_Prediction_System/images/gui.png)
 
+![GUI Screenshot](Diabetes_Prediction_System/images/gui2.png)
 ---
 
 ## 🚀 Installation & Usage
