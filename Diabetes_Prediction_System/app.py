@@ -709,6 +709,7 @@ for k, v in DEFAULTS.items():
 def reset_form():
     for k, v in DEFAULTS.items():
         st.session_state[k] = v
+    st.rerun()
 
 # ─── Input Form ──────────────────────────────────────────────────────────────
 st.markdown('<div class="card">', unsafe_allow_html=True)
