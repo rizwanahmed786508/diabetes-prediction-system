@@ -698,9 +698,9 @@ with st.sidebar:
 
 # ─── Session State Defaults ──────────────────────────────────────────────────
 DEFAULTS = {
-    "pregnancies": 1, "glucose": 120, "blood_pressure": 70,
-    "skin_thickness": 20, "insulin": 80, "bmi": 28.5,
-    "dpf": 0.350, "age": 30,
+    "pregnancies": 0, "glucose": 0, "blood_pressure": 0,
+    "skin_thickness": 0, "insulin": 0, "bmi": 0.0,
+    "dpf": 0.000, "age": 0,
 }
 for k, v in DEFAULTS.items():
     if k not in st.session_state:
