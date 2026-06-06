@@ -50,12 +50,40 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     max-width: 100% !important;
     width: 100% !important;
 }
-[data-testid="stVerticalBlock"] { gap: 0 !important; }
-[data-testid="stVerticalBlockBorderWrapper"] { padding: 0 !important; }
-[data-testid="stHorizontalBlock"] { gap: 0 !important; padding: 0 !important; }
-[data-testid="column"] { padding: 0 !important; overflow: hidden; }
-[data-testid="column"] > [data-testid="stVerticalBlock"] { gap: 0 !important; }
-[data-testid="column"] > [data-testid="stVerticalBlock"] > div { padding: 0 !important; }
+
+/* Kill ALL flex gaps Streamlit injects — including inline style overrides */
+[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+    row-gap: 0 !important;
+}
+[data-testid="stVerticalBlockBorderWrapper"] {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+[data-testid="stHorizontalBlock"] {
+    gap: 0 !important;
+    padding: 0 !important;
+    column-gap: 0 !important;
+}
+[data-testid="column"] {
+    padding: 0 !important;
+    min-width: 0 !important;
+}
+/* The actual flex children Streamlit wraps each widget in */
+[data-testid="column"] > div { padding: 0 !important; gap: 0 !important; }
+[data-testid="column"] > div > div { gap: 0 !important; row-gap: 0 !important; }
+
+/* Streamlit wraps every widget in stElementContainer with margin */
+[data-testid="stElementContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+/* stWidgetLabel gap */
+[data-testid="stWidgetLabel"] { margin-bottom: 1px !important; }
+
+/* Every direct child block gap = 0 */
+.stMarkdown { margin: 0 !important; padding: 0 !important; }
+.element-container { margin: 0 !important; padding: 0 !important; }
 
 section[data-testid="stSidebar"] { display: none !important; }
 footer, #MainMenu, header { visibility: hidden !important; }
@@ -134,27 +162,40 @@ footer, #MainMenu, header { visibility: hidden !important; }
 .card-sub { font-size:0.7rem; color:#94a3b8; margin-bottom:10px; }
 
 /* ── PATIENT PANEL ── */
-.patient-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; padding-bottom:14px;
+.patient-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:10px;
     border-bottom:1px solid #f1f5f9; }
-.patient-icon { width:36px; height:36px; background:#eff6ff; border-radius:9px;
-    display:flex; align-items:center; justify-content:center; font-size:17px; }
-.patient-title { font-size:0.9rem; font-weight:700; color:#0f172a; }
-.patient-sub { font-size:0.7rem; color:#94a3b8; }
+.patient-icon { width:32px; height:32px; background:#eff6ff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:15px; }
+.patient-title { font-size:0.86rem; font-weight:700; color:#0f172a; }
+.patient-sub { font-size:0.67rem; color:#94a3b8; }
 
-/* ── Number inputs ── */
+/* ── Number inputs — zero all gaps ── */
 div[data-testid="stNumberInput"] {
-    margin-bottom: 0px !important;
-    padding-bottom: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 div[data-testid="stNumberInput"] > div {
-    margin-bottom: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
 }
-div[data-testid="stNumberInput"] label,
-div[data-testid="stNumberInput"] label p {
-    font-size: 0.74rem !important;
+div[data-testid="stNumberInput"] p {
+    margin: 0 0 1px 0 !important;
+    padding: 0 !important;
+    font-size: 0.73rem !important;
     font-weight: 500 !important;
     color: #475569 !important;
-    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
+}
+div[data-testid="stNumberInput"] label {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+div[data-testid="stNumberInput"] label p {
+    font-size: 0.73rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    margin-bottom: 1px !important;
     line-height: 1.2 !important;
 }
 div[data-testid="stNumberInput"] input {
@@ -162,15 +203,20 @@ div[data-testid="stNumberInput"] input {
     border: 1.5px solid #e2e8f0 !important;
     border-radius: 7px !important;
     color: #0f172a !important;
-    font-size: 0.85rem !important;
+    font-size: 0.84rem !important;
     font-weight: 600 !important;
-    padding: 5px 8px !important;
-    height: 32px !important;
+    padding: 4px 8px !important;
+    height: 30px !important;
+    margin: 0 !important;
 }
 div[data-testid="stNumberInput"] input:focus {
     border-color: #2563eb !important;
     box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important;
     outline: none !important;
+}
+/* The wrapper div around the actual input+stepper */
+div[data-testid="stNumberInput"] > div > div {
+    margin: 0 !important; padding: 0 !important; gap: 0 !important;
 }
 
 /* ── Predict button ── */
