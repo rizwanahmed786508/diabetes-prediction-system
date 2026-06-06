@@ -7,6 +7,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -253,7 +255,11 @@ def train_models():
         trained[name] = m
         accuracies[name] = round(accuracy_score(y_test, m.predict(X_test_sc)) * 100, 2)
 
-    return trained, scaler, accuracies
+    # Store feature names and correlation-based importance as KNN fallback
+    feature_names = list(X.columns)
+    corr_importance = np.abs(df[feature_names].corrwith(df["Outcome"])).values
+
+    return trained, scaler, accuracies, feature_names, corr_importance
 
 
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
@@ -288,7 +294,7 @@ st.markdown('<p class="subtitle">AI-Powered Clinical Risk Assessment</p>', unsaf
 
 # Train models
 with st.spinner("🔄 Initializing AI models..."):
-    trained_models, scaler, accuracies = train_models()
+    trained_models, scaler, accuracies, feature_names, corr_importance = train_models()
 
 # Show accuracies in sidebar after training
 with st.sidebar:
@@ -427,6 +433,123 @@ if predict_clicked:
         <span>🤖 Model: <b style="color:#00b4ff">{selected_model}</b></span>
         <span>|</span>
         <span>📈 Accuracy: <b style="color:#00b4ff">{accuracies[selected_model]}%</b></span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ─── Risk Factors Chart ──────────────────────────────────────────────────
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">⚠️ Risk Factors — Feature Importance</div>', unsafe_allow_html=True)
+
+    # Get importance scores based on model type
+    if selected_model == "Random Forest":
+        importances = trained_models[selected_model].feature_importances_
+        method_note = "Source: Random Forest `feature_importances_` (Gini impurity reduction)"
+    elif selected_model == "Logistic Regression":
+        importances = np.abs(trained_models[selected_model].coef_[0])
+        importances = importances / importances.sum()   # normalize to 0-1 range
+        method_note = "Source: Logistic Regression `|coef_|` (absolute coefficient weight)"
+    else:  # KNN — no native importance, use correlation
+        importances = corr_importance / corr_importance.sum()
+        method_note = "Source: Pearson correlation with Outcome (KNN has no native importance)"
+
+    # Short display labels
+    short_labels = ["Pregnancies", "Glucose", "Blood\nPressure", "Skin\nThickness",
+                    "Insulin", "BMI", "Pedigree\nFunction", "Age"]
+
+    # Sort descending
+    sorted_idx = np.argsort(importances)[::-1]
+    sorted_imp = importances[sorted_idx]
+    sorted_labels = [short_labels[i] for i in sorted_idx]
+
+    # Color: top 3 highlight, rest muted
+    bar_colors = []
+    for rank, _ in enumerate(sorted_imp):
+        if rank == 0:
+            bar_colors.append("#00b4ff")    # top feature — cyan
+        elif rank == 1:
+            bar_colors.append("#7b2fff")    # 2nd — purple
+        elif rank == 2:
+            bar_colors.append("#ff6b35")    # 3rd — orange
+        else:
+            bar_colors.append("rgba(80,110,160,0.45)")
+
+    # Build matplotlib figure (dark themed)
+    fig, ax = plt.subplots(figsize=(8, 3.8))
+    fig.patch.set_facecolor("#0d1420")
+    ax.set_facecolor("#0d1420")
+
+    bars = ax.barh(
+        sorted_labels[::-1],      # reverse so highest is at top
+        sorted_imp[::-1],
+        color=bar_colors[::-1],
+        height=0.55,
+        edgecolor="none",
+    )
+
+    # Subtle glow effect via twin bar (slightly wider, very transparent)
+    ax.barh(
+        sorted_labels[::-1],
+        sorted_imp[::-1],
+        color=bar_colors[::-1],
+        height=0.72,
+        edgecolor="none",
+        alpha=0.12,
+    )
+
+    # Value labels on bars
+    for bar, val in zip(bars, sorted_imp[::-1]):
+        ax.text(
+            val + 0.004, bar.get_y() + bar.get_height() / 2,
+            f"{val:.3f}",
+            va="center", ha="left",
+            fontsize=8, color="#a0c8ff", fontweight="600"
+        )
+
+    # Styling
+    ax.set_xlabel("Importance Score", color="#6080b0", fontsize=8, labelpad=8)
+    ax.tick_params(axis="y", colors="#c0d8ff", labelsize=8.5)
+    ax.tick_params(axis="x", colors="#506080", labelsize=7)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#1e3050")
+    ax.spines["bottom"].set_color("#1e3050")
+    ax.xaxis.grid(True, color="#1a2a40", linewidth=0.6, linestyle="--")
+    ax.set_axisbelow(True)
+
+    # Legend patches for top 3
+    patches = [
+        mpatches.Patch(color="#00b4ff", label=f"1st: {sorted_labels[0]}"),
+        mpatches.Patch(color="#7b2fff", label=f"2nd: {sorted_labels[1]}"),
+        mpatches.Patch(color="#ff6b35", label=f"3rd: {sorted_labels[2]}"),
+    ]
+    ax.legend(
+        handles=patches, loc="lower right",
+        fontsize=7.5, framealpha=0.15,
+        labelcolor="#c0d8ff", edgecolor="#1e3050",
+        facecolor="#0a1020"
+    )
+
+    plt.tight_layout(pad=1.2)
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
+
+    # Method note + interview tip
+    st.markdown(f"""
+    <div style="font-size:0.72rem;color:rgba(120,160,220,0.55);margin-top:8px;line-height:1.6">
+        📌 {method_note}
+    </div>
+    <div style="background:rgba(0,180,255,0.05);border:1px solid rgba(0,180,255,0.15);
+         border-radius:10px;padding:12px 16px;margin-top:14px;font-size:0.8rem;
+         color:rgba(160,200,255,0.8);line-height:1.7">
+        🎓 <b style="color:#00b4ff">Interview Tip:</b>
+        <b>Glucose</b> & <b>BMI</b> consistently rank highest across all three models —
+        they have the strongest clinical correlation with diabetes onset.
+        Random Forest importances are most reliable (model-native), while LR coefficients
+        show linear contribution, and KNN uses correlation as a proxy since it has no
+        built-in feature importance mechanism.
     </div>
     """, unsafe_allow_html=True)
 
