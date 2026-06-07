@@ -3,7 +3,7 @@ etic_prob = round(proba[0] * 100, 1)
     st.markdown("---")
 
     if prediction == 1:
-        st.markdown(f"""
+     st.markdown(f"""
         <div class="result-diabetic">
             <div class="result-label" style="color:#ff5555">⚠️ DIABETIC RISK DETECTED</div>
             <div class="result-sub">The model indicates a high probability of diabetes.</div>
