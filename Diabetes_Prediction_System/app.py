@@ -9,6 +9,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.patheffects as pe
+from matplotlib.patches import FancyArrowPatch
 import io
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
@@ -20,927 +22,961 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 import warnings
 warnings.filterwarnings("ignore")
 
-# ─── Page Config ────────────────────────────────────────────────────────────
+# ─── Page Config ─────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Diabetes Prediction System",
+    page_title="Diabetes Risk Prediction",
     page_icon="🩺",
-    layout="centered",
-    initial_sidebar_state="expanded",
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-# ─── Custom CSS (dark futuristic) ────────────────────────────────────────────
+# ─── CSS ─────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
-    html, body, [data-testid="stAppViewContainer"] {
-        background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #0a0a1a 100%);
-        color: #e0e6ff;
-        font-family: 'Inter', sans-serif;
-    }
+*, html, body { box-sizing: border-box; margin: 0; padding: 0; }
 
-    [data-testid="stSidebar"] {
-        background: rgba(10, 20, 40, 0.95) !important;
-        border-right: 1px solid rgba(0, 180, 255, 0.2);
-    }
+html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+    background: #F0F4F8 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    color: #1a2332 !important;
+}
 
-    .main-title {
-        font-family: 'Orbitron', monospace;
-        font-size: 2.2rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00b4ff, #7b2fff, #00b4ff);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        padding: 10px 0 4px;
-        animation: shimmer 3s linear infinite;
-    }
+/* Remove ALL Streamlit default spacing */
+[data-testid="stAppViewContainer"] > .main { padding: 0 !important; }
+[data-testid="stMainBlockContainer"] {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
 
-    @keyframes shimmer {
-        0% { background-position: 0% center; }
-        100% { background-position: 200% center; }
-    }
+/* Kill ALL flex gaps Streamlit injects — including inline style overrides */
+[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+    row-gap: 0 !important;
+}
+[data-testid="stVerticalBlockBorderWrapper"] {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+[data-testid="stHorizontalBlock"] {
+    gap: 0 !important;
+    padding: 0 !important;
+    column-gap: 0 !important;
+}
+[data-testid="column"] {
+    padding: 0 !important;
+    min-width: 0 !important;
+}
+/* The actual flex children Streamlit wraps each widget in */
+[data-testid="column"] > div { padding: 0 !important; gap: 0 !important; }
+[data-testid="column"] > div > div { gap: 0 !important; row-gap: 0 !important; }
 
-    .subtitle {
-        text-align: center;
-        color: rgba(160, 190, 255, 0.7);
-        font-size: 0.85rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 30px;
-    }
+/* Streamlit wraps every widget in stElementContainer with margin */
+[data-testid="stElementContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+/* stWidgetLabel gap */
+[data-testid="stWidgetLabel"] { margin-bottom: 1px !important; }
 
-    .card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(0, 180, 255, 0.15);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 30px rgba(0, 100, 255, 0.05);
-        backdrop-filter: blur(10px);
-    }
+/* Every direct child block gap = 0 */
+.stMarkdown { margin: 0 !important; padding: 0 !important; }
+.element-container { margin: 0 !important; padding: 0 !important; }
 
-    .section-label {
-        font-family: 'Orbitron', monospace;
-        font-size: 0.75rem;
-        color: #00b4ff;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(0, 180, 255, 0.2);
-    }
+section[data-testid="stSidebar"] { display: none !important; }
+footer, #MainMenu, header { visibility: hidden !important; }
+[data-testid="stDecoration"] { display: none !important; }
 
-    .result-diabetic {
-        background: linear-gradient(135deg, rgba(255,50,50,0.15), rgba(180,0,0,0.08));
-        border: 1px solid rgba(255, 80, 80, 0.5);
-        border-radius: 16px;
-        padding: 28px;
-        text-align: center;
-        animation: pulse-red 2s ease-in-out infinite;
-    }
+/* ── TOP NAV ── */
+.top-nav {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    width: 100%;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-icon { width: 34px; height: 34px; background: linear-gradient(135deg,#2563eb,#0ea5e9);
+    border-radius: 9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.nav-title { font-size: 1rem; font-weight: 700; color: #0f172a; line-height:1.2; }
+.nav-sub { font-size: 0.68rem; color: #64748b; font-weight: 400; }
+.nav-right { display:flex; align-items:center; gap:8px; }
+.nav-badge { background:#f1f5f9; border:1px solid #e2e8f0; border-radius:20px;
+    padding:4px 12px; font-size:0.72rem; color:#475569; font-weight:500; }
+.nav-avatar { width:32px; height:32px; background:linear-gradient(135deg,#7c3aed,#a78bfa);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:white; font-weight:700; flex-shrink:0; }
 
-    .result-safe {
-        background: linear-gradient(135deg, rgba(0,255,120,0.12), rgba(0,180,80,0.06));
-        border: 1px solid rgba(0, 255, 120, 0.4);
-        border-radius: 16px;
-        padding: 28px;
-        text-align: center;
-        animation: pulse-green 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-red {
-        0%, 100% { box-shadow: 0 0 20px rgba(255,50,50,0.2); }
-        50% { box-shadow: 0 0 40px rgba(255,50,50,0.4); }
-    }
-
-    @keyframes pulse-green {
-        0%, 100% { box-shadow: 0 0 20px rgba(0,255,120,0.15); }
-        50% { box-shadow: 0 0 40px rgba(0,255,120,0.3); }
-    }
-
-    .result-label {
-        font-family: 'Orbitron', monospace;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-    .result-sub {
-        font-size: 0.85rem;
-        opacity: 0.75;
-    }
-
-    .accuracy-badge {
-        display: inline-block;
-        background: rgba(0, 180, 255, 0.12);
-        border: 1px solid rgba(0, 180, 255, 0.3);
-        border-radius: 20px;
-        padding: 4px 14px;
-        font-size: 0.78rem;
-        color: #00b4ff;
-        font-weight: 500;
-    }
-
-    div[data-testid="stSlider"] > div { color: #a0c0ff; }
-
-    div[data-testid="stNumberInput"] input {
-        background: rgba(0, 180, 255, 0.05) !important;
-        border: 1px solid rgba(0, 180, 255, 0.25) !important;
-        color: #e0e6ff !important;
-        border-radius: 8px !important;
-    }
-
-    .stButton > button {
-        width: 100%;
-        background: linear-gradient(135deg, #0050cc, #7b2fff);
-        color: white;
+/* ── COLUMN PANELS ── */
+.left-panel {
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    padding: 16px 14px;
+}
+.mid-panel {
+    background: #F0F4F8;
+    padding: 16px 14px;
+}
+.right-panel {
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    padding: 16px 14px;
+}
+@media (max-width: 900px) {
+    .left-panel, .mid-panel, .right-panel {
         border: none;
-        padding: 14px;
-        border-radius: 12px;
-        font-family: 'Orbitron', monospace;
-        font-size: 0.85rem;
-        letter-spacing: 2px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 10px;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 12px;
     }
+    .nav-badge { display: none; }
+    .nav-title { font-size: 0.88rem; }
+}
 
-    .stButton > button:hover {
-        background: linear-gradient(135deg, #0070ff, #9b4fff);
-        box-shadow: 0 0 25px rgba(123, 47, 255, 0.5);
-        transform: translateY(-1px);
-    }
+/* ── LAYOUT ── */
+.dashboard { width:100%; }
+.panel { padding: 18px 16px; }
+.panel-left { background:#ffffff; border-right:1px solid #e2e8f0; }
+.panel-mid  { background:#F0F4F8; }
+.panel-right{ background:#ffffff; border-left:1px solid #e2e8f0; }
 
-    .stSelectbox > div > div {
-        background: rgba(0, 180, 255, 0.05) !important;
-        border: 1px solid rgba(0, 180, 255, 0.25) !important;
-        color: #e0e6ff !important;
-        border-radius: 8px !important;
-    }
+/* ── CARDS ── */
+.card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.card-header { font-size:0.82rem; font-weight:700; color:#0f172a; margin-bottom:2px; }
+.card-sub { font-size:0.7rem; color:#94a3b8; margin-bottom:10px; }
 
-    .metric-row {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 12px;
-    }
+/* ── PATIENT PANEL ── */
+.patient-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:10px;
+    border-bottom:1px solid #f1f5f9; }
+.patient-icon { width:32px; height:32px; background:#eff6ff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; font-size:15px; }
+.patient-title { font-size:0.86rem; font-weight:700; color:#0f172a; }
+.patient-sub { font-size:0.67rem; color:#94a3b8; }
 
-    .metric-box {
-        flex: 1;
-        background: rgba(0, 180, 255, 0.05);
-        border: 1px solid rgba(0, 180, 255, 0.15);
-        border-radius: 10px;
-        padding: 12px;
-        text-align: center;
-    }
+/* ── Number inputs — zero all gaps ── */
+div[data-testid="stNumberInput"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+div[data-testid="stNumberInput"] > div {
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+}
+div[data-testid="stNumberInput"] p {
+    margin: 0 0 1px 0 !important;
+    padding: 0 !important;
+    font-size: 0.73rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    line-height: 1.2 !important;
+}
+div[data-testid="stNumberInput"] label {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+div[data-testid="stNumberInput"] label p {
+    font-size: 0.73rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    margin-bottom: 1px !important;
+    line-height: 1.2 !important;
+}
+div[data-testid="stNumberInput"] input {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 7px !important;
+    color: #0f172a !important;
+    font-size: 0.84rem !important;
+    font-weight: 600 !important;
+    padding: 4px 8px !important;
+    height: 30px !important;
+    margin: 0 !important;
+}
+div[data-testid="stNumberInput"] input:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important;
+    outline: none !important;
+}
+/* The wrapper div around the actual input+stepper */
+div[data-testid="stNumberInput"] > div > div {
+    margin: 0 !important; padding: 0 !important; gap: 0 !important;
+}
 
-    .metric-val {
-        font-family: 'Orbitron', monospace;
-        font-size: 1.3rem;
-        color: #00b4ff;
-        font-weight: 700;
-    }
+/* ── Predict button ── */
+.stButton > button {
+    width: 100% !important;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3) !important;
+    margin-top: 8px !important;
+}
+.stButton > button:hover {
+    background: linear-gradient(135deg, #1e40af, #1d4ed8) !important;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.4) !important;
+    transform: translateY(-1px) !important;
+}
 
-    .metric-name {
-        font-size: 0.7rem;
-        color: rgba(160, 190, 255, 0.6);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+/* ── Reset button ── */
+button[kind="secondary"] {
+    background: #f1f5f9 !important;
+    border: 1.5px solid #e2e8f0 !important;
+    color: #475569 !important;
+    padding: 7px 14px !important;
+    font-size: 0.78rem !important;
+    border-radius: 8px !important;
+    margin-top: 0 !important;
+    width: auto !important;
+    box-shadow: none !important;
+}
+button[kind="secondary"]:hover {
+    background: #e2e8f0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
 
-    footer { visibility: hidden; }
-    #MainMenu { visibility: hidden; }
+/* ── Download button ── */
+[data-testid="stDownloadButton"] > button {
+    width: 100% !important;
+    background: #f0fdf4 !important;
+    color: #15803d !important;
+    border: 1.5px solid #bbf7d0 !important;
+    padding: 10px 16px !important;
+    border-radius: 9px !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+}
+[data-testid="stDownloadButton"] > button:hover {
+    background: #dcfce7 !important;
+    transform: none !important;
+}
 
-    /* Reset button — ghost style, separate from Predict */
-    [data-testid="stButton"][key="reset_btn"] > button,
-    button[kind="secondary"] {
-        background: transparent !important;
-        border: 1px solid rgba(0, 180, 255, 0.35) !important;
-        color: #00b4ff !important;
-        padding: 6px 16px !important;
-        font-size: 0.78rem !important;
-        letter-spacing: 1px !important;
-        border-radius: 8px !important;
-        margin-top: 0 !important;
-        width: auto !important;
-    }
-    button[kind="secondary"]:hover {
-        background: rgba(0, 180, 255, 0.08) !important;
-        box-shadow: 0 0 12px rgba(0, 180, 255, 0.2) !important;
-        transform: none !important;
-    }
+/* ── Select box ── */
+div[data-testid="stSelectbox"] label { font-size:0.78rem !important; color:#475569 !important; font-weight:500 !important; }
+div[data-testid="stSelectbox"] > div > div {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    color: #0f172a !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+}
 
-    /* PDF download button — green accent */
-    [data-testid="stDownloadButton"] > button {
-        width: 100%;
-        background: linear-gradient(135deg, #006633, #00aa55) !important;
-        color: white !important;
-        border: none !important;
-        padding: 13px !important;
-        border-radius: 12px !important;
-        font-family: 'Orbitron', monospace !important;
-        font-size: 0.82rem !important;
-        letter-spacing: 1.5px !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
+/* ── Text area ── */
+div[data-testid="stTextArea"] textarea {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    color: #0f172a !important;
+    font-size: 0.82rem !important;
+}
+div[data-testid="stTextArea"] label { font-size:0.78rem !important; color:#475569 !important; }
+
+/* ── Risk result cards ── */
+.risk-high {
+    background: linear-gradient(135deg,#fef2f2,#fff1f1);
+    border: 1.5px solid #fca5a5;
+    border-radius: 12px; padding: 16px 18px; text-align:center;
+    animation: glow-red 2.5s ease-in-out infinite;
+}
+.risk-low {
+    background: linear-gradient(135deg,#f0fdf4,#ecfdf5);
+    border: 1.5px solid #86efac;
+    border-radius: 12px; padding: 16px 18px; text-align:center;
+    animation: glow-green 2.5s ease-in-out infinite;
+}
+@keyframes glow-red {
+    0%,100% { box-shadow: 0 0 0 rgba(239,68,68,0.15); }
+    50% { box-shadow: 0 0 18px rgba(239,68,68,0.2); }
+}
+@keyframes glow-green {
+    0%,100% { box-shadow: 0 0 0 rgba(34,197,94,0.12); }
+    50% { box-shadow: 0 0 18px rgba(34,197,94,0.18); }
+}
+
+/* ── SHAP rows ── */
+.shap-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 8px 0; border-bottom: 1px solid #f1f5f9;
+    font-size: 0.82rem;
+}
+.shap-bar-pos { height:6px; background:linear-gradient(90deg,#f97316,#ef4444); border-radius:3px; }
+.shap-bar-neg { height:6px; background:linear-gradient(90deg,#22c55e,#10b981); border-radius:3px; }
+
+/* ── Donut legend ── */
+.legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:6px; }
+
+/* ── Recent table ── */
+.rec-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+.rec-table th { background:#f8fafc; color:#64748b; font-weight:600; font-size:0.72rem;
+    text-transform:uppercase; letter-spacing:0.5px; padding:8px 12px; text-align:left;
+    border-bottom:1px solid #e2e8f0; }
+.rec-table td { padding:9px 12px; border-bottom:1px solid #f1f5f9; color:#334155; }
+.rec-table tr:last-child td { border-bottom:none; }
+.badge-high { background:#fef2f2; color:#dc2626; border:1px solid #fca5a5;
+    border-radius:20px; padding:2px 10px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+.badge-mod  { background:#fffbeb; color:#d97706; border:1px solid #fcd34d;
+    border-radius:20px; padding:2px 10px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+.badge-low  { background:#f0fdf4; color:#16a34a; border:1px solid #86efac;
+    border-radius:20px; padding:2px 10px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+
+/* ── Quick action buttons ── */
+.qa-btn {
+    display:flex; align-items:center; gap:10px;
+    background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px;
+    padding:10px 14px; margin-bottom:8px; cursor:pointer;
+    font-size:0.82rem; color:#334155; font-weight:500;
+    transition: all 0.15s;
+}
+.qa-btn:hover { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+.qa-icon { font-size:15px; }
+
+/* ── Note box ── */
+.note-box {
+    background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px;
+    padding:12px 14px; display:flex; gap:10px; align-items:flex-start;
+    font-size:0.78rem; color:#166534; margin-top:12px;
+}
+
+/* ── Model selector ── */
+.model-pill {
+    display:inline-block; background:#eff6ff; border:1px solid #bfdbfe;
+    border-radius:20px; padding:3px 12px; font-size:0.72rem; color:#1d4ed8;
+    font-weight:600; margin-bottom:10px;
+}
+
+/* ── Accuracy mini cards ── */
+.acc-row { display:flex; gap:8px; margin-bottom:14px; }
+.acc-card { flex:1; background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px;
+    padding:8px; text-align:center; }
+.acc-val { font-size:0.95rem; font-weight:700; color:#0f172a; }
+.acc-label { font-size:0.62rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* Mobile: force Streamlit columns to stack vertically */
+@media screen and (max-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+        flex-wrap: wrap !important;
     }
-    [data-testid="stDownloadButton"] > button:hover {
-        background: linear-gradient(135deg, #008844, #00cc66) !important;
-        box-shadow: 0 0 22px rgba(0, 180, 80, 0.45) !important;
-        transform: translateY(-1px) !important;
+    [data-testid="column"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
     }
+    /* Hide right panel on mobile to save space */
+    [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(3) .right-panel {
+        display: none;
+    }
+}
+
+/* spinner override */
+[data-testid="stSpinner"] { display:none !important; }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ─── Model Training (cached) ─────────────────────────────────────────────────
+# ─── Model Training ───────────────────────────────────────────────────────────
 @st.cache_resource(show_spinner=False)
 def train_models():
-    # Load the Pima Indians Diabetes dataset directly from URL
     url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
     cols = ["Pregnancies","Glucose","BloodPressure","SkinThickness",
             "Insulin","BMI","DiabetesPedigreeFunction","Age","Outcome"]
     try:
         df = pd.read_csv(url, names=cols)
     except Exception:
-        # Fallback: generate synthetic data if offline
-        np.random.seed(42)
-        n = 768
+        np.random.seed(42); n=768
         df = pd.DataFrame({
-            "Pregnancies": np.random.randint(0, 17, n),
-            "Glucose": np.random.randint(70, 200, n),
-            "BloodPressure": np.random.randint(40, 120, n),
-            "SkinThickness": np.random.randint(0, 100, n),
-            "Insulin": np.random.randint(0, 850, n),
-            "BMI": np.round(np.random.uniform(18, 67, n), 1),
-            "DiabetesPedigreeFunction": np.round(np.random.uniform(0.07, 2.4, n), 3),
-            "Age": np.random.randint(21, 81, n),
-            "Outcome": np.random.randint(0, 2, n),
+            "Pregnancies":np.random.randint(0,17,n), "Glucose":np.random.randint(70,200,n),
+            "BloodPressure":np.random.randint(40,120,n), "SkinThickness":np.random.randint(0,100,n),
+            "Insulin":np.random.randint(0,850,n), "BMI":np.round(np.random.uniform(18,67,n),1),
+            "DiabetesPedigreeFunction":np.round(np.random.uniform(0.07,2.4,n),3),
+            "Age":np.random.randint(21,81,n), "Outcome":np.random.randint(0,2,n),
         })
-
-    X = df.drop("Outcome", axis=1)
-    y = df["Outcome"]
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
+    X = df.drop("Outcome", axis=1); y = df["Outcome"]
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=42)
     scaler = StandardScaler()
-    X_train_sc = scaler.fit_transform(X_train)
-    X_test_sc  = scaler.transform(X_test)
-
+    Xt = scaler.fit_transform(X_train); Xs = scaler.transform(X_test)
     models = {
         "Logistic Regression": LogisticRegression(max_iter=1000),
-        "Random Forest":       RandomForestClassifier(n_estimators=100, random_state=42),
+        "Random Forest": RandomForestClassifier(n_estimators=100,random_state=42),
         "K-Nearest Neighbors": KNeighborsClassifier(n_neighbors=5),
     }
-
     trained, accuracies = {}, {}
     for name, m in models.items():
-        m.fit(X_train_sc, y_train)
+        m.fit(Xt, y_train)
         trained[name] = m
-        accuracies[name] = round(accuracy_score(y_test, m.predict(X_test_sc)) * 100, 2)
-
-    # Store feature names and correlation-based importance as KNN fallback
+        accuracies[name] = round(accuracy_score(y_test, m.predict(Xs))*100, 2)
     feature_names = list(X.columns)
     corr_importance = np.abs(df[feature_names].corrwith(df["Outcome"])).values
-
     return trained, scaler, accuracies, feature_names, corr_importance
 
+trained_models, scaler, accuracies, feature_names, corr_importance = train_models()
 
+# ─── Session State ────────────────────────────────────────────────────────────
+DEFAULTS = {"pregnancies":0,"glucose":0,"blood_pressure":0,"skin_thickness":0,
+            "insulin":0,"bmi":0.0,"dpf":0.000,"age":0}
+for k,v in DEFAULTS.items():
+    if k not in st.session_state: st.session_state[k] = v
 
-# ─── PDF Report Generator ─────────────────────────────────────────────────────
+if "history" not in st.session_state: st.session_state.history = []
+if "last_result" not in st.session_state: st.session_state.last_result = None
+
+def reset_form():
+    for k,v in DEFAULTS.items(): st.session_state[k] = v
+    st.session_state.last_result = None
+    st.rerun()
+
+# ─── PDF Generator ────────────────────────────────────────────────────────────
 def generate_pdf(patient_data, prediction, diabetic_prob, nondiabetic_prob,
                  selected_model, model_accuracy, importances, sorted_labels, sorted_imp):
-
     buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4,
-                            topMargin=1.8*cm, bottomMargin=1.8*cm,
+    doc = SimpleDocTemplate(buf, pagesize=A4, topMargin=1.8*cm, bottomMargin=1.8*cm,
                             leftMargin=2*cm, rightMargin=2*cm)
-
-    # ── Color palette ──
-    C_DARK    = colors.HexColor("#0d1420")
-    C_BLUE    = colors.HexColor("#00b4ff")
-    C_PURPLE  = colors.HexColor("#7b2fff")
-    C_GREEN   = colors.HexColor("#00c864")
-    C_RED     = colors.HexColor("#ff4444")
-    C_TEXT    = colors.HexColor("#1a2a3a")
-    C_MUTED   = colors.HexColor("#5a7090")
-    C_BORDER  = colors.HexColor("#d0e4f0")
-    C_LBLUE   = colors.HexColor("#e8f4ff")
-
-    # ── Styles ──
-    def S(name, **kw):
-        defaults = dict(fontName="Helvetica", fontSize=10, textColor=C_TEXT, leading=14)
-        defaults.update(kw)
-        return ParagraphStyle(name, **defaults)
-
-    sTitle   = S("T", fontName="Helvetica-Bold", fontSize=22, textColor=C_DARK,
-                 alignment=TA_CENTER, leading=28, spaceAfter=2)
-    sSub     = S("Su", fontSize=9, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
-    sSecHdr  = S("SH", fontName="Helvetica-Bold", fontSize=9, textColor=C_BLUE,
-                 leading=14, spaceBefore=4, spaceAfter=2)
-    sNormal  = S("N", fontSize=9, textColor=C_TEXT, leading=13)
-    sSmall   = S("Sm", fontSize=7.5, textColor=C_MUTED, leading=11)
-    sCenter  = S("C", fontSize=9, textColor=C_TEXT, alignment=TA_CENTER, leading=13)
-    sBold    = S("B", fontName="Helvetica-Bold", fontSize=9, textColor=C_TEXT, leading=13)
-
-    story = []
-    W = A4[0] - 4*cm   # usable width
-
-    # ── HEADER ──
-    story.append(Paragraph("DIABETES PREDICTION REPORT", sTitle))
-    story.append(Paragraph("AI-Powered Clinical Risk Assessment", sSub))
-    story.append(Spacer(1, 6))
-
-    now = datetime.now()
-    story.append(Paragraph(
-        f"Generated: {now.strftime('%B %d, %Y')} &nbsp;&nbsp;|&nbsp;&nbsp; "
-        f"Time: {now.strftime('%H:%M:%S')} &nbsp;&nbsp;|&nbsp;&nbsp; "
-        f"Model: {selected_model}",
-        S("dt", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
-    ))
-    story.append(Spacer(1, 10))
-    story.append(HRFlowable(width=W, thickness=2, color=C_BLUE, spaceAfter=14))
-
-    # ── SECTION 1 — PATIENT DATA ──
-    story.append(Paragraph("PATIENT CLINICAL DATA", sSecHdr))
-
-    labels = ["Pregnancies", "Glucose (mg/dL)", "Blood Pressure (mmHg)",
-              "Skin Thickness (mm)", "Insulin (uU/mL)", "BMI (kg/m2)",
-              "Diabetes Pedigree Function", "Age (years)"]
-    values = [str(v) for v in patient_data]
-
-    # 2-column table layout (4 rows x 2 pairs)
-    table_data = [["Parameter", "Value", "Parameter", "Value"]]
-    for i in range(0, 8, 2):
-        table_data.append([labels[i], values[i], labels[i+1], values[i+1]])
-
-    tbl = Table(table_data, colWidths=[W*0.30, W*0.18, W*0.30, W*0.18],
-                repeatRows=1)
+    C_DARK=colors.HexColor("#0d1420"); C_BLUE=colors.HexColor("#2563eb")
+    C_GREEN=colors.HexColor("#16a34a"); C_RED=colors.HexColor("#dc2626")
+    C_TEXT=colors.HexColor("#1a2332"); C_MUTED=colors.HexColor("#64748b")
+    C_BORDER=colors.HexColor("#e2e8f0"); C_LBLUE=colors.HexColor("#f0f9ff")
+    def S(name,**kw):
+        d=dict(fontName="Helvetica",fontSize=10,textColor=C_TEXT,leading=14); d.update(kw)
+        return ParagraphStyle(name,**d)
+    sTitle=S("T",fontName="Helvetica-Bold",fontSize=22,textColor=C_DARK,alignment=TA_CENTER,leading=28,spaceAfter=2)
+    sSub=S("Su",fontSize=9,textColor=C_MUTED,alignment=TA_CENTER,leading=12)
+    sSecHdr=S("SH",fontName="Helvetica-Bold",fontSize=9,textColor=C_BLUE,leading=14,spaceBefore=4,spaceAfter=2)
+    W=A4[0]-4*cm; story=[]
+    story.append(Paragraph("DIABETES RISK PREDICTION REPORT",sTitle))
+    story.append(Paragraph("AI-Powered Clinical Risk Assessment",sSub))
+    story.append(Spacer(1,6))
+    now=datetime.now()
+    story.append(Paragraph(f"Generated: {now.strftime('%B %d, %Y')} &nbsp;|&nbsp; Time: {now.strftime('%H:%M:%S')} &nbsp;|&nbsp; Model: {selected_model}",
+        S("dt",fontSize=8,textColor=C_MUTED,alignment=TA_CENTER,leading=12)))
+    story.append(Spacer(1,10))
+    story.append(HRFlowable(width=W,thickness=2,color=C_BLUE,spaceAfter=14))
+    story.append(Paragraph("PATIENT CLINICAL DATA",sSecHdr))
+    labels=["Pregnancies","Glucose (mg/dL)","Blood Pressure (mmHg)","Skin Thickness (mm)",
+            "Insulin (uU/mL)","BMI (kg/m2)","Diabetes Pedigree Function","Age (years)"]
+    values=[str(v) for v in patient_data]
+    td=[["Parameter","Value","Parameter","Value"]]
+    for i in range(0,8,2): td.append([labels[i],values[i],labels[i+1],values[i+1]])
+    tbl=Table(td,colWidths=[W*.30,W*.18,W*.30,W*.18],repeatRows=1)
     tbl.setStyle(TableStyle([
-        # Header row
-        ("BACKGROUND",   (0,0), (-1,0), C_DARK),
-        ("TEXTCOLOR",    (0,0), (-1,0), C_BLUE),
-        ("FONTNAME",     (0,0), (-1,0), "Helvetica-Bold"),
-        ("FONTSIZE",     (0,0), (-1,0), 8),
-        ("ALIGN",        (0,0), (-1,0), "CENTER"),
-        ("TOPPADDING",   (0,0), (-1,0), 5),
-        ("BOTTOMPADDING",(0,0), (-1,0), 5),
-        # Data rows
-        ("FONTSIZE",     (0,1), (-1,-1), 8.5),
-        ("FONTNAME",     (1,1), (1,-1), "Helvetica-Bold"),
-        ("FONTNAME",     (3,1), (3,-1), "Helvetica-Bold"),
-        ("TEXTCOLOR",    (1,1), (1,-1), C_TEXT),
-        ("TEXTCOLOR",    (3,1), (3,-1), C_TEXT),
-        ("ALIGN",        (1,0), (1,-1), "CENTER"),
-        ("ALIGN",        (3,0), (3,-1), "CENTER"),
-        ("ROWBACKGROUNDS",(0,1),(-1,-1),[colors.white, C_LBLUE]),
-        ("GRID",         (0,0), (-1,-1), 0.5, C_BORDER),
-        ("TOPPADDING",   (0,1), (-1,-1), 5),
-        ("BOTTOMPADDING",(0,1), (-1,-1), 5),
-        ("LEFTPADDING",  (0,0), (-1,-1), 8),
+        ("BACKGROUND",(0,0),(-1,0),C_DARK),("TEXTCOLOR",(0,0),(-1,0),C_BLUE),
+        ("FONTNAME",(0,0),(-1,0),"Helvetica-Bold"),("FONTSIZE",(0,0),(-1,0),8),
+        ("ALIGN",(0,0),(-1,0),"CENTER"),("TOPPADDING",(0,0),(-1,0),5),("BOTTOMPADDING",(0,0),(-1,0),5),
+        ("FONTSIZE",(0,1),(-1,-1),8.5),("FONTNAME",(1,1),(1,-1),"Helvetica-Bold"),
+        ("FONTNAME",(3,1),(3,-1),"Helvetica-Bold"),("ALIGN",(1,0),(1,-1),"CENTER"),
+        ("ALIGN",(3,0),(3,-1),"CENTER"),("ROWBACKGROUNDS",(0,1),(-1,-1),[colors.white,C_LBLUE]),
+        ("GRID",(0,0),(-1,-1),0.5,C_BORDER),("TOPPADDING",(0,1),(-1,-1),5),
+        ("BOTTOMPADDING",(0,1),(-1,-1),5),("LEFTPADDING",(0,0),(-1,-1),8),
     ]))
-    story.append(tbl)
-    story.append(Spacer(1, 14))
-
-    # ── SECTION 2 — PREDICTION RESULT ──
-    story.append(HRFlowable(width=W, thickness=0.5, color=C_BORDER, spaceAfter=10))
-    story.append(Paragraph("PREDICTION RESULT", sSecHdr))
-
-    if prediction == 1:
-        res_label = "DIABETIC RISK DETECTED"
-        res_conf  = f"{diabetic_prob}%"
-        res_sub   = f"Non-Diabetic Probability: {nondiabetic_prob}%"
-        bg_color  = colors.HexColor("#fff0f0")
-        txt_color = C_RED
-        border_c  = C_RED
+    story.append(tbl); story.append(Spacer(1,14))
+    story.append(HRFlowable(width=W,thickness=0.5,color=C_BORDER,spaceAfter=10))
+    story.append(Paragraph("PREDICTION RESULT",sSecHdr))
+    if prediction==1:
+        res_label="DIABETIC RISK DETECTED"; res_conf=f"{diabetic_prob}%"
+        res_sub=f"Non-Diabetic Probability: {nondiabetic_prob}%"
+        bg_color=colors.HexColor("#fef2f2"); txt_color=C_RED; border_c=C_RED
     else:
-        res_label = "NON-DIABETIC"
-        res_conf  = f"{nondiabetic_prob}%"
-        res_sub   = f"Diabetic Probability: {diabetic_prob}%"
-        bg_color  = colors.HexColor("#f0fff6")
-        txt_color = C_GREEN
-        border_c  = C_GREEN
-
-    result_data = [[
-        Paragraph(res_label, S("RL", fontName="Helvetica-Bold", fontSize=14,
-                               textColor=txt_color, alignment=TA_CENTER, leading=18)),
-        Paragraph(res_conf,  S("RC", fontName="Helvetica-Bold", fontSize=26,
-                               textColor=txt_color, alignment=TA_CENTER, leading=30)),
-        Paragraph(f"Confidence\n{res_sub}",
-                  S("RS", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)),
+        res_label="NON-DIABETIC"; res_conf=f"{nondiabetic_prob}%"
+        res_sub=f"Diabetic Probability: {diabetic_prob}%"
+        bg_color=colors.HexColor("#f0fdf4"); txt_color=C_GREEN; border_c=C_GREEN
+    result_data=[[
+        Paragraph(res_label,S("RL",fontName="Helvetica-Bold",fontSize=14,textColor=txt_color,alignment=TA_CENTER,leading=18)),
+        Paragraph(res_conf,S("RC",fontName="Helvetica-Bold",fontSize=26,textColor=txt_color,alignment=TA_CENTER,leading=30)),
+        Paragraph(f"Confidence\n{res_sub}",S("RS",fontSize=8,textColor=C_MUTED,alignment=TA_CENTER,leading=12)),
     ]]
-    rtbl = Table(result_data, colWidths=[W*0.38, W*0.28, W*0.34])
+    rtbl=Table(result_data,colWidths=[W*.38,W*.28,W*.34])
     rtbl.setStyle(TableStyle([
-        ("BACKGROUND",    (0,0), (-1,-1), bg_color),
-        ("BOX",           (0,0), (-1,-1), 1.5, border_c),
-        ("ROUNDEDCORNERS",(0,0), (-1,-1), [6,6,6,6]),
-        ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
-        ("TOPPADDING",    (0,0), (-1,-1), 14),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 14),
-        ("LEFTPADDING",   (0,0), (-1,-1), 10),
-        ("RIGHTPADDING",  (0,0), (-1,-1), 10),
-        ("LINEAFTER",     (0,0), (1,-1), 0.5, border_c),
+        ("BACKGROUND",(0,0),(-1,-1),bg_color),("BOX",(0,0),(-1,-1),1.5,border_c),
+        ("VALIGN",(0,0),(-1,-1),"MIDDLE"),("TOPPADDING",(0,0),(-1,-1),14),
+        ("BOTTOMPADDING",(0,0),(-1,-1),14),("LEFTPADDING",(0,0),(-1,-1),10),
+        ("RIGHTPADDING",(0,0),(-1,-1),10),("LINEAFTER",(0,0),(1,-1),0.5,border_c),
     ]))
-    story.append(rtbl)
-
-    # Model accuracy badge
-    story.append(Spacer(1, 6))
-    story.append(Paragraph(
-        f"Algorithm: {selected_model} &nbsp;&nbsp;|&nbsp;&nbsp; Model Accuracy: {model_accuracy}%",
-        S("acc", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
-    ))
-    story.append(Spacer(1, 14))
-
-    # ── SECTION 3 — RISK FACTORS CHART ──
-    story.append(HRFlowable(width=W, thickness=0.5, color=C_BORDER, spaceAfter=10))
-    story.append(Paragraph("RISK FACTORS — FEATURE IMPORTANCE", sSecHdr))
-
-    # Render chart to PNG in-memory (white bg for PDF)
-    fig, ax = plt.subplots(figsize=(7, 3.2))
-    fig.patch.set_facecolor("white")
-    ax.set_facecolor("#f7faff")
-
-    pdf_colors = ["#0077cc", "#5500cc", "#cc4400"] + ["#4a7aaa"] * 5
-    pdf_colors = pdf_colors[:len(sorted_imp)]
-
-    ax.barh(sorted_labels[::-1], sorted_imp[::-1],
-            color=pdf_colors[::-1], height=0.55, edgecolor="none")
-
-    for i, (label, val) in enumerate(zip(sorted_labels[::-1], sorted_imp[::-1])):
-        ax.text(val + 0.003, i, f"{val:.3f}",
-                va="center", ha="left", fontsize=7.5,
-                color="#334466", fontweight="600")
-
-    ax.set_xlabel("Importance Score", fontsize=8, color="#556688", labelpad=6)
-    ax.tick_params(axis="y", labelsize=8, colors="#223344")
-    ax.tick_params(axis="x", labelsize=7, colors="#778899")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_color("#ccddee")
-    ax.spines["bottom"].set_color("#ccddee")
-    ax.xaxis.grid(True, color="#ddeeff", linewidth=0.6, linestyle="--")
-    ax.set_axisbelow(True)
-
-    patches_pdf = [
-        mpatches.Patch(color="#0077cc", label=f"1st: {sorted_labels[0]}"),
-        mpatches.Patch(color="#5500cc", label=f"2nd: {sorted_labels[1]}"),
-        mpatches.Patch(color="#cc4400", label=f"3rd: {sorted_labels[2]}"),
-    ]
-    ax.legend(handles=patches_pdf, loc="lower right", fontsize=7,
-              framealpha=0.7, edgecolor="#ccddee")
-
+    story.append(rtbl); story.append(Spacer(1,6))
+    story.append(Paragraph(f"Algorithm: {selected_model} &nbsp;|&nbsp; Model Accuracy: {model_accuracy}%",
+        S("acc",fontSize=8,textColor=C_MUTED,alignment=TA_CENTER,leading=12)))
+    story.append(Spacer(1,14))
+    story.append(HRFlowable(width=W,thickness=0.5,color=C_BORDER,spaceAfter=10))
+    story.append(Paragraph("RISK FACTORS — FEATURE IMPORTANCE",sSecHdr))
+    fig,ax=plt.subplots(figsize=(7,3.2))
+    fig.patch.set_facecolor("white"); ax.set_facecolor("#f8fafc")
+    pdf_colors=["#1d4ed8","#0ea5e9","#2563eb"]+["#94a3b8"]*5
+    pdf_colors=pdf_colors[:len(sorted_imp)]
+    ax.barh(sorted_labels[::-1],sorted_imp[::-1],color=pdf_colors[::-1],height=0.55,edgecolor="none")
+    for i,(label,val) in enumerate(zip(sorted_labels[::-1],sorted_imp[::-1])):
+        ax.text(val+0.003,i,f"{val:.3f}",va="center",ha="left",fontsize=7.5,color="#334155",fontweight="600")
+    ax.set_xlabel("Importance Score",fontsize=8,color="#64748b",labelpad=6)
+    ax.tick_params(axis="y",labelsize=8,colors="#1a2332")
+    ax.tick_params(axis="x",labelsize=7,colors="#64748b")
+    ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#e2e8f0"); ax.spines["bottom"].set_color("#e2e8f0")
+    ax.xaxis.grid(True,color="#f1f5f9",linewidth=0.6,linestyle="--"); ax.set_axisbelow(True)
     plt.tight_layout(pad=1.0)
-    chart_buf = io.BytesIO()
-    plt.savefig(chart_buf, format="png", dpi=150, bbox_inches="tight")
-    chart_buf.seek(0)
-    plt.close(fig)
-
-    chart_img = RLImage(chart_buf, width=W, height=W * 0.42)
-    story.append(chart_img)
-    story.append(Spacer(1, 6))
-
-    # Top features table
-    top3_data = [["Rank", "Feature", "Importance Score", "Clinical Significance"]]
-    significance = {
-        "Glucose":           "Primary diabetes biomarker",
-        "BMI":               "Obesity-related insulin resistance",
-        "Age":               "Risk increases with age",
-        "Pregnancies":       "Gestational diabetes history",
-        "Insulin":           "Insulin production capacity",
-        "DiabetesPedigreeFunction": "Hereditary risk factor",
-        "BloodPressure":     "Cardiovascular comorbidity",
-        "SkinThickness":     "Body fat distribution proxy",
-        "Pedigree\nFunction":"Hereditary risk factor",
-        "Blood\nPressure":   "Cardiovascular comorbidity",
-        "Skin\nThickness":   "Body fat distribution proxy",
-    }
-    medals = ["#1", "#2", "#3"]
-    for i in range(min(3, len(sorted_labels))):
-        label_clean = sorted_labels[i].replace("\n", " ")
-        sig = significance.get(sorted_labels[i], significance.get(label_clean, "Contributing factor"))
-        top3_data.append([medals[i], label_clean, f"{sorted_imp[i]:.4f}", sig])
-
-    t3 = Table(top3_data, colWidths=[W*0.08, W*0.25, W*0.22, W*0.45])
-    t3.setStyle(TableStyle([
-        ("BACKGROUND",    (0,0), (-1,0), C_DARK),
-        ("TEXTCOLOR",     (0,0), (-1,0), C_BLUE),
-        ("FONTNAME",      (0,0), (-1,0), "Helvetica-Bold"),
-        ("FONTSIZE",      (0,0), (-1,0), 8),
-        ("ALIGN",         (0,0), (-1,0), "CENTER"),
-        ("FONTSIZE",      (0,1), (-1,-1), 8),
-        ("ROWBACKGROUNDS",(0,1),(-1,-1),[colors.white, C_LBLUE]),
-        ("GRID",          (0,0), (-1,-1), 0.4, C_BORDER),
-        ("ALIGN",         (0,0), (0,-1), "CENTER"),
-        ("ALIGN",         (2,0), (2,-1), "CENTER"),
-        ("TOPPADDING",    (0,0), (-1,-1), 5),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 5),
-        ("LEFTPADDING",   (0,0), (-1,-1), 7),
-    ]))
-    story.append(t3)
-    story.append(Spacer(1, 14))
-
-    # ── DISCLAIMER ──
-    story.append(HRFlowable(width=W, thickness=0.5, color=C_BORDER, spaceAfter=10))
-    disc_data = [[
-        Paragraph(
-            "<b>MEDICAL DISCLAIMER</b><br/>"
-            "This report is generated by an AI-based system for educational and informational "
-            "purposes only. It does NOT constitute medical advice, diagnosis, or treatment. "
-            "Predictions are based on statistical patterns and should NOT replace professional "
-            "clinical evaluation. Please consult a qualified healthcare provider for any "
-            "medical concerns or before making any health-related decisions.",
-            S("D", fontSize=7.5, textColor=colors.HexColor("#7a5500"), leading=11)
-        )
-    ]]
-    dtbl = Table(disc_data, colWidths=[W])
+    chart_buf=io.BytesIO()
+    plt.savefig(chart_buf,format="png",dpi=150,bbox_inches="tight"); chart_buf.seek(0); plt.close(fig)
+    story.append(RLImage(chart_buf,width=W,height=W*0.42)); story.append(Spacer(1,14))
+    story.append(HRFlowable(width=W,thickness=0.5,color=C_BORDER,spaceAfter=10))
+    disc_data=[[Paragraph(
+        "<b>MEDICAL DISCLAIMER</b><br/>This report is generated by an AI-based system for educational and informational "
+        "purposes only. It does NOT constitute medical advice, diagnosis, or treatment. "
+        "Please consult a qualified healthcare provider for any medical concerns.",
+        S("D",fontSize=7.5,textColor=colors.HexColor("#7a5500"),leading=11)
+    )]]
+    dtbl=Table(disc_data,colWidths=[W])
     dtbl.setStyle(TableStyle([
-        ("BACKGROUND",    (0,0), (-1,-1), colors.HexColor("#fffbe6")),
-        ("BOX",           (0,0), (-1,-1), 0.8, colors.HexColor("#e6b800")),
-        ("TOPPADDING",    (0,0), (-1,-1), 10),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 10),
-        ("LEFTPADDING",   (0,0), (-1,-1), 12),
-        ("RIGHTPADDING",  (0,0), (-1,-1), 12),
+        ("BACKGROUND",(0,0),(-1,-1),colors.HexColor("#fffbe6")),
+        ("BOX",(0,0),(-1,-1),0.8,colors.HexColor("#e6b800")),
+        ("TOPPADDING",(0,0),(-1,-1),10),("BOTTOMPADDING",(0,0),(-1,-1),10),
+        ("LEFTPADDING",(0,0),(-1,-1),12),("RIGHTPADDING",(0,0),(-1,-1),12),
     ]))
-    story.append(dtbl)
-    story.append(Spacer(1, 10))
-    story.append(Paragraph(
-        "Diabetes Prediction System &nbsp;•&nbsp; Built with Streamlit + Scikit-learn",
-        S("ft", fontSize=7, textColor=C_MUTED, alignment=TA_CENTER, leading=10)
-    ))
-
-    doc.build(story)
-    buf.seek(0)
+    story.append(dtbl); story.append(Spacer(1,10))
+    story.append(Paragraph("Diabetes Prediction System &nbsp;•&nbsp; Developed By Rizwan Ahmed",
+        S("ft",fontSize=7,textColor=C_MUTED,alignment=TA_CENTER,leading=10)))
+    doc.build(story); buf.seek(0)
     return buf.read()
 
 
-# ─── SIDEBAR ─────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown('<div class="section-label">🤖 Model Selection</div>', unsafe_allow_html=True)
-    selected_model = st.selectbox(
-        "Choose Algorithm",
-        ["Logistic Regression", "Random Forest", "K-Nearest Neighbors"],
-        label_visibility="collapsed"
-    )
+# ─── NAV BAR ─────────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="top-nav">
+  <div class="nav-brand">
+    <div class="nav-icon">🩺</div>
+    <div>
+      <div class="nav-title">Diabetes Risk Prediction</div>
+      <div class="nav-sub">Early detection. Better health.</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-badge">🤖 AI-Powered</div>
+    <div class="nav-avatar">RA</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
-    st.markdown('<br>', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">ℹ️ About</div>', unsafe_allow_html=True)
+# ─── 3-COLUMN DASHBOARD ───────────────────────────────────────────────────────
+st.markdown('<div class="dashboard">', unsafe_allow_html=True)
+
+# ════════════════════════════════════════════════════════════════════
+# LEFT PANEL — Patient Inputs
+# ════════════════════════════════════════════════════════════════════
+left, mid, right = st.columns([1, 1.5, 1], gap="small")
+
+with left:
     st.markdown("""
-    <div style="font-size:0.8rem; color:rgba(160,190,255,0.7); line-height:1.7">
-    This system uses the <b style="color:#00b4ff">Pima Indians Diabetes Dataset</b>
-    to predict diabetes risk based on clinical measurements.<br><br>
-    Three algorithms are trained and compared:<br>
-    • Logistic Regression<br>
-    • Random Forest<br>
-    • K-Nearest Neighbors
+    <div class="left-panel">
+    <div class="patient-header">
+      <div class="patient-icon">👤</div>
+      <div>
+        <div class="patient-title">Patient Information</div>
+        <div class="patient-sub">Enter patient medical details</div>
+      </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<br>', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">📊 Model Accuracy</div>', unsafe_allow_html=True)
+    pregnancies    = st.number_input("Pregnancies",           min_value=0, max_value=20,  step=1,   key="pregnancies")
+    glucose        = st.number_input("Glucose (mg/dL)",       min_value=0, max_value=300, step=1,   key="glucose")
+    blood_pressure = st.number_input("Blood Pressure (mmHg)", min_value=0, max_value=200, step=1,   key="blood_pressure")
+    skin_thickness = st.number_input("Skin Thickness (mm)",   min_value=0, max_value=100, step=1,   key="skin_thickness")
+    insulin        = st.number_input("Insulin (mu U/ml)",     min_value=0, max_value=900, step=1,   key="insulin")
+    bmi            = st.number_input("BMI (kg/m²)",           min_value=0.0,max_value=70.0,step=0.1,key="bmi")
+    dpf            = st.number_input("Diabetes Pedigree Function", min_value=0.0,max_value=3.0,step=0.001,format="%.3f",key="dpf")
+    age            = st.number_input("Age (years)",           min_value=0, max_value=120, step=1,   key="age")
 
+    # Model selector
+    st.markdown("<div style='margin-top:10px;margin-bottom:4px'>", unsafe_allow_html=True)
+    selected_model = st.selectbox("Algorithm", ["Random Forest","Logistic Regression","K-Nearest Neighbors"],
+                                  label_visibility="visible")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# ─── MAIN ────────────────────────────────────────────────────────────────────
-st.markdown('<h1 class="main-title">🩺 DIABETES PREDICTION</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">AI-Powered Clinical Risk Assessment</p>', unsafe_allow_html=True)
+    # Buttons row
+    bc1, bc2 = st.columns([2, 1])
+    with bc1:
+        predict_clicked = st.button("🧠 Predict Risk")
+    with bc2:
+        st.button("↺ Reset", on_click=reset_form, key="reset_btn")
 
-# Train models
-with st.spinner("🔄 Initializing AI models..."):
-    trained_models, scaler, accuracies, feature_names, corr_importance = train_models()
+    # Note box
+    st.markdown("""
+    <div class="note-box">
+      <span style="font-size:16px">🛡️</span>
+      <div><b>Note</b><br>Please ensure all values are correct. This tool is for risk assessment only, not for medical diagnosis.</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Show accuracies in sidebar after training
-with st.sidebar:
-    for mname, acc in accuracies.items():
-        icon = "🟢" if acc >= 78 else "🟡"
-        active = "border: 1px solid #00b4ff;" if mname == selected_model else ""
-        st.markdown(f"""
-        <div style="background:rgba(0,180,255,0.05);{active}border-radius:8px;
-             padding:8px 12px;margin-bottom:6px;font-size:0.8rem;">
-            {icon} <b>{mname}</b><br>
-            <span style="color:#00b4ff;font-weight:700">{acc}%</span>
-            <span style="color:rgba(160,190,255,0.5)"> accuracy</span>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)  # close panel-left
 
-# ─── Session State Defaults ──────────────────────────────────────────────────
-DEFAULTS = {
-    "pregnancies": 1, "glucose": 120, "blood_pressure": 70,
-    "skin_thickness": 20, "insulin": 80, "bmi": 28.5,
-    "dpf": 0.350, "age": 30,
-}
-for k, v in DEFAULTS.items():
-    if k not in st.session_state:
-        st.session_state[k] = v
+# ════════════════════════════════════════════════════════════════════
+# MIDDLE PANEL — Results
+# ════════════════════════════════════════════════════════════════════
+with mid:
+    st.markdown('<div class="mid-panel">', unsafe_allow_html=True)
 
-def reset_form():
-    for k, v in DEFAULTS.items():
-        st.session_state[k] = v
+    if predict_clicked:
+        # ── Compute prediction ──
+        input_data   = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, dpf, age]])
+        input_scaled = scaler.transform(input_data)
+        model        = trained_models[selected_model]
+        prediction   = model.predict(input_scaled)[0]
+        proba        = model.predict_proba(input_scaled)[0]
+        diabetic_prob    = round(proba[1]*100,1)
+        nondiabetic_prob = round(proba[0]*100,1)
 
-# ─── Input Form ──────────────────────────────────────────────────────────────
-st.markdown('<div class="card">', unsafe_allow_html=True)
+        # Feature importance
+        if selected_model == "Random Forest":
+            importances = model.feature_importances_
+            method_note = "Random Forest feature_importances_ (Gini)"
+        elif selected_model == "Logistic Regression":
+            importances = np.abs(model.coef_[0]); importances = importances/importances.sum()
+            method_note = "Logistic Regression |coef_| (normalized)"
+        else:
+            importances = corr_importance/corr_importance.sum()
+            method_note = "Pearson correlation (KNN proxy)"
 
-# Header row: label left, Reset button right
-hcol1, hcol2 = st.columns([3, 1])
-with hcol1:
-    st.markdown('<div class="section-label" style="margin-bottom:0">📋 Patient Clinical Data</div>', unsafe_allow_html=True)
-with hcol2:
-    st.button("↺ Reset", on_click=reset_form, key="reset_btn",
-              help="Reset all inputs to default values")
+        short_labels = ["Pregnancies","Glucose","Blood Pressure","Skin Thickness","Insulin","BMI","Pedigree Fn","Age"]
+        sorted_idx   = np.argsort(importances)[::-1]
+        sorted_imp   = importances[sorted_idx]
+        sorted_labels= [short_labels[i] for i in sorted_idx]
 
-st.markdown("<div style='margin-top:16px'></div>", unsafe_allow_html=True)
+        # Save to history
+        st.session_state.history.insert(0, {
+            "id": f"P{1000+len(st.session_state.history):05d}",
+            "date": datetime.now().strftime("%d %b %Y"),
+            "glucose": glucose, "bmi": bmi,
+            "score": diabetic_prob,
+            "level": "High Risk" if diabetic_prob>=60 else ("Moderate Risk" if diabetic_prob>=35 else "Low Risk"),
+        })
+        if len(st.session_state.history) > 5: st.session_state.history = st.session_state.history[:5]
 
-col1, col2 = st.columns(2)
+        st.session_state.last_result = {
+            "prediction":prediction,"diabetic_prob":diabetic_prob,"nondiabetic_prob":nondiabetic_prob,
+            "selected_model":selected_model,"importances":importances,
+            "sorted_labels":sorted_labels,"sorted_imp":sorted_imp,
+            "method_note":method_note,"input_data":[pregnancies,glucose,blood_pressure,skin_thickness,insulin,bmi,dpf,age],
+        }
 
-with col1:
-    pregnancies = st.number_input(
-        "🤱 Pregnancies", min_value=0, max_value=20, step=1,
-        key="pregnancies", help="Number of times pregnant"
-    )
-    glucose = st.number_input(
-        "🩸 Glucose (mg/dL)", min_value=0, max_value=300,
-        key="glucose", help="Plasma glucose concentration (2-hour oral glucose tolerance test)"
-    )
-    blood_pressure = st.number_input(
-        "💓 Blood Pressure (mmHg)", min_value=0, max_value=200,
-        key="blood_pressure", help="Diastolic blood pressure"
-    )
-    skin_thickness = st.number_input(
-        "📏 Skin Thickness (mm)", min_value=0, max_value=100,
-        key="skin_thickness", help="Triceps skin fold thickness"
-    )
+    res = st.session_state.last_result
 
-with col2:
-    insulin = st.number_input(
-        "💉 Insulin (μU/mL)", min_value=0, max_value=900,
-        key="insulin", help="2-Hour serum insulin"
-    )
-    bmi = st.number_input(
-        "⚖️ BMI (kg/m²)", min_value=0.0, max_value=70.0, step=0.1,
-        key="bmi", help="Body Mass Index"
-    )
-    dpf = st.number_input(
-        "🧬 Diabetes Pedigree Function", min_value=0.0, max_value=3.0,
-        step=0.001, format="%.3f",
-        key="dpf", help="Diabetes heredity score based on family history"
-    )
-    age = st.number_input(
-        "🎂 Age (years)", min_value=1, max_value=120,
-        key="age", help="Patient age in years"
-    )
-
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ─── Predict Button ───────────────────────────────────────────────────────────
-predict_clicked = st.button("🔬 ANALYZE & PREDICT")
-
-if predict_clicked:
-    input_data = np.array([[pregnancies, glucose, blood_pressure, skin_thickness,
-                             insulin, bmi, dpf, age]])
-    input_scaled = scaler.transform(input_data)
-
-    model = trained_models[selected_model]
-    prediction = model.predict(input_scaled)[0]
-    proba = model.predict_proba(input_scaled)[0]
-
-    diabetic_prob   = round(proba[1] * 100, 1)
-    nondiabetic_prob = round(proba[0] * 100, 1)
-
-    st.markdown("---")
-
-    if prediction == 1:
-        st.markdown(f"""
-        <div class="result-diabetic">
-            <div class="result-label" style="color:#ff5555">⚠️ DIABETIC RISK DETECTED</div>
-            <div class="result-sub">The model indicates a high probability of diabetes.</div>
-            <br>
-            <div style="font-family:Orbitron,monospace;font-size:2rem;color:#ff5555;font-weight:700">
-                {diabetic_prob}%
-            </div>
-            <div style="font-size:0.8rem;color:rgba(255,120,120,0.7)">Diabetes Probability</div>
+    if res is None:
+        st.markdown("""
+        <div style="text-align:center;padding:24px 16px;color:#94a3b8;">
+          <div style="font-size:40px;margin-bottom:10px">🩺</div>
+          <div style="font-size:0.95rem;font-weight:700;color:#0f172a;margin-bottom:6px">Ready to Analyze</div>
+          <div style="font-size:0.8rem;color:#94a3b8;">
+            Fill patient data and click <b>Predict Risk</b>
+          </div>
         </div>
         """, unsafe_allow_html=True)
     else:
+        prediction       = res["prediction"]
+        diabetic_prob    = res["diabetic_prob"]
+        nondiabetic_prob = res["nondiabetic_prob"]
+        selected_model_r = res["selected_model"]
+        importances      = res["importances"]
+        sorted_labels    = res["sorted_labels"]
+        sorted_imp       = res["sorted_imp"]
+        method_note      = res["method_note"]
+
+        # ── GAUGE CHART ──
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-header">Prediction Result</div><div class="card-sub">The model has analyzed the patient data</div>', unsafe_allow_html=True)
+
+        risk_pct = diabetic_prob / 100.0
+        fig_g, ax_g = plt.subplots(figsize=(4.5, 2.6), subplot_kw=dict(aspect="equal"))
+        fig_g.patch.set_facecolor("white")
+        ax_g.set_facecolor("white")
+
+        # Draw gauge arc background (green→yellow→red)
+        n_seg = 100
+        for i in range(n_seg):
+            theta_s = np.pi * (1 - i/n_seg)
+            theta_e = np.pi * (1 - (i+1)/n_seg)
+            t = i/n_seg
+            r = min(1.0, t*2) if t < 0.5 else 1.0
+            g = min(1.0, (1-t)*2) if t > 0.5 else 1.0
+            b = 0.0
+            ax_g.add_patch(plt.matplotlib.patches.Wedge(
+                (0,0), 1.0, np.degrees(theta_e), np.degrees(theta_s),
+                width=0.28, facecolor=(r,g,b), edgecolor="none"
+            ))
+
+        # Needle
+        needle_angle = np.pi * (1 - risk_pct)
+        nx = 0.72 * np.cos(needle_angle)
+        ny = 0.72 * np.sin(needle_angle)
+        ax_g.annotate("", xy=(nx,ny), xytext=(0,0),
+            arrowprops=dict(arrowstyle="->", color="#1a2332", lw=2.5,
+                           mutation_scale=18))
+        ax_g.add_patch(plt.Circle((0,0), 0.06, color="#1a2332", zorder=5))
+
+        # Inner white circle
+        ax_g.add_patch(plt.matplotlib.patches.Wedge(
+            (0,0), 0.72, 0, 180, facecolor="white", edgecolor="none"))
+
+        # Labels
+        pct_color = "#dc2626" if diabetic_prob >= 60 else ("#d97706" if diabetic_prob >= 35 else "#16a34a")
+        risk_text = "High Risk" if diabetic_prob >= 60 else ("Moderate Risk" if diabetic_prob >= 35 else "Low Risk")
+        ax_g.text(0, 0.18, f"{diabetic_prob}%", ha="center", va="center",
+                  fontsize=26, fontweight="700", color=pct_color,
+                  fontfamily="DM Sans")
+        ax_g.text(0, -0.08, risk_text, ha="center", va="center",
+                  fontsize=10, fontweight="600", color=pct_color)
+        ax_g.text(-1.05, -0.12, "0%", ha="center", va="center", fontsize=7, color="#94a3b8")
+        ax_g.text( 1.05, -0.12, "100%", ha="center", va="center", fontsize=7, color="#94a3b8")
+
+        ax_g.set_xlim(-1.2, 1.2); ax_g.set_ylim(-0.3, 1.15)
+        ax_g.axis("off")
+        plt.tight_layout(pad=0.3)
+
+        gc1, gc2, gc3 = st.columns([1,2,1])
+        with gc2:
+            st.pyplot(fig_g, use_container_width=True)
+        plt.close(fig_g)
+
+        # Result badge
+        if prediction == 1:
+            st.markdown(f"""
+            <div class="risk-high" style="margin-top:4px">
+              <div style="font-size:1rem;font-weight:700;color:#dc2626">⚠️ The patient is at <b>High Risk of Diabetes.</b></div>
+              <div style="font-size:0.8rem;color:#b91c1c;margin-top:4px">Please consult a healthcare professional.</div>
+            </div>""", unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="risk-low" style="margin-top:4px">
+              <div style="font-size:1rem;font-weight:700;color:#16a34a">✅ The patient shows <b>Low Risk of Diabetes.</b></div>
+              <div style="font-size:0.8rem;color:#15803d;margin-top:4px">Continue healthy lifestyle maintenance.</div>
+            </div>""", unsafe_allow_html=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)  # card
+
+        # ── FEATURE IMPORTANCE BAR CHART ──
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown(f'<div class="card-header">Feature Importance ({method_note.split("(")[0].strip()})</div><div class="card-sub">Impact of each feature on prediction</div>', unsafe_allow_html=True)
+
+        bar_colors_chart = ["#ef4444","#f97316","#f59e0b","#84cc16","#22c55e","#14b8a6","#3b82f6","#8b5cf6"]
+        fig_b, ax_b = plt.subplots(figsize=(6, 3.0))
+        fig_b.patch.set_facecolor("white"); ax_b.set_facecolor("#f8fafc")
+        ys = range(len(sorted_imp))
+        ax_b.barh([sl.replace("\n"," ") for sl in sorted_labels[::-1]],
+                  sorted_imp[::-1], color=bar_colors_chart[:len(sorted_imp)],
+                  height=0.58, edgecolor="none")
+        for i, val in enumerate(sorted_imp[::-1]):
+            ax_b.text(val+0.003, i, f"{val:.2f}", va="center", ha="left",
+                      fontsize=8, color="#334155", fontweight="600")
+        ax_b.set_xlabel("Impact on Prediction", fontsize=8, color="#64748b")
+        ax_b.tick_params(axis="y", labelsize=8.5, colors="#334155")
+        ax_b.tick_params(axis="x", labelsize=7, colors="#94a3b8")
+        ax_b.spines["top"].set_visible(False); ax_b.spines["right"].set_visible(False)
+        ax_b.spines["left"].set_color("#e2e8f0"); ax_b.spines["bottom"].set_color("#e2e8f0")
+        ax_b.xaxis.grid(True, color="#f1f5f9", linewidth=0.7, linestyle="--")
+        ax_b.set_axisbelow(True)
+        plt.tight_layout(pad=0.8)
+        st.pyplot(fig_b, use_container_width=True)
+        plt.close(fig_b)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # ── RECENT PREDICTIONS TABLE ──
+        if st.session_state.history:
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+            st.markdown('<div class="card-header">Recent Predictions</div>', unsafe_allow_html=True)
+            rows = ""
+            for h in st.session_state.history:
+                badge_cls = "badge-high" if h["level"]=="High Risk" else ("badge-mod" if h["level"]=="Moderate Risk" else "badge-low")
+                rows += f"""<tr>
+                  <td>{h['id']}</td><td>{h['date']}</td>
+                  <td>{h['glucose']}</td><td>{h['bmi']}</td>
+                  <td><b>{h['score']}%</b></td>
+                  <td><span class="{badge_cls}">{h['level']}</span></td>
+                </tr>"""
+            st.markdown(f"""
+            <table class="rec-table">
+              <thead><tr><th>Patient ID</th><th>Date</th><th>Glucose</th><th>BMI</th><th>Risk Score</th><th>Risk Level</th></tr></thead>
+              <tbody>{rows}</tbody>
+            </table>""", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)  # panel-mid
+
+# ════════════════════════════════════════════════════════════════════
+# RIGHT PANEL — Explanation + Probability + Quick Actions
+# ════════════════════════════════════════════════════════════════════
+with right:
+    st.markdown('<div class="right-panel">', unsafe_allow_html=True)
+
+    res = st.session_state.last_result
+
+    # ── MODEL ACCURACY ──
+    st.markdown('<div class="card-header" style="margin-bottom:8px">Model Accuracy</div>', unsafe_allow_html=True)
+    for mname, acc in accuracies.items():
+        short = mname.replace("Logistic Regression","Log. Reg.").replace("K-Nearest Neighbors","KNN").replace("Random Forest","Rand. Forest")
+        bar_w = int(acc)
+        highlight = "background:#eff6ff;border:1.5px solid #bfdbfe;" if mname == selected_model else "background:#f8fafc;border:1px solid #e2e8f0;"
         st.markdown(f"""
-        <div class="result-safe">
-            <div class="result-label" style="color:#00ff78">✅ NON-DIABETIC</div>
-            <div class="result-sub">No significant diabetes risk detected.</div>
-            <br>
-            <div style="font-family:Orbitron,monospace;font-size:2rem;color:#00ff78;font-weight:700">
-                {nondiabetic_prob}%
-            </div>
-            <div style="font-size:0.8rem;color:rgba(0,255,120,0.7)">Non-Diabetic Probability</div>
+        <div style="{highlight}border-radius:9px;padding:8px 12px;margin-bottom:7px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.78rem;font-weight:600;color:#0f172a;margin-bottom:5px">
+            <span>{'⭐ ' if mname==selected_model else ''}{short}</span>
+            <span style="color:{'#2563eb' if mname==selected_model else '#64748b'}">{acc}%</span>
+          </div>
+          <div style="background:#e2e8f0;border-radius:4px;height:5px">
+            <div style="width:{bar_w}%;background:{'linear-gradient(90deg,#2563eb,#0ea5e9)' if mname==selected_model else '#cbd5e1'};height:100%;border-radius:4px"></div>
+          </div>
+        </div>""", unsafe_allow_html=True)
+
+    if res is None:
+        st.markdown("""
+        <div style="margin-top:20px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;
+             border-radius:10px;text-align:center;color:#94a3b8;font-size:0.8rem">
+          Run a prediction to see explanation and probability charts.
         </div>
         """, unsafe_allow_html=True)
+    else:
+        prediction    = res["prediction"]
+        diabetic_prob = res["diabetic_prob"]
+        nondiabetic_prob = res["nondiabetic_prob"]
+        sorted_labels = res["sorted_labels"]
+        sorted_imp    = res["sorted_imp"]
+        input_vals    = res["input_data"]
+        input_labels  = ["Pregnancies","Glucose","Blood Pressure","Skin Thickness","Insulin","BMI","Pedigree Fn","Age"]
+        sorted_feature_vals = [input_vals[feature_names.index(fn)] if fn in feature_names else 0
+                               for fn in [
+                                   "Glucose","BMI","Age","Pregnancies","SkinThickness",
+                                   "DiabetesPedigreeFunction","BloodPressure","Insulin"
+                               ]]
 
-    st.markdown("<br>", unsafe_allow_html=True)
+        # ── EXPLANATION (SHAP-style) ──
+        st.markdown('<div class="card" style="margin-top:14px">', unsafe_allow_html=True)
+        st.markdown('<div class="card-header">Explanation (SHAP)</div><div class="card-sub">Top factors influencing the prediction</div>', unsafe_allow_html=True)
 
-    # Breakdown Card
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">📊 Prediction Breakdown</div>', unsafe_allow_html=True)
+        top1 = sorted_labels[0].replace("\n"," ")
+        top2 = sorted_labels[1].replace("\n"," ")
+        color1 = "#dc2626" if prediction==1 else "#16a34a"
+        st.markdown(f"""
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;
+             padding:10px 12px;font-size:0.8rem;color:#7f1d1d;margin-bottom:12px;line-height:1.6">
+          This prediction is primarily influenced by high
+          <b style="color:{color1}">{top1}</b> level and <b style="color:{color1}">{top2}</b>.
+        </div>""", unsafe_allow_html=True)
 
-    bar_diabetic = int(diabetic_prob)
-    bar_safe     = int(nondiabetic_prob)
+        # SHAP rows (top 5)
+        for i, (lbl, imp) in enumerate(zip(sorted_labels[:5], sorted_imp[:5])):
+            lbl_clean = lbl.replace("\n"," ")
+            is_pos = imp > sorted_imp.mean()
+            arrow  = "↑" if is_pos else "↓"
+            clr    = "#dc2626" if is_pos else "#16a34a"
+            bar_w  = int(imp / sorted_imp[0] * 120)
+            bar_cls= "shap-bar-pos" if is_pos else "shap-bar-neg"
+            val_str= f"+{imp:.2f}" if is_pos else f"-{imp:.2f}"
+            st.markdown(f"""
+            <div class="shap-row">
+              <span style="color:{clr};font-weight:600;width:14px">{arrow}</span>
+              <span style="flex:1;padding:0 6px;color:#334155">{lbl_clean}</span>
+              <div style="width:80px;margin-right:8px">
+                <div class="{bar_cls}" style="width:{bar_w}px"></div>
+              </div>
+              <span style="color:{clr};font-weight:700;font-size:0.82rem;min-width:36px;text-align:right">{val_str}</span>
+            </div>""", unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div style="margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
-            <span>🔴 Diabetic</span><span style="color:#ff5555">{diabetic_prob}%</span>
-        </div>
-        <div style="background:rgba(255,255,255,0.06);border-radius:6px;height:10px;overflow:hidden">
-            <div style="width:{bar_diabetic}%;background:linear-gradient(90deg,#cc0000,#ff5555);
-                        height:100%;border-radius:6px;transition:all 0.5s"></div>
-        </div>
-    </div>
-    <div>
-        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
-            <span>🟢 Non-Diabetic</span><span style="color:#00ff78">{nondiabetic_prob}%</span>
-        </div>
-        <div style="background:rgba(255,255,255,0.06);border-radius:6px;height:10px;overflow:hidden">
-            <div style="width:{bar_safe}%;background:linear-gradient(90deg,#009944,#00ff78);
-                        height:100%;border-radius:6px;transition:all 0.5s"></div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <br>
-    <div style="display:flex;gap:12px;font-size:0.8rem;color:rgba(160,190,255,0.6)">
-        <span>🤖 Model: <b style="color:#00b4ff">{selected_model}</b></span>
-        <span>|</span>
-        <span>📈 Accuracy: <b style="color:#00b4ff">{accuracies[selected_model]}%</b></span>
-    </div>
-    """, unsafe_allow_html=True)
+        # ── DONUT CHART ──
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-header">Prediction Probability</div><div class="card-sub">Probability of each class</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ─── Risk Factors Chart ──────────────────────────────────────────────────
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">⚠️ Risk Factors — Feature Importance</div>', unsafe_allow_html=True)
-
-    # Get importance scores based on model type
-    if selected_model == "Random Forest":
-        importances = trained_models[selected_model].feature_importances_
-        method_note = "Source: Random Forest `feature_importances_` (Gini impurity reduction)"
-    elif selected_model == "Logistic Regression":
-        importances = np.abs(trained_models[selected_model].coef_[0])
-        importances = importances / importances.sum()   # normalize to 0-1 range
-        method_note = "Source: Logistic Regression `|coef_|` (absolute coefficient weight)"
-    else:  # KNN — no native importance, use correlation
-        importances = corr_importance / corr_importance.sum()
-        method_note = "Source: Pearson correlation with Outcome (KNN has no native importance)"
-
-    # Short display labels
-    short_labels = ["Pregnancies", "Glucose", "Blood\nPressure", "Skin\nThickness",
-                    "Insulin", "BMI", "Pedigree\nFunction", "Age"]
-
-    # Sort descending
-    sorted_idx = np.argsort(importances)[::-1]
-    sorted_imp = importances[sorted_idx]
-    sorted_labels = [short_labels[i] for i in sorted_idx]
-
-    # Color: top 3 highlight, rest muted
-    bar_colors = []
-    for rank, _ in enumerate(sorted_imp):
-        if rank == 0:
-            bar_colors.append("#00b4ff")    # top feature — cyan
-        elif rank == 1:
-            bar_colors.append("#7b2fff")    # 2nd — purple
-        elif rank == 2:
-            bar_colors.append("#ff6b35")    # 3rd — orange
-        else:
-            bar_colors.append("#2a4a7a")
-
-    # Build matplotlib figure (dark themed)
-    fig, ax = plt.subplots(figsize=(8, 3.8))
-    fig.patch.set_facecolor("#0d1420")
-    ax.set_facecolor("#0d1420")
-
-    bars = ax.barh(
-        sorted_labels[::-1],      # reverse so highest is at top
-        sorted_imp[::-1],
-        color=bar_colors[::-1],
-        height=0.55,
-        edgecolor="none",
-    )
-
-    # Subtle glow effect via twin bar (slightly wider, very transparent)
-    ax.barh(
-        sorted_labels[::-1],
-        sorted_imp[::-1],
-        color=bar_colors[::-1],
-        height=0.72,
-        edgecolor="none",
-        alpha=0.12,
-    )
-
-    # Value labels on bars
-    for bar, val in zip(bars, sorted_imp[::-1]):
-        ax.text(
-            val + 0.004, bar.get_y() + bar.get_height() / 2,
-            f"{val:.3f}",
-            va="center", ha="left",
-            fontsize=8, color="#a0c8ff", fontweight="600"
+        fig_d, ax_d = plt.subplots(figsize=(3.2, 2.4))
+        fig_d.patch.set_facecolor("white"); ax_d.set_facecolor("white")
+        wedge_colors = ["#ef4444","#22c55e"]
+        wedges, _ = ax_d.pie(
+            [diabetic_prob, nondiabetic_prob],
+            colors=wedge_colors,
+            startangle=90,
+            wedgeprops=dict(width=0.52, edgecolor="white", linewidth=2.5),
         )
+        ax_d.text(0, 0, f"{diabetic_prob}%", ha="center", va="center",
+                  fontsize=13, fontweight="700",
+                  color="#dc2626" if prediction==1 else "#16a34a")
+        plt.tight_layout(pad=0.2)
+        dc1, dc2, dc3 = st.columns([0.3,2,0.3])
+        with dc2:
+            st.pyplot(fig_d, use_container_width=True)
+        plt.close(fig_d)
 
-    # Styling
-    ax.set_xlabel("Importance Score", color="#6080b0", fontsize=8, labelpad=8)
-    ax.tick_params(axis="y", colors="#c0d8ff", labelsize=8.5)
-    ax.tick_params(axis="x", colors="#506080", labelsize=7)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_color("#1e3050")
-    ax.spines["bottom"].set_color("#1e3050")
-    ax.xaxis.grid(True, color="#1a2a40", linewidth=0.6, linestyle="--")
-    ax.set_axisbelow(True)
+        st.markdown(f"""
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.8rem">
+            <span><span class="legend-dot" style="background:#ef4444"></span>High Risk (Diabetic)</span>
+            <b>{diabetic_prob}%</b>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.8rem">
+            <span><span class="legend-dot" style="background:#22c55e"></span>Low Risk (Non-Diabetic)</span>
+            <b>{nondiabetic_prob}%</b>
+          </div>
+        </div>""", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # Legend patches for top 3
-    patches = [
-        mpatches.Patch(color="#00b4ff", label=f"1st: {sorted_labels[0]}"),
-        mpatches.Patch(color="#7b2fff", label=f"2nd: {sorted_labels[1]}"),
-        mpatches.Patch(color="#ff6b35", label=f"3rd: {sorted_labels[2]}"),
-    ]
-    ax.legend(
-        handles=patches, loc="lower right",
-        fontsize=7.5, framealpha=0.15,
-        labelcolor="#c0d8ff", edgecolor="#1e3050",
-        facecolor="#0a1020"
-    )
+        # ── QUICK ACTIONS ──
+        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown('<div class="card-header">Quick Actions</div>', unsafe_allow_html=True)
 
-    plt.tight_layout(pad=1.2)
-    st.pyplot(fig, use_container_width=True)
-    plt.close(fig)
-
-    # Method note + interview tip
-    st.markdown(f"""
-    <div style="font-size:0.72rem;color:rgba(120,160,220,0.55);margin-top:8px;line-height:1.6">
-        📌 {method_note}
-    </div>
-    <div style="background:rgba(0,180,255,0.05);border:1px solid rgba(0,180,255,0.15);
-         border-radius:10px;padding:12px 16px;margin-top:14px;font-size:0.8rem;
-         color:rgba(160,200,255,0.8);line-height:1.7">
-        🎓 <b style="color:#00b4ff">Interview Tip:</b>
-        <b>Glucose</b> & <b>BMI</b> consistently rank highest across all three models —
-        they have the strongest clinical correlation with diabetes onset.
-        Random Forest importances are most reliable (model-native), while LR coefficients
-        show linear contribution, and KNN uses correlation as a proxy since it has no
-        built-in feature importance mechanism.
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Medical disclaimer
-    st.markdown("""
-    <div style="background:rgba(255,200,0,0.05);border:1px solid rgba(255,200,0,0.2);
-         border-radius:10px;padding:14px;margin-top:10px;font-size:0.78rem;
-         color:rgba(255,220,100,0.75);text-align:center">
-        ⚕️ <b>Disclaimer:</b> This tool is for educational purposes only.
-        Always consult a qualified healthcare professional for medical advice.
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ─── PDF Download ─────────────────────────────────────────────────────────
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-label">📄 Download Report</div>', unsafe_allow_html=True)
-
-    with st.spinner("📝 Preparing PDF report..."):
         pdf_bytes = generate_pdf(
-            patient_data=[pregnancies, glucose, blood_pressure, skin_thickness,
-                          insulin, bmi, dpf, age],
-            prediction=prediction,
-            diabetic_prob=diabetic_prob,
-            nondiabetic_prob=nondiabetic_prob,
-            selected_model=selected_model,
-            model_accuracy=accuracies[selected_model],
-            importances=importances,
-            sorted_labels=sorted_labels,
-            sorted_imp=sorted_imp,
+            patient_data=res["input_data"],
+            prediction=res["prediction"],
+            diabetic_prob=res["diabetic_prob"],
+            nondiabetic_prob=res["nondiabetic_prob"],
+            selected_model=res["selected_model"],
+            model_accuracy=accuracies[res["selected_model"]],
+            importances=res["importances"],
+            sorted_labels=res["sorted_labels"],
+            sorted_imp=res["sorted_imp"],
         )
+        fname = f"diabetes_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        st.download_button("📄 Download Report (PDF)", data=pdf_bytes,
+                           file_name=fname, mime="application/pdf", key="pdf_dl")
 
-    fname = f"diabetes_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    st.download_button(
-        label="📥 Download Patient Report (PDF)",
-        data=pdf_bytes,
-        file_name=fname,
-        mime="application/pdf",
-        key="pdf_download",
-    )
-    st.markdown("""
-    <div style="font-size:0.75rem;color:rgba(120,160,200,0.55);margin-top:8px;text-align:center">
-        Includes: Patient Data · Prediction Result · Risk Factors Chart · Disclaimer
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+        # Feedback
+        st.markdown('<div style="margin-top:10px">', unsafe_allow_html=True)
+        feedback_text = st.text_area("", placeholder="Write your feedback or suggestions here...",
+                                     height=80, label_visibility="collapsed", key="feedback_text")
+        mailto = (f"mailto:rizwanmb310@gmail.com?subject=Diabetes%20Prediction%20App%20-%20Feedback"
+                  f"&body={feedback_text.replace(' ','%20').replace(chr(10),'%0A') if feedback_text else ''}")
+        st.markdown(f"""
+        <a href="{mailto}" target="_blank" style="text-decoration:none">
+          <div class="qa-btn"><span class="qa-icon">📧</span> Send Feedback</div>
+        </a>
+        <div style="font-size:0.67rem;color:#94a3b8;text-align:center;margin-top:4px">
+          rizwanmb310@gmail.com
+        </div>""", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)  # quick actions card
 
-# ─── Footer ──────────────────────────────────────────────────────────────────
-st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)  # right panel
+
+st.markdown("</div>", unsafe_allow_html=True)  # dashboard grid
+
+# ── Footer ──
 st.markdown("""
-<div style="text-align:center;font-size:0.72rem;color:rgba(100,130,180,0.4);
-     letter-spacing:1px;padding-bottom:10px">
-    DIABETES PREDICTION SYSTEM • BUILT WITH STREAMLIT + SCIKIT-LEARN
-</div>
-""", unsafe_allow_html=True)
+<div style="text-align:center;padding:14px;font-size:0.72rem;color:#94a3b8;
+     border-top:1px solid #e2e8f0;background:#ffffff">
+  © 2025 Diabetes Risk AI &nbsp;|&nbsp; Developed by <b>Rizwan Ahmed</b> &nbsp;|&nbsp; An ML Framework for Early Healthcare Risk Prediction
+</div>""", unsafe_allow_html=True)
