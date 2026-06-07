@@ -1,6 +1,6 @@
 etic_prob = round(proba[0] * 100, 1)
 
-    st.markdown("---")
+st.markdown("---")
 
     if prediction == 1:
      st.markdown(f"""
