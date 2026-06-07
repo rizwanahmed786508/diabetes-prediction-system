@@ -1,4 +1,4 @@
-import streamlit as st
+impor streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -145,11 +145,41 @@ st.markdown("""
 
     div[data-testid="stSlider"] > div { color: #a0c0ff; }
 
+    /* ── Number Input: value text, placeholder, label, focus ── */
     div[data-testid="stNumberInput"] input {
-        background: rgba(0, 180, 255, 0.05) !important;
+        background: #1E1E1E !important;
         border: 1px solid rgba(0, 180, 255, 0.25) !important;
-        color: #e0e6ff !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
         border-radius: 8px !important;
+        caret-color: #00D4FF !important;
+    }
+    div[data-testid="stNumberInput"] input::placeholder {
+        color: #B0B0B0 !important;
+        font-weight: 400 !important;
+        opacity: 1 !important;
+    }
+    div[data-testid="stNumberInput"] input::-webkit-input-placeholder {
+        color: #B0B0B0 !important;
+        font-weight: 400 !important;
+        opacity: 1 !important;
+    }
+    div[data-testid="stNumberInput"] input:focus {
+        border-color: #00D4FF !important;
+        box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.18) !important;
+        outline: none !important;
+    }
+    div[data-testid="stNumberInput"] label,
+    div[data-testid="stNumberInput"] > label {
+        color: #E0E0E0 !important;
+        font-weight: 500 !important;
+    }
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        div[data-testid="stNumberInput"] input {
+            font-size: 17px !important;
+        }
     }
 
     .stButton > button {
@@ -307,6 +337,213 @@ def train_models():
     corr_importance = np.abs(df[feature_names].corrwith(df["Outcome"])).values
 
     return trained, scaler, accuracies, feature_names, corr_importance
+
+
+
+# ─── PDF Report Generator ─────────────────────────────────────────────────────
+def generate_pdf(patient_data, prediction, diabetic_prob, nondiabetic_prob,
+                 selected_model, model_accuracy, importances, sorted_labels, sorted_imp):
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4,
+                            topMargin=1.8*cm, bottomMargin=1.8*cm,
+                            leftMargin=2*cm, rightMargin=2*cm)
+
+    # ── Color palette ──
+    C_DARK    = colors.HexColor("#0d1420")
+    C_BLUE    = colors.HexColor("#00b4ff")
+    C_PURPLE  = colors.HexColor("#7b2fff")
+    C_GREEN   = colors.HexColor("#00c864")
+    C_RED     = colors.HexColor("#ff4444")
+    C_TEXT    = colors.HexColor("#1a2a3a")
+    C_MUTED   = colors.HexColor("#5a7090")
+    C_BORDER  = colors.HexColor("#d0e4f0")
+    C_LBLUE   = colors.HexColor("#e8f4ff")
+
+    # ── Styles ──
+    def S(name, **kw):
+        defaults = dict(fontName="Helvetica", fontSize=10, textColor=C_TEXT, leading=14)
+        defaults.update(kw)
+        return ParagraphStyle(name, **defaults)
+
+    sTitle   = S("T", fontName="Helvetica-Bold", fontSize=22, textColor=C_DARK,
+                 alignment=TA_CENTER, leading=28, spaceAfter=2)
+    sSub     = S("Su", fontSize=9, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
+    sSecHdr  = S("SH", fontName="Helvetica-Bold", fontSize=9, textColor=C_BLUE,
+                 leading=14, spaceBefore=4, spaceAfter=2)
+    sNormal  = S("N", fontSize=9, textColor=C_TEXT, leading=13)
+    sSmall   = S("Sm", fontSize=7.5, textColor=C_MUTED, leading=11)
+    sCenter  = S("C", fontSize=9, textColor=C_TEXT, alignment=TA_CENTER, leading=13)
+    sBold    = S("B", fontName="Helvetica-Bold", fontSize=9, textColor=C_TEXT, leading=13)
+
+    story = []
+    W = A4[0] - 4*cm   # usable width
+
+    # ── HEADER ──
+    story.append(Paragraph("DIABETES PREDICTION REPORT", sTitle))
+    story.append(Paragraph("AI-Powered Clinical Risk Assessment", sSub))
+    story.append(Spacer(1, 6))
+
+    now = datetime.now()
+    story.append(Paragraph(
+        f"Generated: {now.strftime('%B %d, %Y')} &nbsp;&nbsp;|&nbsp;&nbsp; "
+        f"Time: {now.strftime('%H:%M:%S')} &nbsp;&nbsp;|&nbsp;&nbsp; "
+        f"Model: {selected_model}",
+        S("dt", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
+    ))
+    story.append(Spacer(1, 10))
+    story.append(HRFlowable(width=W, thickness=2, color=C_BLUE, spaceAfter=14))
+
+    # ── SECTION 1 — PATIENT DATA ──
+    story.append(Paragraph("PATIENT CLINICAL DATA", sSecHdr))
+
+    labels = ["Pregnancies", "Glucose (mg/dL)", "Blood Pressure (mmHg)",
+              "Skin Thickness (mm)", "Insulin (uU/mL)", "BMI (kg/m2)",
+              "Diabetes Pedigree Function", "Age (years)"]
+    values = [str(v) for v in patient_data]
+
+    # 2-column table layout (4 rows x 2 pairs)
+    table_data = [["Parameter", "Value", "Parameter", "Value"]]
+    for i in range(0, 8, 2):
+        table_data.append([labels[i], values[i], labels[i+1], values[i+1]])
+
+    tbl = Table(table_data, colWidths=[W*0.30, W*0.18, W*0.30, W*0.18],
+                repeatRows=1)
+    tbl.setStyle(TableStyle([
+        # Header row
+        ("BACKGROUND",   (0,0), (-1,0), C_DARK),
+        ("TEXTCOLOR",    (0,0), (-1,0), C_BLUE),
+        ("FONTNAME",     (0,0), (-1,0), "Helvetica-Bold"),
+        ("FONTSIZE",     (0,0), (-1,0), 8),
+        ("ALIGN",        (0,0), (-1,0), "CENTER"),
+        ("TOPPADDING",   (0,0), (-1,0), 5),
+        ("BOTTOMPADDING",(0,0), (-1,0), 5),
+        # Data rows
+        ("FONTSIZE",     (0,1), (-1,-1), 8.5),
+        ("FONTNAME",     (1,1), (1,-1), "Helvetica-Bold"),
+        ("FONTNAME",     (3,1), (3,-1), "Helvetica-Bold"),
+        ("TEXTCOLOR",    (1,1), (1,-1), C_TEXT),
+        ("TEXTCOLOR",    (3,1), (3,-1), C_TEXT),
+        ("ALIGN",        (1,0), (1,-1), "CENTER"),
+        ("ALIGN",        (3,0), (3,-1), "CENTER"),
+        ("ROWBACKGROUNDS",(0,1),(-1,-1),[colors.white, C_LBLUE]),
+        ("GRID",         (0,0), (-1,-1), 0.5, C_BORDER),
+        ("TOPPADDING",   (0,1), (-1,-1), 5),
+        ("BOTTOMPADDING",(0,1), (-1,-1), 5),
+        ("LEFTPADDING",  (0,0), (-1,-1), 8),
+    ]))
+    story.append(tbl)
+    story.append(Spacer(1, 14))
+
+    # ── SECTION 2 — PREDICTION RESULT ──
+    story.append(HRFlowable(width=W, thickness=0.5, color=C_BORDER, spaceAfter=10))
+    story.append(Paragraph("PREDICTION RESULT", sSecHdr))
+
+    if prediction == 1:
+        res_label = "DIABETIC RISK DETECTED"
+        res_conf  = f"{diabetic_prob}%"
+        res_sub   = f"Non-Diabetic Probability: {nondiabetic_prob}%"
+        bg_color  = colors.HexColor("#fff0f0")
+        txt_color = C_RED
+        border_c  = C_RED
+    else:
+        res_label = "NON-DIABETIC"
+        res_conf  = f"{nondiabetic_prob}%"
+        res_sub   = f"Diabetic Probability: {diabetic_prob}%"
+        bg_color  = colors.HexColor("#f0fff6")
+        txt_color = C_GREEN
+        border_c  = C_GREEN
+
+    result_data = [[
+        Paragraph(res_label, S("RL", fontName="Helvetica-Bold", fontSize=14,
+                               textColor=txt_color, alignment=TA_CENTER, leading=18)),
+        Paragraph(res_conf,  S("RC", fontName="Helvetica-Bold", fontSize=26,
+                               textColor=txt_color, alignment=TA_CENTER, leading=30)),
+        Paragraph(f"Confidence\n{res_sub}",
+                  S("RS", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)),
+    ]]
+    rtbl = Table(result_data, colWidths=[W*0.38, W*0.28, W*0.34])
+    rtbl.setStyle(TableStyle([
+        ("BACKGROUND",    (0,0), (-1,-1), bg_color),
+        ("BOX",           (0,0), (-1,-1), 1.5, border_c),
+        ("ROUNDEDCORNERS",(0,0), (-1,-1), [6,6,6,6]),
+        ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+        ("TOPPADDING",    (0,0), (-1,-1), 14),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 14),
+        ("LEFTPADDING",   (0,0), (-1,-1), 10),
+        ("RIGHTPADDING",  (0,0), (-1,-1), 10),
+        ("LINEAFTER",     (0,0), (1,-1), 0.5, border_c),
+    ]))
+    story.append(rtbl)
+
+    # Model accuracy badge
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        f"Algorithm: {selected_model} &nbsp;&nbsp;|&nbsp;&nbsp; Model Accuracy: {model_accuracy}%",
+        S("acc", fontSize=8, textColor=C_MUTED, alignment=TA_CENTER, leading=12)
+    ))
+    story.append(Spacer(1, 14))
+
+    # ── SECTION 3 — RISK FACTORS CHART ──
+    story.append(HRFlowable(width=W, thickness=0.5, color=C_BORDER, spaceAfter=10))
+    story.append(Paragraph("RISK FACTORS — FEATURE IMPORTANCE", sSecHdr))
+
+    # Render chart to PNG in-memory (white bg for PDF)
+    fig, ax = plt.subplots(figsize=(7, 3.2))
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("#f7faff")
+
+    pdf_colors = ["#0077cc", "#5500cc", "#cc4400"] + ["#4a7aaa"] * 5
+    pdf_colors = pdf_colors[:len(sorted_imp)]
+
+    ax.barh(sorted_labels[::-1], sorted_imp[::-1],
+            color=pdf_colors[::-1], height=0.55, edgecolor="none")
+
+    for i, (label, val) in enumerate(zip(sorted_labels[::-1], sorted_imp[::-1])):
+        ax.text(val + 0.003, i, f"{val:.3f}",
+                va="center", ha="left", fontsize=7.5,
+                color="#334466", fontweight="600")
+
+    ax.set_xlabel("Importance Score", fontsize=8, color="#556688", labelpad=6)
+    ax.tick_params(axis="y", labelsize=8, colors="#223344")
+    ax.tick_params(axis="x", labelsize=7, colors="#778899")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#ccddee")
+    ax.spines["bottom"].set_color("#ccddee")
+    ax.xaxis.grid(True, color="#ddeeff", linewidth=0.6, linestyle="--")
+    ax.set_axisbelow(True)
+
+    patches_pdf = [
+        mpatches.Patch(color="#0077cc", label=f"1st: {sorted_labels[0]}"),
+        mpatches.Patch(color="#5500cc", label=f"2nd: {sorted_labels[1]}"),
+        mpatches.Patch(color="#cc4400", label=f"3rd: {sorted_labels[2]}"),
+    ]
+    ax.legend(handles=patches_pdf, loc="lower right", fontsize=7,
+              framealpha=0.7, edgecolor="#ccddee")
+
+    plt.tight_layout(pad=1.0)
+    chart_buf = io.BytesIO()
+    plt.savefig(chart_buf, format="png", dpi=150, bbox_inches="tight")
+    chart_buf.seek(0)
+    plt.close(fig)
+
+    chart_img = RLImage(chart_buf, width=W, height=W * 0.42)
+    story.append(chart_img)
+    story.append(Spacer(1, 6))
+
+    # Top features table
+    top3_data = [["Rank", "Feature", "Importance Score", "Clinical Significance"]]
+    significance = {
+        "Glucose":           "Primary diabetes biomarker",
+        "BMI":               "Obesity-related insulin resistance",
+        "Age":               "Risk increases with age",
+        "Pregnancies":       "Gestational diabetes history",
+        "Insulin":           "Insulin production capacity",
+        "DiabetesPedigreeFunction": "Hereditary risk factor",
+        "BloodPressure":     "Cardiovascular comorbidity",
+        "SkinThickness":     "Body fat distribution proxy",
+        "Pedigree\nFunction":"Hereditarye_names, corr_importance
 
 
 
