@@ -158,7 +158,8 @@ cd diabetes-prediction-system
 pip install -r requirements.txt
 streamlit run app.py
 ```
-
+## Live Demo
+[Open Application](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/)
 ---
 
 ## 📂 Project Structure
