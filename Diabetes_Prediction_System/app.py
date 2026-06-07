@@ -14,7 +14,7 @@ if prediction == 1:
             <div style="font-size:0.8rem;color:rgba(255,120,120,0.7)">Diabetes Probability</div>
         </div>
         """, unsafe_allow_html=True)
-    else:
+ else:
         st.markdown(f"""
         <div class="result-safe">
             <div class="result-label" style="color:#00ff78">✅ NON-DIABETIC</div>
