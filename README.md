@@ -1,148 +1,190 @@
-![Python](https://img.shields.io/badge/Python-3.8+-blue) 
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
-# diabetes-prediction-system
+<div align="center">
 
-# 🩺 Diabetes Prediction System Using Machine Learning
+# 🩺 Diabetes Prediction System
 
-A machine learning-based application designed to predict the likelihood of diabetes using patient medical data. This project applies data preprocessing, exploratory data analysis (EDA), machine learning classification techniques, and a graphical user interface (GUI) to provide predictions in a user-friendly manner.
+### A Machine Learning–Powered Web Application for Early Diabetes Risk Assessment
+
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-ML-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#license)
+
+[![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen?style=flat-square)]()
+[![Best Accuracy](https://img.shields.io/badge/Best%20Accuracy-75.97%25-success?style=flat-square)]()
+[![Open Issues](https://img.shields.io/github/issues/rizwanahmed786508/diabetes-prediction-system?style=flat-square)]()
+[![Last Commit](https://img.shields.io/github/last-commit/rizwanahmed786508/diabetes-prediction-system?style=flat-square)]()
+
+**[🚀 Live Demo](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/) &nbsp;•&nbsp; [📂 Repository](https://github.com/rizwanahmed786508/diabetes-prediction-system) &nbsp;•&nbsp; [🐛 Report Bug](https://github.com/rizwanahmed786508/diabetes-prediction-system/issues)**
+
+</div>
 
 ---
 
-## 📌 Project Overview
+## 📖 Overview
 
-Diabetes is one of the most common chronic diseases worldwide. Early prediction can help patients seek timely medical attention and reduce health risks.
+Diabetes is one of the most prevalent chronic diseases worldwide, and **early detection** plays a critical role in reducing long-term health complications. The **Diabetes Prediction System** is an end-to-end machine learning application that analyzes key clinical indicators — such as glucose level, BMI, and age — to assess a patient's risk of diabetes in real time.
 
-This project uses the **PIMA Indians Diabetes Dataset** and machine learning algorithms to predict whether a patient is diabetic based on several medical attributes.
+This project demonstrates a complete **Data Science workflow**: data preprocessing, exploratory data analysis (EDA), multi-model training and evaluation, feature importance analysis, and deployment as an interactive **Streamlit web application** with downloadable PDF reports.
 
 ---
 
 ## 🎯 Objectives
 
-* Analyze diabetes-related medical data.
-* Build and train machine learning classification models.
-* Evaluate model performance using standard metrics.
-* Provide an easy-to-use GUI for diabetes prediction.
-* Demonstrate the practical application of machine learning in healthcare.
+- 📊 Analyze and preprocess diabetes-related clinical data
+- 🤖 Build, train, and evaluate multiple ML classification models
+- 📈 Compare model performance using standard evaluation metrics
+- 🔍 Identify key risk factors using feature importance analysis
+- 🖥️ Provide an interactive, easy-to-use prediction interface
+- 📄 Generate downloadable clinical reports for end users
+- 🏥 Demonstrate the real-world application of ML in healthcare
 
 ---
 
 ## 📊 Dataset Information
 
-The project uses the **PIMA Indians Diabetes Dataset**, which contains the following features:
+This project uses the well-known **PIMA Indians Diabetes Dataset**, containing diagnostic measurements for female patients of Pima Indian heritage.
 
-| Feature                  | Description                       |
-| ------------------------ | --------------------------------- |
-| Pregnancies              | Number of pregnancies             |
-| Glucose                  | Plasma glucose concentration      |
-| BloodPressure            | Diastolic blood pressure          |
-| SkinThickness            | Triceps skin fold thickness       |
-| Insulin                  | 2-Hour serum insulin              |
-| BMI                      | Body Mass Index                   |
-| DiabetesPedigreeFunction | Diabetes hereditary score         |
-| Age                      | Age of patient                    |
-| Outcome                  | Diabetes status (0 = No, 1 = Yes) |
+| Feature | Description |
+|---|---|
+| `Pregnancies` | Number of times pregnant |
+| `Glucose` | Plasma glucose concentration (2-hour oral glucose tolerance test) |
+| `BloodPressure` | Diastolic blood pressure (mm Hg) |
+| `SkinThickness` | Triceps skin fold thickness (mm) |
+| `Insulin` | 2-Hour serum insulin (mu U/ml) |
+| `BMI` | Body Mass Index (kg/m²) |
+| `DiabetesPedigreeFunction` | Diabetes hereditary risk score |
+| `Age` | Age of the patient (years) |
+| `Outcome` | Target variable — `0` = Non-Diabetic, `1` = Diabetic |
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Tech Stack
 
-* Python
-* Pandas
-* NumPy
-* Matplotlib
-* Seaborn
-* Scikit-learn
-* Joblib
-* Tkinter (GUI)
+| Category | Tools & Libraries |
+|---|---|
+| **Language** | Python 3.8+ |
+| **Data Processing** | Pandas, NumPy |
+| **Visualization** | Matplotlib, Seaborn |
+| **Machine Learning** | Scikit-learn |
+| **Model Persistence** | Joblib |
+| **Web Application** | Streamlit |
+| **Report Generation** | ReportLab |
+| **GUI (legacy)** | Tkinter |
 
 ---
 
 ## 🧠 Machine Learning Workflow
 
-1. Data Collection
-2. Data Cleaning & Preprocessing
-3. Exploratory Data Analysis (EDA)
-4. Feature Scaling
-5. Model Training
-6. Model Evaluation
-7. GUI Development
-8. Prediction & Deployment
+```
+Data Collection → Data Cleaning & Preprocessing → Exploratory Data Analysis (EDA)
+        → Feature Scaling → Model Training → Model Evaluation
+        → Web App Development → Prediction & Deployment
+```
+
+1. **Data Collection** — Imported the PIMA Indians Diabetes Dataset
+2. **Data Cleaning & Preprocessing** — Handled missing/zero values and outliers
+3. **Exploratory Data Analysis (EDA)** — Visualized feature distributions and correlations
+4. **Feature Scaling** — Standardized features using `StandardScaler`
+5. **Model Training** — Trained multiple classification algorithms
+6. **Model Evaluation** — Compared models using accuracy, precision, recall, and F1-score
+7. **Web App Development** — Built an interactive Streamlit interface
+8. **Deployment** — Hosted the application for public access
 
 ---
 
 ## 📈 Exploratory Data Analysis
 
-### Correlation Heatmap
+<table>
+<tr>
+<td align="center" width="50%">
 
-![Correlation Heatmap](Diabetes_Prediction_System/images/heatmap.png)
+**Correlation Heatmap**
+<br>
+<img src="Diabetes_Prediction_System/images/heatmap.png" alt="Correlation Heatmap" width="100%">
 
-### Dataset Distribution
+</td>
+<td align="center" width="50%">
 
-![Dataset Distribution](Diabetes_Prediction_System/images/distribution.png)
+**Dataset Distribution**
+<br>
+<img src="Diabetes_Prediction_System/images/distribution.png" alt="Dataset Distribution" width="100%">
 
----
-
-## 🤖 Model Training
-
-The dataset was divided into training and testing sets.
-
-Algorithms used:
-
-* Logistic Regression
-* Random Forest Classifier
-* KNN
-
-Feature scaling was performed using **StandardScaler** to improve model performance.
+</td>
+</tr>
+</table>
 
 ---
 
-## 📊 Model Evaluation
+## 🤖 Model Training & Evaluation
 
-Evaluation metrics:
+The dataset was split into **training** and **testing** sets, with feature scaling applied via `StandardScaler` to improve model convergence and performance.
 
-* Accuracy Score
-* Confusion Matrix
-* Precision
-* Recall
-* F1-Score
+### Models Implemented
 
-### Confusion Matrix
+- 📐 **Logistic Regression**
+- 🌲 **Random Forest Classifier**
+- 📍 **K-Nearest Neighbors (KNN)**
 
-![Confusion Matrix](Diabetes_Prediction_System/images/confusion_matrix.png)
+### Evaluation Metrics
 
-### Model Accuracy
+- ✅ Accuracy Score
+- 🎯 Precision & Recall
+- ⚖️ F1-Score
+- 📊 Confusion Matrix
 
-![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen)
+### 📊 Model Performance Comparison
 
 | Model | Accuracy |
-|--------|----------|
-| Logistic Regression | 75.32% |
-| Random Forest | 75.97% |
-| K-Nearest Neighbors (KNN) | 69.48% |
+|---|---|
+| 🌲 **Random Forest** | **75.97%** ⭐ |
+| 📐 Logistic Regression | 75.32% |
+| 📍 K-Nearest Neighbors (KNN) | 69.48% |
 
+<div align="center">
+<img src="Diabetes_Prediction_System/images/confusion_matrix.png" alt="Confusion Matrix" width="60%">
+</div>
 
 ---
 
-## 🖥️ Graphical User Interface (GUI)
+## 🖥️ Application Interface
 
-The application includes a user-friendly GUI where users can enter medical information and receive a diabetes prediction instantly.
+The deployed application provides a clean, intuitive interface where users can input clinical parameters and receive an instant diabetes risk prediction — complete with confidence scores, feature importance visualization, and a downloadable PDF report.
 
-### Application Interface
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="Diabetes_Prediction_System/images/gui.png" alt="Application Interface" width="100%">
+</td>
+<td align="center" width="50%">
+<img src="Diabetes_Prediction_System/images/gui2.png" alt="Application Interface" width="100%">
+</td>
+</tr>
+</table>
 
-![GUI Screenshot](Diabetes_Prediction_System/images/gui.png)
+### ✨ Key Features
 
-![GUI Screenshot](Diabetes_Prediction_System/images/gui2.png)
+- 🔬 **Real-time prediction** across three ML algorithms
+- 📊 **Feature importance analysis** to explain model decisions
+- 📄 **One-click PDF report generation** for clinical record-keeping
+- ↺ **Reset functionality** for quick re-testing
+- 💬 **Built-in feedback system**
+- 📱 **Responsive design** for desktop and mobile
+
 ---
 
 ## 🚀 Installation & Usage
 
-### Clone Repository
+### Prerequisites
+
+- Python 3.8 or higher
+- pip package manager
+
+### Clone the Repository
 
 ```bash
 git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
-```
-
-
+cd diabetes-prediction-system
 ```
 
 ### Install Dependencies
@@ -151,15 +193,18 @@ git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
 pip install -r requirements.txt
 ```
 
-## 🚀 Run Locally
+### Run Locally
+
 ```bash
-git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
-cd diabetes-prediction-system
-pip install -r requirements.txt
 streamlit run app.py
 ```
-## Live Demo
-[Open Application](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/)
+
+The application will open automatically in your default browser at `http://localhost:8501`.
+
+### 🌐 Live Demo
+
+> **[👉 Try the Live Application](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/)**
+
 ---
 
 ## 📂 Project Structure
@@ -172,31 +217,72 @@ diabetes-prediction-system/
 │
 ├── images/
 │   ├── gui.png
+│   ├── gui2.png
 │   ├── heatmap.png
+│   ├── distribution.png
 │   └── confusion_matrix.png
 │
-├── Diabetes_Prediction.ipynb
-│    
 ├── models/
-│   └── Diabetes_Model.pkl
-|   └── diabetes_scaler.pkl
+│   ├── Diabetes_Model.pkl
+│   └── diabetes_scaler.pkl
 │
+├── Diabetes_Prediction.ipynb
+├── app.py
 ├── requirements.txt
-├── README.md
-└── app.py
+└── README.md
 ```
 
 ---
 
 ## 🔮 Future Improvements
 
-* Hyperparameter Tuning
-* Deep Learning-Based Prediction
-* Database Integration
-* Bette UI/UX Design 
+- [ ] Hyperparameter tuning (GridSearchCV / RandomizedSearchCV)
+- [ ] Deep learning–based prediction model
+- [ ] Database integration for patient history tracking
+- [ ] Enhanced UI/UX with improved data visualizations
+- [ ] SHAP-based model explainability
+- [ ] Multi-language support
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** — feel free to use, modify, and distribute with attribution.
 
 ---
 
 ## 👨‍💻 Author
 
+<div align="center">
+
 **Rizwan Ahmed**
+
+Software Engineering Student | Data Science & Machine Learning Enthusiast
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rizwanahmed786508)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](#)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
+
+</div>
+
+---
+
+<div align="center">
+
+### ⭐ If you found this project helpful, consider giving it a star!
+
+*Built with ❤️ using Python, Scikit-learn & Streamlit*
+
+</div>
