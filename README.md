@@ -15,7 +15,7 @@
 [![Open Issues](https://img.shields.io/github/issues/rizwanahmed786508/diabetes-prediction-system?style=flat-square)]()
 [![Last Commit](https://img.shields.io/github/last-commit/rizwanahmed786508/diabetes-prediction-system?style=flat-square)]()
 
-**[🚀 Live Demo](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/) &nbsp;•&nbsp; [📂 Repository](https://github.com/rizwanahmed786508/diabetes-prediction-system) &nbsp;•&nbsp; [🐛 Report Bug](https://github.com/rizwanahmed786508/diabetes-prediction-system/issues)**
+**[🚀 Live Demo](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/) &nbsp;•&nbsp; [📂 Repository](https://github.com/rizwanahmed786508/diabetes-prediction-system) 
 
 </div>
 
@@ -272,7 +272,7 @@ This project is licensed under the **MIT License** — feel free to use, modify,
 Software Engineering Student | Data Science & Machine Learning Enthusiast
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rizwanahmed786508)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](#)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](linkedin.com/in/rizwanahmed78)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
 
 </div>
