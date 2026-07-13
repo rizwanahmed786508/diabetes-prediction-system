@@ -139,7 +139,7 @@ The notebook's own `sns.countplot(x='Outcome', data=df)` confirms the dataset is
 
 ---
 
-## 🔄 7. Machine Learning Pipeline
+## 🔄 6. Machine Learning Pipeline
 
 ```mermaid
 flowchart TD
@@ -158,7 +158,7 @@ flowchart TD
 
 ---
 
-## 🤖 8. Models Used
+## 🤖 7. Models Used
 
 Metrics below are copied exactly from the notebook's `classification_report()` output (weighted average across both classes) — nothing here is estimated.
 
@@ -203,7 +203,7 @@ Given the two models perform identically on this test split, Logistic Regression
 
 ---
 
-## 📊 9. Model Performance
+## 📊 8. Model Performance
 
 ### Confusion Matrix
 ![Confusion Matrix](images/confusion_matrix.png)
@@ -229,7 +229,7 @@ Computed from a Random Forest trained on the identical pipeline. **Glucose is by
 
 ---
 
-## 🏆 10. Results Dashboard
+## 🏆 9. Results Dashboard
 
 | 📦 Samples | 🧬 Features | 🤖 Models Compared | 🎯 Deployed Model | 🥇 Accuracy | 📈 ROC AUC | 🚀 Deployment | 🔮 Prediction Type |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -239,7 +239,7 @@ Computed from a Random Forest trained on the identical pipeline. **Glucose is by
 
 ---
 
-## 🛠️ 11. Technologies Used
+## 🛠️ 10. Technologies Used
 
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)
@@ -256,7 +256,7 @@ Computed from a Random Forest trained on the identical pipeline. **Glucose is by
 
 ---
 
-## 🖥️ 12. Application Interface
+## 🖥️ 11. Application Interface
 
 <details>
 <summary><b>Click to view screenshots</b></summary>
@@ -273,7 +273,7 @@ Computed from a Random Forest trained on the identical pipeline. **Glucose is by
 
 ---
 
-## 📂 13. Project Structure
+## 📂 12. Project Structure
 
 ```text
 diabetes-prediction-system/
@@ -303,7 +303,7 @@ diabetes-prediction-system/
 
 ---
 
-## 🚀 14. Live Demo
+## 🚀 13. Live Demo
 
 <div align="center">
 
@@ -319,7 +319,7 @@ Enter patient measurements (Glucose, BMI, Age, etc.) and get an instant diabetes
 
 ---
 
-## ⚙️ 15. Installation
+## ⚙️ 14. Installation
 
 ```bash
 # Clone the repository
@@ -332,7 +332,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ 16. Usage
+## ▶️ 15. Usage
 
 ```bash
 streamlit run app.py
@@ -345,7 +345,7 @@ streamlit run app.py
 
 ---
 
-## 🔮 17. Future Improvements
+## 🔮 16. Future Improvements
 
 0. **Two quick fixes first (highest value for least effort):** impute the invalid zero-values in Glucose/BloodPressure/SkinThickness/Insulin/BMI (Section 4), and add `random_state=42` to `RandomForestClassifier()` so results stop changing between reruns.
 1. **Explainable AI (SHAP)** — per-prediction explanations of which features drove the risk score
@@ -360,7 +360,7 @@ streamlit run app.py
 
 ---
 
-## 🧠 18. Key Learnings
+## 🧠 17. Key Learnings
 
 Building this project reinforced several practical lessons that go beyond textbook machine learning:
 
@@ -373,7 +373,7 @@ Building this project reinforced several practical lessons that go beyond textbo
 
 ---
 
-## ✅ 19. Conclusion
+## ✅ 18. Conclusion
 
 **Problem:** Manual diabetes risk screening is slow and inconsistent, while early detection meaningfully improves patient outcomes.
 
