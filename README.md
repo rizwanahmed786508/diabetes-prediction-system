@@ -55,6 +55,15 @@ This project builds a supervised machine learning pipeline that predicts whether
 > **The objective is not only to train an accurate model, but to demonstrate a complete Machine Learning workflow from raw data to deployment** — data cleaning, EDA, model comparison, evaluation, and a live, usable interface, rather than a notebook that stops at `model.fit()`.
 
 ---
+## ⭐ Project Highlights
+
+- ✅ End-to-End Machine Learning Pipeline
+- ✅ Random Forest & Logistic Regression Comparison
+- ✅ Streamlit Deployment
+- ✅ 768 Healthcare Records
+- ✅ Data Cleaning & Feature Scaling
+- ✅ Interactive Prediction System
+- ✅ Professional GitHub Documentation
 
 ## ❓ 2. Problem Statement
 
@@ -351,6 +360,7 @@ streamlit run app.py
 
 ---
 
+
 ## 🧠 18. Key Learnings
 
 Building this project reinforced several practical lessons that go beyond textbook machine learning:
@@ -381,6 +391,11 @@ Building this project reinforced several practical lessons that go beyond textbo
 ---
 
 ## 👨‍💻 Author
+---
+
+⭐ If you found this project useful, please consider giving it a star.
+
+Thank you for visiting this repository ❤️
 
 <div align="center">
 
