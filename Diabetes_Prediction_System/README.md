@@ -55,6 +55,15 @@ This project builds a supervised machine learning pipeline that predicts whether
 > **The objective is not only to train an accurate model, but to demonstrate a complete Machine Learning workflow from raw data to deployment** — data cleaning, EDA, model comparison, evaluation, and a live, usable interface, rather than a notebook that stops at `model.fit()`.
 
 ---
+## ⭐ Project Highlights
+
+- ✅ End-to-End Machine Learning Pipeline
+- ✅ Random Forest & Logistic Regression Comparison
+- ✅ Streamlit Deployment
+- ✅ 768 Healthcare Records
+- ✅ Data Cleaning & Feature Scaling
+- ✅ Interactive Prediction System
+- ✅ Professional GitHub Documentation
 
 ## ❓ 2. Problem Statement
 
@@ -387,8 +396,8 @@ Building this project reinforced several practical lessons that go beyond textbo
 **Rizwan Ahmed**
 
 [![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?style=for-the-badge&logo=github)](https://github.com/rizwanahmed786508)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Rizwan-Ahmed-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/rizwanahmed78)
-[![Kaggle](https://img.shields.io/badge/Kaggle-Rizwan-Ahmed-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://kaggle.com/rizwanahmedlund)
+[![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed78-181717?style=for-the-badge&logo=github)](https://linkedin.com/rizwanahmed78)
+[![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://kaggle.com/rizwanahmedlund)
 [![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
 </div>
 
