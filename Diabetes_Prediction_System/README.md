@@ -161,11 +161,11 @@ flowchart TD
 
 ## 🤖 8. Models Used
 
-| Model | Accuracy | Precision | Recall | F1 Score | ROC AUC |
+| Model | Accuracy | Precision 
 |---|---|---|---|---|---|
-| Logistic Regression | 75.32% | 🔲 *add* | 🔲 *add* | 🔲 *add* | 🔲 *add* |
-| Random Forest Classifier | **75.97%** | 🔲 *add* | 🔲 *add* | 🔲 *add* | ~76%* |
-| K-Nearest Neighbors (KNN) | 69.48% | 🔲 *add* | 🔲 *add* | 🔲 *add* | 🔲 *add* |
+| Logistic Regression | 75.32% 
+| Random Forest Classifier | **75.97%** |
+| K-Nearest Neighbors (KNN) | 69.48% |
 
 *\*Inferred from your existing ROC-AUC badge — confirm which model this figure belongs to and insert per-model values once available.*
 
@@ -187,16 +187,7 @@ flowchart TD
 ### Confusion Matrix
 ![Confusion Matrix](Diabetes_Prediction_System/images/confusion_matrix.png)
 
-*(Add 1–2 sentences here once you have exact numbers, e.g., "The model correctly identified X% of diabetic patients while keeping false positives low.")*
 
-### 🔲 Placeholders to fill in
-
-| Visualization | What it shows | Status |
-|---|---|---|
-| Classification Report | Precision/Recall/F1 per class | 🔲 To add |
-| ROC Curve | Visual backing for the 76% ROC-AUC badge | 🔲 To add |
-| Feature Importance Plot | Which clinical factors drive risk (Random Forest) | 🔲 To add |
-| Prediction Examples | 2–3 sample inputs with predicted probability | 🔲 To add |
 
 ---
 
@@ -284,7 +275,7 @@ Enter patient measurements (Glucose, BMI, Age, etc.) and get an instant diabetes
 
 ### 📦 Repository
 
-🔗 **[github.com/rizwanahmed786508/diabetes-prediction-system](https://github.com/rizwanahmed786508/diabetes-prediction-system)**
+🔗 **[Repo](https://github.com/rizwanahmed786508/diabetes-prediction-system)**
 
 ---
 
@@ -363,15 +354,12 @@ Building this project reinforced several practical lessons that go beyond textbo
 **Rizwan Ahmed**
 
 [![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?style=for-the-badge&logo=github)](https://github.com/rizwanahmed786508)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-YourName-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/rizwanahmed78)
+[![Kaggle](https://img.shields.io/badge/Kaggle-YourName-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://kaggle.com/rizwanahmedlund)
+[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
 
 </div>
 
-> 📝 **Per your instructions, I have not invented any LinkedIn, Kaggle, or email links** — none were present in your original README. Add your real profile links here in the same badge style, for example:
-> ```markdown
-> [![LinkedIn](https://img.shields.io/badge/LinkedIn-YourName-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](YOUR_LINKEDIN_URL)
-> [![Kaggle](https://img.shields.io/badge/Kaggle-YourName-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](YOUR_KAGGLE_URL)
-> [![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:YOUR_EMAIL)
-> ```
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F260,100:0575E6&height=100&section=footer" alt="footer" width="100%"/>
