@@ -103,7 +103,6 @@ This project builds a supervised machine learning pipeline that predicts whether
 | Age | Age of patient (years) |
 | **Outcome** | **Target** — Diabetes status (0 = No, 1 = Yes) |
 
-> ⚠️ **Data quality note (verified from the notebook):** this dataset has a known quirk — `0` values in `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, and `BMI` are not biologically valid and actually represent missing data. Checking the actual data confirms real zero-counts of **Glucose: 5, BloodPressure: 35, SkinThickness: 227, Insulin: 374, BMI: 11** out of 768 rows. **The current notebook does not impute or handle these zeros** — `df.isnull().sum()` returns 0 for every column because the missing values are encoded as `0`, not `NaN`, so they pass the null-check silently and flow straight into training. This is the single most valuable and easy fix to add next: replacing these zeros with the median (ideally grouped by `Outcome`) would likely improve model performance and is exactly the kind of data-quality step reviewers look for.
 
 ---
 
