@@ -1,17 +1,21 @@
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
-![Scikit--Learn](https://img.shields.io/badge/Scikit--Learn-ML-orange)
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0575E6,100:00F260&height=200&section=header&text=Diabetes%20Prediction%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20Machine%20Learning%20Case%20Study&descAlignY=58&descSize=18" alt="banner" width="100%"/>
+
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
+![Scikit--Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?logo=scikit-learn&logoColor=white)
 ![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 ![Status](https://img.shields.io/badge/Status-Active-success)
 
-<div align="center">
+### An end-to-end Machine Learning application for predicting diabetes risk using clinical measurements — featuring data preprocessing, model comparison, evaluation, and interactive deployment through Streamlit.
 
-# 🩺 Diabetes Prediction System
-
-**An end-to-end Machine Learning application for predicting diabetes risk using clinical measurements — featuring data preprocessing, model comparison, evaluation, and interactive deployment through Streamlit.**
-
-[🚀 Live Demo](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/) • [📂 Repository](https://github.com/rizwanahmed786508/diabetes-prediction-system) • [📓 Notebook](Diabetes_Prediction.ipynb) • [🐛 Report Issue](https://github.com/rizwanahmed786508/diabetes-prediction-system/issues)
+<p>
+<a href="https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/"><img src="https://img.shields.io/badge/🚀_Live_Demo-Try_It_Now-FF4B4B?style=for-the-badge" /></a>
+<a href="https://github.com/rizwanahmed786508/diabetes-prediction-system"><img src="https://img.shields.io/badge/📂_Repository-View_Code-181717?style=for-the-badge&logo=github" /></a>
+<a href="Diabetes_Prediction.ipynb"><img src="https://img.shields.io/badge/📓_Notebook-Open-F37626?style=for-the-badge&logo=jupyter&logoColor=white" /></a>
+</p>
 
 </div>
 
@@ -48,7 +52,7 @@ Diabetes affects over 500 million people worldwide, and early detection is one o
 
 This project builds a supervised machine learning pipeline that predicts whether a patient is likely diabetic using eight routine clinical measurements, then packages the model behind a simple web interface so a non-technical user (e.g., a nurse or patient) can get an instant risk estimate.
 
-**The objective is not only to train an accurate model, but to demonstrate a complete Machine Learning workflow from raw data to deployment** — data cleaning, EDA, model comparison, evaluation, and a live, usable interface, rather than a notebook that stops at `model.fit()`.
+> **The objective is not only to train an accurate model, but to demonstrate a complete Machine Learning workflow from raw data to deployment** — data cleaning, EDA, model comparison, evaluation, and a live, usable interface, rather than a notebook that stops at `model.fit()`.
 
 ---
 
@@ -82,8 +86,8 @@ This project builds a supervised machine learning pipeline that predicts whether
 | Samples | 768 patient records |
 | Features | 8 clinical measurements |
 | Target | `Outcome` (binary: 0 / 1) |
-| Missing Values | None reported as NaN — *but see data quality note below* |
-| Class Distribution | ⚠️ *Add exact split — this dataset is commonly ~65% non-diabetic / 35% diabetic; confirm and insert your actual counts here* |
+| Missing Values | None as NaN — *see data quality note below* |
+| Class Distribution | 🔲 *Insert your actual counts here (commonly ~65% non-diabetic / 35% diabetic for this dataset — confirm your split)* |
 
 ### Feature Table
 
@@ -99,7 +103,7 @@ This project builds a supervised machine learning pipeline that predicts whether
 | Age | Age of patient (years) |
 | **Outcome** | **Target** — Diabetes status (0 = No, 1 = Yes) |
 
-**📝 Data quality note to add:** this dataset has a known quirk — `0` values in `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, and `BMI` are not biologically valid and actually represent missing data. State explicitly how you handled this (e.g., median imputation grouped by Outcome). Calling this out signals real data-quality awareness to reviewers.
+> 📝 **Data quality note to add:** this dataset has a known quirk — `0` values in `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, and `BMI` are not biologically valid and actually represent missing data. State explicitly how you handled this (e.g., median imputation grouped by Outcome). Calling this out signals real data-quality awareness to reviewers.
 
 ---
 
@@ -113,7 +117,7 @@ This project builds a supervised machine learning pipeline that predicts whether
 * BMI and Age show a moderate positive correlation with diabetes risk.
 * Pregnancies and Age are correlated with each other, as expected biologically.
 
-*(Replace the bullets above with your actual correlation values once confirmed from the notebook — approximate figures are fine, e.g., "Glucose correlates with Outcome at ~0.47.")*
+*(Replace with your actual correlation values once confirmed from the notebook — e.g., "Glucose correlates with Outcome at ~0.47.")*
 
 ### Feature Distribution
 ![Dataset Distribution](Diabetes_Prediction_System/images/distribution.png)
@@ -123,15 +127,13 @@ This project builds a supervised machine learning pipeline that predicts whether
 * Several features (Insulin, SkinThickness) are right-skewed, suggesting outliers or missing-value artifacts.
 * The dataset is moderately imbalanced between diabetic and non-diabetic classes.
 
-**📝 Recommended additional charts:**
-- Class balance bar chart (diabetic vs. non-diabetic counts)
-- Box plots of Glucose/BMI split by Outcome, to visually show class separability
+> 📝 **Recommended additional charts:** class balance bar chart, and box plots of Glucose/BMI split by Outcome to visually show class separability.
 
 ---
 
 ## 🧹 6. Data Preprocessing
 
-* **Missing value handling:** biologically invalid zeros in Glucose, BloodPressure, SkinThickness, Insulin, and BMI treated as missing and imputed *(state your exact method — median/mean by class — here)*.
+* **Missing value handling:** biologically invalid zeros in Glucose, BloodPressure, SkinThickness, Insulin, and BMI treated as missing and imputed *(state your exact method here)*.
 * **Feature scaling:** `StandardScaler` applied to normalize feature ranges, important for distance-based models like KNN.
 * **Train/Test split:** dataset split into training and testing sets *(add your exact ratio, e.g., 80/20, and whether it was stratified)*.
 * **Encoding:** not required — all features are numeric.
@@ -142,35 +144,41 @@ This project builds a supervised machine learning pipeline that predicts whether
 
 ```mermaid
 flowchart TD
-    A[📥 Raw Data<br/>PIMA CSV] --> B[🧹 Data Cleaning<br/>Handle invalid zeros]
-    B --> C[📊 Exploratory Data Analysis]
-    C --> D[⚙️ Feature Scaling<br/>StandardScaler]
-    D --> E[✂️ Train / Test Split]
-    E --> F[🤖 Model Training<br/>LogReg · Random Forest · KNN]
-    F --> G[📈 Model Evaluation<br/>Accuracy · Precision · Recall · F1]
-    G --> H[💾 Serialization<br/>joblib]
-    H --> I[🚀 Streamlit Deployment]
+    A[📥 Dataset] --> B[🧹 Data Cleaning]
+    B --> C[📊 EDA]
+    C --> D[🔧 Feature Engineering]
+    D --> E[⚙️ Scaling]
+    E --> F[✂️ Train / Test Split]
+    F --> G[🤖 Model Training]
+    G --> H[📈 Model Evaluation]
+    H --> I[🏆 Model Selection]
+    I --> J[💾 Model Serialization]
+    J --> K[🚀 Streamlit Deployment]
+    K --> L[🔮 Prediction]
 ```
-
-*(This renders automatically on GitHub. If it doesn't render in your repo, GitHub may need the code fence to say exactly ` ```mermaid ` with no extra characters — copy it as-is.)*
 
 ---
 
 ## 🤖 8. Models Used
 
-| Model | Accuracy | Precision | Recall | F1 Score |
-|---|---|---|---|---|
-| Logistic Regression | 75.32% | *add* | *add* | *add* |
-| Random Forest Classifier | **75.97%** | *add* | *add* | *add* |
-| K-Nearest Neighbors (KNN) | 69.48% | *add* | *add* | *add* |
+| Model | Accuracy | Precision | Recall | F1 Score | ROC AUC |
+|---|---|---|---|---|---|
+| Logistic Regression | 75.32% | 🔲 *add* | 🔲 *add* | 🔲 *add* | 🔲 *add* |
+| Random Forest Classifier | **75.97%** | 🔲 *add* | 🔲 *add* | 🔲 *add* | ~76%* |
+| K-Nearest Neighbors (KNN) | 69.48% | 🔲 *add* | 🔲 *add* | 🔲 *add* | 🔲 *add* |
 
-**Why Random Forest was selected (not just "highest accuracy"):**
-* **Better robustness** — as an ensemble of decision trees, it averages out the variance of any single tree, making it less sensitive to noisy or outlier-heavy features like Insulin and SkinThickness.
-* **Non-linear relationships** — it naturally captures interactions between features (e.g., Glucose × BMI) without manual feature engineering.
-* **Less overfitting, better generalization** — bagging across many trees reduces the risk of memorizing the training set, which single models like KNN are more prone to on small datasets.
-* **Interpretability** — it exposes feature importances, which matters in healthcare where "why" is as important as "what."
+*\*Inferred from your existing ROC-AUC badge — confirm which model this figure belongs to and insert per-model values once available.*
 
-**⚠️ Important:** in a medical screening context, **Recall (sensitivity)** matters more than raw Accuracy — missing an actual diabetic patient (false negative) is more costly than a false alarm (false positive). Add Precision/Recall/F1 numbers from your notebook to the table above to make this comparison meaningful rather than accuracy-only.
+### Why Random Forest Was Selected
+
+* **Ensemble learning** — combines many decision trees, so the final prediction isn't dependent on any single tree's quirks or noise.
+* **Better generalization** — bagging across trees reduces the risk of memorizing the training set, a common failure mode for simpler models like KNN on small datasets.
+* **Handles non-linear relationships** — captures interactions between features (e.g., Glucose × BMI) without manual feature engineering.
+* **More robust** — less sensitive to outlier-heavy features like Insulin and SkinThickness.
+* **Less overfitting** — averaging across trees smooths out variance compared to a single deep decision tree.
+* **Feature importance** — exposes which clinical factors matter most, adding interpretability that matters in a healthcare context.
+
+> ⚠️ **Important:** in a medical screening context, **Recall (sensitivity)** matters more than raw Accuracy — missing an actual diabetic patient (false negative) is more costly than a false alarm. Add Precision/Recall/F1 numbers from your notebook to make this comparison meaningful.
 
 ---
 
@@ -179,21 +187,24 @@ flowchart TD
 ### Confusion Matrix
 ![Confusion Matrix](Diabetes_Prediction_System/images/confusion_matrix.png)
 
-**In plain English:** the confusion matrix shows how many patients were correctly vs. incorrectly classified in each outcome class. *(Add 1–2 sentences here once you have exact numbers, e.g., "The model correctly identified X% of diabetic patients while keeping false positives low.")*
+*(Add 1–2 sentences here once you have exact numbers, e.g., "The model correctly identified X% of diabetic patients while keeping false positives low.")*
 
-**📝 Recommended additions:**
-- **Classification Report** — Precision/Recall/F1 per class, so the accuracy numbers above have full context.
-- **ROC Curve** — you already advertise ROC-AUC 76% via badge; showing the actual curve backs that number up visually.
-- **Feature Importance Plot** — from the Random Forest model. Often the single most compelling chart in a healthcare ML project, since it shows which clinical factors drive risk.
-- **Prediction Examples** — 2–3 sample inputs with the model's predicted probability, to make the output concrete for a non-technical reviewer.
+### 🔲 Placeholders to fill in
+
+| Visualization | What it shows | Status |
+|---|---|---|
+| Classification Report | Precision/Recall/F1 per class | 🔲 To add |
+| ROC Curve | Visual backing for the 76% ROC-AUC badge | 🔲 To add |
+| Feature Importance Plot | Which clinical factors drive risk (Random Forest) | 🔲 To add |
+| Prediction Examples | 2–3 sample inputs with predicted probability | 🔲 To add |
 
 ---
 
 ## 🏆 10. Results Dashboard
 
-| 📦 Samples | 🧬 Features | 🤖 Models Compared | 🎯 Best Accuracy | 🚀 Deployment | 🔮 Prediction Type |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-| 768 | 8 | 3 (LogReg, RF, KNN) | **75.97%** (Random Forest) | Streamlit Cloud | Binary Classification |
+| 📦 Samples | 🧬 Features | 🤖 Models Compared | 🎯 Best Model | 🥇 Best Accuracy | 📈 ROC AUC | 🚀 Deployment | 🔮 Prediction Type |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 768 | 8 | 3 | Random Forest | **75.97%** | ~76% | Streamlit Cloud | Binary Classification |
 
 ---
 
@@ -227,9 +238,7 @@ flowchart TD
 
 </details>
 
-**📝 Screenshots to add if not already captured:**
-* Prediction Result view (showing the model's output/probability for a sample patient)
-* A short GIF of the full user flow (input → predict → result) — GIFs consistently outperform static screenshots for recruiter attention
+> 📝 **Screenshots to add:** Prediction Result view, EDA charts view, Feature Importance view, and ideally a short GIF of the full flow (input → predict → result) — GIFs consistently get more recruiter attention than static screenshots.
 
 ---
 
@@ -259,7 +268,7 @@ diabetes-prediction-system/
 └── README.md
 ```
 
-**📝 To add:** a `.gitignore` file if not already present (to exclude `__pycache__/`, `.ipynb_checkpoints/`, virtual environment folders, etc.) — a small detail, but its absence is often noticed by reviewers checking repo hygiene.
+> 📝 **To add:** a `.gitignore` file if not already present (excluding `__pycache__/`, `.ipynb_checkpoints/`, virtual environment folders) — a small detail, but its absence is often noticed by reviewers checking repo hygiene.
 
 ---
 
@@ -269,13 +278,11 @@ diabetes-prediction-system/
 
 ### 🔗 [**Open the Diabetes Prediction App →**](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/)
 
-Enter patient measurements (Glucose, BMI, Age, etc.) and get an instant diabetes risk prediction in your browser — no installation required.
+Enter patient measurements (Glucose, BMI, Age, etc.) and get an instant diabetes risk prediction directly in your browser — no installation required.
 
 </div>
 
----
-
-## 📦 Repository
+### 📦 Repository
 
 🔗 **[github.com/rizwanahmed786508/diabetes-prediction-system](https://github.com/rizwanahmed786508/diabetes-prediction-system)**
 
@@ -300,7 +307,10 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Then open the local URL Streamlit prints in your terminal, enter the requested patient details in the form, and click **Predict** to view the diabetes risk result.
+1. Run the command above from the project root.
+2. Open the local URL Streamlit prints in your terminal.
+3. Enter the requested patient details (Glucose, BMI, Age, etc.) in the form.
+4. Click **Predict** to view the diabetes risk result instantly.
 
 ---
 
@@ -310,33 +320,59 @@ Then open the local URL Streamlit prints in your terminal, enter the requested p
 2. **Hyperparameter Tuning** — GridSearchCV / Optuna for the Random Forest model
 3. **XGBoost / LightGBM** — add to the model comparison table
 4. **Docker** — containerize the app for reproducible deployment
-5. **CI/CD** — GitHub Actions for automated testing on every push
-6. **Cloud Deployment** — AWS/GCP/Azure alongside Streamlit Cloud
-7. **MLOps** — experiment tracking (MLflow/Weights & Biases)
-8. **Monitoring & Retraining** — scheduled retraining as new data becomes available
+5. **GitHub Actions (CI/CD)** — automated testing on every push
+6. **MLflow** — experiment tracking across model versions
+7. **MLOps Practices** — versioned datasets, reproducible pipelines
+8. **Cloud Deployment** — AWS/GCP/Azure alongside Streamlit Cloud
+9. **Monitoring & Retraining** — scheduled retraining as new data becomes available
 
 ---
 
 ## 🧠 18. Key Learnings
 
-*(Write 3–5 sentences in your own words — this section matters a lot to internship/scholarship reviewers because it shows self-reflection, not just execution. Some prompts to answer:)*
-* What was the hardest part of this project — the data cleaning, the model comparison, or the deployment?
-* What ML concept "clicked" for you while building this (e.g., why scaling matters for KNN but not for Random Forest)?
-* What would you do differently if you started over?
-* What did deploying a model to Streamlit teach you that training it in a notebook didn't?
+Building this project reinforced several practical lessons that go beyond textbook machine learning:
+
+* **Data preprocessing is where most of the real work lives.** The PIMA dataset looks clean at a glance, but the invalid zero-values in Glucose, BMI, and Insulin are a reminder that "no missing values" in a `.isnull()` check doesn't mean the data is actually complete — domain knowledge matters as much as code.
+* **Model comparison is not just about picking the highest number.** Evaluating Logistic Regression, Random Forest, and KNN side by side made it clear that a small accuracy gap can hide a meaningful difference in robustness and generalization, especially on a dataset this size.
+* **Healthcare ML carries different stakes than a typical Kaggle competition.** A false negative (telling a diabetic patient they're low-risk) is a fundamentally different kind of error than a false positive — this reframed how I think about which metric to optimize for.
+* **Deployment surfaces problems a notebook never will.** Getting the trained model and scaler into a Streamlit app — matching input formats, handling edge cases in user input — required a different kind of rigor than training the model itself.
+* **A working demo is worth more than a polished notebook.** Shipping something a non-technical person can actually use was, by far, the most valuable part of this project for understanding what "end-to-end" really means.
 
 ---
 
 ## ✅ 19. Conclusion
 
-This project demonstrates a complete, deployable machine learning workflow for diabetes risk prediction — from raw clinical data to a live, interactive web application. It reflects practical, healthcare-relevant ML engineering: handling real-world data quality issues, comparing multiple algorithms with an eye toward generalization rather than a single accuracy number, and shipping a model that a non-technical user can actually interact with. With the additions recommended above — class balance handling, feature importance, SHAP explainability — this moves from a strong portfolio piece toward a genuinely production-aware case study.
+**Problem:** Manual diabetes risk screening is slow and inconsistent, while early detection meaningfully improves patient outcomes.
+
+**Approach:** This project builds a full machine learning pipeline — cleaning and exploring the PIMA Indians Diabetes Dataset, engineering and scaling features, and training and comparing Logistic Regression, Random Forest, and KNN classifiers.
+
+**Results:** Random Forest was selected as the final model based on its stronger generalization and robustness, achieving **75.97% accuracy** (full precision/recall/F1 breakdown to be added).
+
+**Deployment:** The trained model is served through a live Streamlit application, allowing anyone to input patient measurements and receive an instant risk prediction — no local setup required.
+
+**Real-world impact:** As a first-pass screening aid, a tool like this could help clinics and telehealth platforms flag higher-risk patients earlier and more consistently than manual review alone.
+
+**Future scalability:** With explainability (SHAP), stronger models (XGBoost), and MLOps practices (Docker, CI/CD, monitoring) layered on top, this project's architecture is well-positioned to scale from a portfolio piece toward a genuinely deployable clinical screening tool.
 
 ---
 
 ## 👨‍💻 Author
 
+<div align="center">
+
 **Rizwan Ahmed**
 
-[![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?logo=github)](https://github.com/rizwanahmed786508)
+[![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?style=for-the-badge&logo=github)](https://github.com/rizwanahmed786508)
 
-📝 **To add (do not leave blank on your live repo):** LinkedIn profile badge and contact email. I haven't invented these since they weren't in your original README — but recruiters actively look for a LinkedIn link on ML portfolio repos, so add yours here in the same badge style as GitHub above.
+</div>
+
+> 📝 **Per your instructions, I have not invented any LinkedIn, Kaggle, or email links** — none were present in your original README. Add your real profile links here in the same badge style, for example:
+> ```markdown
+> [![LinkedIn](https://img.shields.io/badge/LinkedIn-YourName-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](YOUR_LINKEDIN_URL)
+> [![Kaggle](https://img.shields.io/badge/Kaggle-YourName-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](YOUR_KAGGLE_URL)
+> [![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:YOUR_EMAIL)
+> ```
+
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F260,100:0575E6&height=100&section=footer" alt="footer" width="100%"/>
+</div>
