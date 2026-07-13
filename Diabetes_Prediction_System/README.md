@@ -109,7 +109,7 @@ This project builds a supervised machine learning pipeline that predicts whether
 ## 📈 5. Exploratory Data Analysis (EDA)
 
 ### Correlation Heatmap
-![Correlation Heatmap](Diabetes_Prediction_System/images/heatmap.png)
+![Correlation Heatmap](images/heatmap.png)
 
 **Key Insights**
 * Glucose shows the strongest relationship with diabetes outcome among all features — this is confirmed later by the Random Forest feature importance ranking below.
@@ -120,22 +120,13 @@ This project builds a supervised machine learning pipeline that predicts whether
 The notebook's own `sns.countplot(x='Outcome', data=df)` confirms the dataset is **moderately imbalanced: 500 Non-Diabetic (65.1%) vs. 268 Diabetic (34.9%)**. This matters directly for evaluation — with this imbalance, a model can score ~65% accuracy by predicting "Non-Diabetic" every time, which is why Precision/Recall/F1 (added in Section 8 below) matter more than accuracy alone.
 
 ### Feature Distribution
-![Dataset Distribution](Diabetes_Prediction_System/images/distribution.png)
+![Dataset Distribution](images/distribution.png)
 
 **Key Insights**
 * Several features (Insulin, SkinThickness, Pregnancies) are right-skewed, partly driven by the invalid zero-values described above rather than true biological distribution.
 * Glucose and BMI show the clearest visual separation between diabetic and non-diabetic patients.
 
 > 📝 **Recommended additional chart:** box plots of Glucose/BMI split by Outcome, to visually show class separability described above.
-
----
-
-## 🧹 6. Data Preprocessing
-
-* **Missing value handling:** ⚠️ **not currently implemented.** The invalid zero-values in Glucose, BloodPressure, SkinThickness, Insulin, and BMI (see data quality note above) are passed into training unchanged. This is the most impactful next improvement — see Section 4.
-* **Feature scaling:** `StandardScaler` applied via `fit_transform` on the training set and `transform` on the test set (correctly avoiding data leakage), important for distance-based models like KNN.
-* **Train/Test split:** `train_test_split(X, y, test_size=0.2, random_state=42)` — an **80/20 split**, not stratified by class.
-* **Encoding:** not required — all features are numeric.
 
 ---
 
@@ -191,10 +182,6 @@ Metrics below are copied exactly from the notebook's `classification_report()` o
 
 </details>
 
-> ⚠️ **Important finding — please read before publishing:** I ran your notebook's exact code cell-by-cell to verify these numbers, and found two things worth knowing before you present this project:
->
-> 1. **Logistic Regression and Random Forest produced identical confusion matrices and accuracy (75.32%) in your saved notebook output.** This isn't a copy-paste error in your code — it's because `RandomForestClassifier()` was created without a `random_state`, so its result is different every time the notebook is re-run. In your saved run, it happened to match Logistic Regression exactly; when I re-ran the same pipeline myself, Random Forest scored anywhere from ~72–76% depending on the random seed. **Fix:** add `random_state=42` to `RandomForestClassifier(random_state=42)` so your results are reproducible and don't change every time someone reruns the notebook.
-> 2. **The model actually saved and deployed is Logistic Regression, not Random Forest.** Your notebook's final cell runs `joblib.dump(lr_model, "Diabetes_Model.pkl")` — so whatever your live Streamlit app is currently predicting with is Logistic Regression. I've written this README around that fact. If you intended to deploy Random Forest instead, that's a one-line fix (`joblib.dump(rf_model, ...)`) followed by re-uploading the `.pkl` file.
 
 ### Why Logistic Regression Is a Reasonable Baseline Choice Here
 
@@ -210,7 +197,7 @@ Given the two models perform identically on this test split, Logistic Regression
 ## 📊 9. Model Performance
 
 ### Confusion Matrix
-![Confusion Matrix](Diabetes_Prediction_System/images/confusion_matrix.png)
+![Confusion Matrix](images/confusion_matrix.png)
 
 **In plain English:** out of 154 test patients (99 non-diabetic, 55 diabetic), Logistic Regression correctly identified 79 of the 99 non-diabetic patients and 37 of the 55 diabetic patients — meaning 18 diabetic patients were incorrectly cleared as low-risk. That false-negative count is the single most important number in this whole project for a healthcare application, and is exactly what Section 4's missing-data fix and future SHAP/tuning work should aim to reduce.
 
@@ -266,10 +253,10 @@ Computed from a Random Forest trained on the identical pipeline. **Glucose is by
 <summary><b>Click to view screenshots</b></summary>
 
 **Home Interface**
-![GUI Screenshot](Diabetes_Prediction_System/images/gui.png)
+![GUI Screenshot](images/gui.png)
 
 **Prediction Interface**
-![GUI Screenshot](Diabetes_Prediction_System/images/gui2.png)
+![GUI Screenshot](images/gui2.png)
 
 </details>
 
