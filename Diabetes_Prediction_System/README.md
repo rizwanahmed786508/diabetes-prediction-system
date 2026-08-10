@@ -1,20 +1,20 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0575E6,100:00F260&height=200&section=header&text=Diabetes%20Prediction%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20Machine%20Learning%20Case%20Study&descAlignY=58&descSize=18" alt="banner" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0575E6,100:00F260&height=200&section=header&text=Diabetes%20Prediction%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20MLOps%20Case%20Study&descAlignY=58&descSize=18" alt="banner" width="100%"/>
 
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
-![Scikit--Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?logo=scikit-learn&logoColor=white)
-![ROC-AUC](https://img.shields.io/badge/ROC--AUC-76%25-brightgreen)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Minikube-326CE5?logo=kubernetes&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-Tracking%20%26%20Registry-0194E2?logo=mlflow&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 ![Status](https://img.shields.io/badge/Status-Active-success)
 
-### An end-to-end Machine Learning application for predicting diabetes risk using clinical measurements — featuring data preprocessing, model comparison, evaluation, and interactive deployment through Streamlit.
+### An end-to-end Machine Learning system for predicting diabetes risk — from experiment tracking and model registry (MLflow) to a containerized FastAPI + Streamlit application deployed on Kubernetes (Minikube).
 
 <p>
-<a href="https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/"><img src="https://img.shields.io/badge/🚀_Live_Demo-Try_It_Now-FF4B4B?style=for-the-badge" /></a>
 <a href="https://github.com/rizwanahmed786508/diabetes-prediction-system"><img src="https://img.shields.io/badge/📂_Repository-View_Code-181717?style=for-the-badge&logo=github" /></a>
-<a href="Diabetes_Prediction.ipynb"><img src="https://img.shields.io/badge/📓_Notebook-Open-F37626?style=for-the-badge&logo=jupyter&logoColor=white" /></a>
 </p>
 
 </div>
@@ -23,303 +23,226 @@
 
 ## 📑 Table of Contents
 
-- [Project Overview](#-1-project-overview)
-- [Problem Statement](#-2-problem-statement)
-- [Business Objective](#-3-business--clinical-objective)
-- [Dataset](#-4-dataset)
-- [Exploratory Data Analysis](#-5-exploratory-data-analysis-eda)
-- [Data Preprocessing](#-6-data-preprocessing)
-- [ML Pipeline](#-7-machine-learning-pipeline)
-- [Models Used](#-8-models-used)
-- [Model Performance](#-9-model-performance)
-- [Results Dashboard](#-10-results-dashboard)
-- [Technologies Used](#%EF%B8%8F-11-technologies-used)
-- [Application Interface](#%EF%B8%8F-12-application-interface)
-- [Project Structure](#-13-project-structure)
-- [Live Demo](#-14-live-demo)
-- [Installation](#%EF%B8%8F-15-installation)
-- [Usage](#%EF%B8%8F-16-usage)
-- [Future Improvements](#-17-future-improvements)
-- [Key Learnings](#-18-key-learnings)
-- [Conclusion](#-19-conclusion)
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [System Architecture](#-system-architecture)
+- [Machine Learning Models](#-machine-learning-models)
+- [Model Evaluation](#-model-evaluation)
+- [MLflow Experiment Tracking](#-mlflow-experiment-tracking)
+- [MLflow Model Registry](#-mlflow-model-registry)
+- [Backend](#-backend-fastapi)
+- [Frontend](#-frontend-streamlit)
+- [Docker](#-docker)
+- [Kubernetes / Minikube Deployment](#-kubernetes--minikube-deployment)
+- [Project Structure](#-project-structure)
+- [Installation / Setup](#%EF%B8%8F-installation--setup)
+- [Running Locally](#-running-locally)
+- [Running with Docker Compose](#-running-with-docker-compose)
+- [Running with Minikube](#-running-with-minikube)
+- [API Endpoints](#-api-endpoints)
+- [Example Prediction](#-example-prediction)
+- [Technologies Used](#%EF%B8%8F-technologies-used)
+- [Future Improvements](#-future-improvements)
 - [Author](#-author)
 
 ---
 
-## 📌 1. Project Overview
+## 📌 Overview
 
-Diabetes affects over 500 million people worldwide, and early detection is one of the most effective ways to prevent long-term complications like cardiovascular disease, kidney failure, and vision loss. In many clinics, risk screening still relies on manual review of lab results — a process that is slow and inconsistent across practitioners.
+Diabetes is one of the most common chronic conditions worldwide, and early risk screening can meaningfully improve patient outcomes. This project goes beyond a single training notebook and builds a **complete MLOps pipeline** around a diabetes risk classifier:
 
-This project builds a supervised machine learning pipeline that predicts whether a patient is likely diabetic using eight routine clinical measurements, then packages the model behind a simple web interface so a non-technical user (e.g., a nurse or patient) can get an instant risk estimate.
+- Multiple models are trained and compared on clinical measurement data.
+- Every training run is tracked in **MLflow**, and the best-performing model is automatically promoted to the **MLflow Model Registry**.
+- A **FastAPI** backend serves predictions through a REST API.
+- A **Streamlit** frontend gives users a simple interface that talks to the backend.
+- Both services are **containerized with Docker** and orchestrated with **Docker Compose**.
+- The full application is deployed and verified on a local **Kubernetes cluster (Minikube)**, with separate deployments and services for the backend and frontend.
 
-> **The objective is not only to train an accurate model, but to demonstrate a complete Machine Learning workflow from raw data to deployment** — data cleaning, EDA, model comparison, evaluation, and a live, usable interface, rather than a notebook that stops at `model.fit()`.
-
----
-## ⭐ Project Highlights
-
-- ✅ End-to-End Machine Learning Pipeline
-- ✅ Random Forest & Logistic Regression Comparison
-- ✅ Streamlit Deployment
-- ✅ 768 Healthcare Records
-- ✅ Data Cleaning & Feature Scaling
-- ✅ Interactive Prediction System
-- ✅ Professional GitHub Documentation
-
-## ❓ 2. Problem Statement
-
-* Diabetes is frequently under-diagnosed until symptoms become severe.
-* Manual risk assessment depends on clinician experience and does not scale for large-population screening.
-* Key clinical indicators (glucose, BMI, blood pressure, family history) interact in ways that are hard to judge by eye, but are well-suited to statistical learning.
-* A lightweight, interpretable ML model can flag high-risk patients early and support — not replace — clinical judgment.
+> This project is intended to demonstrate the full lifecycle of a machine learning system — training, experiment tracking, model registry, API serving, containerization, and orchestration — not just a trained model.
 
 ---
 
-## 🎯 3. Business / Clinical Objective
+## ⭐ Key Features
 
-* **Predict:** binary diabetes outcome (0 = non-diabetic, 1 = diabetic) from patient measurements.
-* **Who benefits:** clinics and telehealth platforms doing first-pass risk screening; individuals checking their own risk before a formal diagnostic workup.
-* **Impact:** faster triage, more consistent risk flags than manual heuristics, and a low-cost pre-screening step before expensive diagnostic testing.
-
-> ⚠️ **Disclaimer:** this tool is for educational/screening purposes only and is not a substitute for professional medical diagnosis.
-
----
-
-## 📊 4. Dataset
-
-**Source:** [PIMA Indians Diabetes Dataset](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database) (UCI Machine Learning Repository, via Kaggle)
-
-### Dataset Statistics
-
-| Metric | Value |
-|---|---|
-| Samples | 768 patient records |
-| Features | 8 clinical measurements |
-| Target | `Outcome` (binary: 0 / 1) |
-| Missing Values | 0 as `NaN` — *but see data quality note below* |
-| Class Distribution | **500 Non-Diabetic (65.1%)** · **268 Diabetic (34.9%)** — moderately imbalanced |
-
-### Feature Table
-
-| Feature | Description |
-|---|---|
-| Pregnancies | Number of pregnancies |
-| Glucose | Plasma glucose concentration |
-| BloodPressure | Diastolic blood pressure (mm Hg) |
-| SkinThickness | Triceps skin fold thickness (mm) |
-| Insulin | 2-Hour serum insulin (mu U/ml) |
-| BMI | Body Mass Index |
-| DiabetesPedigreeFunction | Diabetes hereditary/genetic score |
-| Age | Age of patient (years) |
-| **Outcome** | **Target** — Diabetes status (0 = No, 1 = Yes) |
-
+- ✅ Three-model comparison (Logistic Regression, Random Forest, KNN)
+- ✅ Full evaluation suite: Accuracy, Precision, Recall, F1, Macro Precision/Recall/F1
+- ✅ MLflow experiment tracking with logged parameters, metrics, and model artifacts
+- ✅ Automatic best-model selection based on accuracy
+- ✅ Model registered and versioned in the MLflow Model Registry with a `champion` alias
+- ✅ FastAPI backend with `/predict` and `/health` endpoints and Pydantic input validation
+- ✅ Streamlit frontend consuming the FastAPI backend
+- ✅ Separate Docker images for backend and frontend, wired together with Docker Compose
+- ✅ Kubernetes deployments and services for both backend and frontend, verified running on Minikube
 
 ---
 
-## 📈 5. Exploratory Data Analysis (EDA)
-
-### Correlation Heatmap
-![Correlation Heatmap](images/heatmap.png)
-
-**Key Insights**
-* Glucose shows the strongest relationship with diabetes outcome among all features — this is confirmed later by the Random Forest feature importance ranking below.
-* BMI, Age, and DiabetesPedigreeFunction show a moderate positive relationship with diabetes risk.
-* Pregnancies and Age are correlated with each other, as expected biologically.
-
-### Class Distribution
-The notebook's own `sns.countplot(x='Outcome', data=df)` confirms the dataset is **moderately imbalanced: 500 Non-Diabetic (65.1%) vs. 268 Diabetic (34.9%)**. This matters directly for evaluation — with this imbalance, a model can score ~65% accuracy by predicting "Non-Diabetic" every time, which is why Precision/Recall/F1 (added in Section 8 below) matter more than accuracy alone.
-
-### Feature Distribution
-![Dataset Distribution](images/distribution.png)
-
-**Key Insights**
-* Several features (Insulin, SkinThickness, Pregnancies) are right-skewed, partly driven by the invalid zero-values described above rather than true biological distribution.
-* Glucose and BMI show the clearest visual separation between diabetic and non-diabetic patients.
-
-> 📝 **Recommended additional chart:** box plots of Glucose/BMI split by Outcome, to visually show class separability described above.
-
----
-
-## 🔄 6. Machine Learning Pipeline
+## 🏗️ System Architecture
 
 ```mermaid
 flowchart TD
-    A[📥 Dataset] --> B[🧹 Data Cleaning]
-    B --> C[📊 EDA]
-    C --> D[🔧 Feature Engineering]
-    D --> E[⚙️ Scaling]
-    E --> F[✂️ Train / Test Split]
-    F --> G[🤖 Model Training]
-    G --> H[📈 Model Evaluation]
-    H --> I[🏆 Model Selection]
-    I --> J[💾 Model Serialization]
-    J --> K[🚀 Streamlit Deployment]
-    K --> L[🔮 Prediction]
+    A[📥 Data] --> B[🤖 Model Training]
+    B --> C[📊 MLflow Experiment Tracking]
+    C --> D[⚖️ Model Comparison]
+    D --> E[🏆 Best Model Selection]
+    E --> F[📦 MLflow Model Registry]
+    F --> G[⚙️ FastAPI Backend]
+    G --> H[🖥️ Streamlit Frontend]
+    H --> I[🐳 Docker]
+    I --> J[☸️ Kubernetes / Minikube]
 ```
 
----
-
-## 🤖 7. Models Used
-
-Metrics below are copied exactly from the notebook's `classification_report()` output (weighted average across both classes) — nothing here is estimated.
-
-| Model | Accuracy | Precision (weighted) | Recall (weighted) | F1 Score (weighted) |
-|---|---|---|---|---|
-| Logistic Regression | 75.32% | 0.76 | 0.75 | 0.75 |
-| Random Forest Classifier | 75.32% | 0.76 | 0.75 | 0.75 |
-| K-Nearest Neighbors (KNN) | 69.48% | 0.69 | 0.69 | 0.69 |
-
-<details>
-<summary><b>Full per-class breakdown (click to expand)</b></summary>
-
-**Logistic Regression**
-| Class | Precision | Recall | F1-Score | Support |
-|---|---|---|---|---|
-| 0 (Non-Diabetic) | 0.81 | 0.80 | 0.81 | 99 |
-| 1 (Diabetic) | 0.65 | 0.67 | 0.66 | 55 |
-
-**Random Forest**
-| Class | Precision | Recall | F1-Score | Support |
-|---|---|---|---|---|
-| 0 (Non-Diabetic) | 0.81 | 0.80 | 0.81 | 99 |
-| 1 (Diabetic) | 0.65 | 0.67 | 0.66 | 55 |
-
-**K-Nearest Neighbors**
-| Class | Precision | Recall | F1-Score | Support |
-|---|---|---|---|---|
-| 0 (Non-Diabetic) | 0.75 | 0.80 | 0.77 | 99 |
-| 1 (Diabetic) | 0.58 | 0.51 | 0.54 | 55 |
-
-</details>
-
-
-### Why Logistic Regression Is a Reasonable Baseline Choice Here
-
-Given the two models perform identically on this test split, Logistic Regression is a defensible pick on its own merits, not just by default:
-* **Simplicity and interpretability** — its coefficients directly show how each feature (in standardized units) pushes the prediction toward "diabetic," which is valuable in a healthcare context where clinicians want to understand *why*, not just *what*.
-* **Lower variance** — as a linear model with no randomness in training, its output is fully reproducible run to run, unlike the unseeded Random Forest above.
-* **Comparable performance at lower complexity** — matching Random Forest's accuracy here means the extra complexity of an ensemble isn't currently buying anything on this dataset size.
-
-**In a medical screening context, Recall (sensitivity) on the diabetic class matters more than overall Accuracy** — missing an actual diabetic patient (a false negative) is more costly than a false alarm. Right now, Recall on class 1 (Diabetic) is **0.67 for Logistic Regression/Random Forest** and **0.51 for KNN** — meaning roughly a third of diabetic patients in the test set were still missed by the best model. This is worth stating plainly in interviews rather than glossing over: it's exactly the kind of number that shows you understand the stakes of the problem, not just the accuracy leaderboard.
+**Flow summary:** raw data is used to train three candidate models, every run is logged to MLflow, the highest-accuracy model is selected and registered in the MLflow Model Registry, the FastAPI backend serves predictions, the Streamlit frontend consumes the backend API, and both services are containerized with Docker and deployed to a local Kubernetes cluster via Minikube.
 
 ---
 
-## 📊 8. Model Performance
+## 🤖 Machine Learning Models
 
-### Confusion Matrix
-![Confusion Matrix](images/confusion_matrix.png)
+Three models were trained and evaluated on the diabetes dataset:
 
-**In plain English:** out of 154 test patients (99 non-diabetic, 55 diabetic), Logistic Regression correctly identified 79 of the 99 non-diabetic patients and 37 of the 55 diabetic patients — meaning 18 diabetic patients were incorrectly cleared as low-risk. That false-negative count is the single most important number in this whole project for a healthcare application, and is exactly what Section 4's missing-data fix and future SHAP/tuning work should aim to reduce.
+- **Logistic Regression**
+- **Random Forest**
+- **K-Nearest Neighbors (KNN)**
 
-### Classification Report
-![Classification Report](images/classification_report.png)
-
-*Generated directly from the exact precision/recall/F1 values printed in the notebook — save this image into your repo's `images/` folder.*
-
-### ROC Curve
-![ROC Curve](images/roc_curve.png)
-
-*Your original README displayed a "ROC-AUC 76%" badge, but the notebook itself never actually computes an ROC curve or AUC score — that number wasn't backed by any code. I generated this chart by running your exact preprocessing pipeline (same 80/20 split, same StandardScaler) and computing real ROC curves for all three models, so the badge now has an actual chart behind it. Save this image into your repo's `images/` folder and update the badge number to match once you regenerate it from your own environment.*
-
-### Feature Importance
-![Feature Importance](images/feature_importance.png)
-
-Computed from a Random Forest trained on the identical pipeline. **Glucose is by far the most important predictor (26%)**, followed by BMI (17%), Age (14%), and Diabetes Pedigree Function (12%) — consistent with the correlation heatmap in Section 5 and with established clinical knowledge about diabetes risk factors.
-
-> 📝 **Still worth adding:** a small "Prediction Examples" table — 2–3 sample patient inputs alongside the model's predicted probability — to make the output concrete for a non-technical reviewer.
+Each model was evaluated using a full metric suite rather than accuracy alone, since the target classes are imbalanced.
 
 ---
 
-## 🏆 9. Results Dashboard
+## 📊 Model Evaluation
 
-| 📦 Samples | 🧬 Features | 🤖 Models Compared | 🎯 Deployed Model | 🥇 Accuracy | 📈 ROC AUC | 🚀 Deployment | 🔮 Prediction Type |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 768 | 8 | 3 | Logistic Regression | **75.32%** | see chart above | Streamlit Cloud | Binary Classification |
+Each model was scored on:
 
-*Verified directly from the notebook's saved `joblib.dump()` call and printed accuracy output — not estimated.*
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- Macro Precision
+- Macro Recall
+- Macro F1
 
----
-
-## 🛠️ 10. Technologies Used
-
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?logo=plotly&logoColor=white)
-![Seaborn](https://img.shields.io/badge/Seaborn-4C72B0)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
-![Joblib](https://img.shields.io/badge/Joblib-Model_Serialization-green)
-![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
-
-> Your original README also listed **Tkinter** alongside Streamlit — if the deployed app is Streamlit-only now, consider removing Tkinter from the stack list so reviewers aren't confused about which UI is actually live.
+The **current champion model is Random Forest, with an accuracy of 75.97%**, as selected automatically by the MLflow-based model comparison step described below.
 
 ---
 
-## 🖥️ 11. Application Interface
+## 🧪 MLflow Experiment Tracking
 
-<details>
-<summary><b>Click to view screenshots</b></summary>
+An MLflow Tracking Server runs through Docker and is used to track every training run.
 
-**Home Interface**
-![GUI Screenshot](images/gui.png)
+- Parameters and evaluation metrics are logged for all three models (Logistic Regression, Random Forest, KNN).
+- Model artifacts are logged for each run.
+- After training, the model with the highest accuracy is automatically selected as the best model.
 
-**Prediction Interface**
-![GUI Screenshot](images/gui2.png)
+**Current best model (selected via MLflow):**
 
-</details>
-
-> 📝 **Screenshots to add:** Prediction Result view, EDA charts view, Feature Importance view, and ideally a short GIF of the full flow (input → predict → result) — GIFs consistently get more recruiter attention than static screenshots.
+| Model | Accuracy |
+|---|---|
+| **Random Forest** | **75.97%** |
 
 ---
 
-## 📂 12. Project Structure
+## 📦 MLflow Model Registry
+
+The best-performing model is registered in the MLflow Model Registry:
+
+- **Registered model name:** `DiabetesPredictionModel`
+- **Version:** `1`
+- **Alias:** `champion`
+
+This gives the project a versioned, trackable record of which model is the current production candidate, independent of the training code itself.
+
+---
+
+## ⚙️ Backend (FastAPI)
+
+The backend is built with **FastAPI** and exposes:
+
+- **`/predict`** — accepts patient measurements and returns a diabetes prediction along with the model's probability output.
+- **`/health`** — health check endpoint for monitoring/orchestration.
+
+Input validation is handled with **Pydantic**, ensuring that malformed or out-of-range requests are rejected before reaching the model.
+
+---
+
+## 🖥️ Frontend (Streamlit)
+
+The frontend is a **Streamlit** application that:
+
+- Collects patient measurements through a simple form.
+- Sends requests to the FastAPI backend's `/predict` endpoint.
+- Displays the prediction result and probability returned by the backend.
+
+The frontend does not perform prediction logic itself — all inference is delegated to the FastAPI backend.
+
+---
+
+## 🐳 Docker
+
+The backend and frontend are containerized **separately**:
+
+- `diabetes-backend` — FastAPI service image
+- `diabetes-frontend` — Streamlit service image
+
+**Docker Compose** is used to run both containers together, with the backend and frontend communicating over the Docker network.
+
+---
+
+## ☸️ Kubernetes / Minikube Deployment
+
+The application has been deployed and verified on a **local Kubernetes cluster using Minikube** (Docker driver, Windows).
+
+**Backend:**
+- Deployment: `diabetes-backend`
+- Service: `diabetes-backend-service` (ClusterIP)
+
+**Frontend:**
+- Deployment: `diabetes-frontend`
+- Service: `diabetes-frontend-service` (NodePort)
+
+**Verified status:**
+- Backend pod reached `READY: 1/1`, `STATUS: Running`.
+- Frontend was successfully accessed via `minikube service diabetes-frontend-service`.
+- The application successfully produced live diabetes predictions through the Minikube deployment.
+
+> 📝 Note: this project currently runs on **Minikube locally** — it has not been deployed to a cloud-managed Kubernetes cluster (e.g. EKS/GKE/AKS).
+
+---
+
+## 📂 Project Structure
 
 ```text
 diabetes-prediction-system/
 │
-├── data/
-│   └── diabetes.csv
+├── backend/
+│   ├── app.py                # FastAPI app (/predict, /health)
+│   ├── Dockerfile
+│   └── requirements.txt
 │
-├── images/
-│   ├── gui.png
-│   ├── gui2.png
-│   ├── heatmap.png
-│   ├── distribution.png
-│   └── confusion_matrix.png
+├── frontend/
+│   ├── app.py                # Streamlit app
+│   ├── Dockerfile
+│   └── requirements.txt
+│
+├── k8s/
+│   ├── backend-deployment.yaml
+│   ├── backend-service.yaml
+│   ├── frontend-deployment.yaml
+│   └── frontend-service.yaml
+│
+├── mlflow/
+│   └── (MLflow tracking config / experiment scripts)
 │
 ├── models/
-│   ├── Diabetes_Model.pkl
-│   └── diabetes_scaler.pkl
+│   └── (serialized model artifacts)
 │
-├── Diabetes_Prediction.ipynb
-├── app.py
+├── docker-compose.yml
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
-> 📝 **To add:** a `.gitignore` file if not already present (excluding `__pycache__/`, `.ipynb_checkpoints/`, virtual environment folders) — a small detail, but its absence is often noticed by reviewers checking repo hygiene.
+> Adjust this tree to match your actual folder names if they differ — this reflects the components described above (FastAPI backend, Streamlit frontend, Kubernetes manifests, MLflow tracking).
 
 ---
 
-## 🚀 13. Live Demo
-
-<div align="center">
-
-### 🔗 [**Open the Diabetes Prediction App →**](https://diabetes-prediction-system-zhnsdbyfenhgd5xgjq4ngt.streamlit.app/)
-
-Enter patient measurements (Glucose, BMI, Age, etc.) and get an instant diabetes risk prediction directly in your browser — no installation required.
-
-</div>
-
-### 📦 Repository
-
-🔗 **[github.com/rizwanahmed786508/diabetes-prediction-system](https://github.com/rizwanahmed786508/diabetes-prediction-system)**
-
----
-
-## ⚙️ 14. Installation
+## ⚙️ Installation / Setup
 
 ```bash
 # Clone the repository
@@ -332,76 +255,125 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ 15. Usage
+## ▶️ Running Locally
 
+**Backend (FastAPI):**
 ```bash
+cd backend
+uvicorn app:app --reload
+```
+
+**Frontend (Streamlit):**
+```bash
+cd frontend
 streamlit run app.py
 ```
 
-1. Run the command above from the project root.
-2. Open the local URL Streamlit prints in your terminal.
-3. Enter the requested patient details (Glucose, BMI, Age, etc.) in the form.
-4. Click **Predict** to view the diabetes risk result instantly.
+---
+
+## 🐳 Running with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+This builds and starts the `diabetes-backend` and `diabetes-frontend` containers together, connected over the Docker network.
 
 ---
 
-## 🔮 16. Future Improvements
+## ☸️ Running with Minikube
 
-0. **Two quick fixes first (highest value for least effort):** impute the invalid zero-values in Glucose/BloodPressure/SkinThickness/Insulin/BMI (Section 4), and add `random_state=42` to `RandomForestClassifier()` so results stop changing between reruns.
-1. **Explainable AI (SHAP)** — per-prediction explanations of which features drove the risk score
-2. **Hyperparameter Tuning** — GridSearchCV / Optuna for the Random Forest model
-3. **XGBoost / LightGBM** — add to the model comparison table
-4. **Docker** — containerize the app for reproducible deployment
-5. **GitHub Actions (CI/CD)** — automated testing on every push
-6. **MLflow** — experiment tracking across model versions
-7. **MLOps Practices** — versioned datasets, reproducible pipelines
-8. **Cloud Deployment** — AWS/GCP/Azure alongside Streamlit Cloud
-9. **Monitoring & Retraining** — scheduled retraining as new data becomes available
+```bash
+# Start Minikube
+minikube start --driver=docker
 
----
+# Apply Kubernetes manifests
+kubectl apply -f k8s/backend-deployment.yaml
+kubectl apply -f k8s/backend-service.yaml
+kubectl apply -f k8s/frontend-deployment.yaml
+kubectl apply -f k8s/frontend-service.yaml
 
-## 🧠 17. Key Learnings
+# Check pod status
+kubectl get pods
 
-Building this project reinforced several practical lessons that go beyond textbook machine learning:
-
-* **Data preprocessing is where most of the real work lives.** The PIMA dataset looks clean at a glance — `.isnull().sum()` reports zero missing values — but the invalid zero-values in Glucose, BMI, and Insulin are a reminder that a clean-looking null check doesn't mean the data is actually complete. Domain knowledge matters as much as code.
-* **Unseeded randomness can be misleading.** Training Random Forest without a fixed `random_state` meant its accuracy happened to exactly match Logistic Regression in one run — a coincidence that could easily be mistaken for a real result unless you rerun the notebook and see the number move.
-* **Model comparison is not just about picking the highest number.** Evaluating Logistic Regression, Random Forest, and KNN side by side made it clear that a small accuracy gap can hide a meaningful difference in robustness and generalization, especially on a dataset this size.
-* **Healthcare ML carries different stakes than a typical Kaggle competition.** A false negative (telling a diabetic patient they're low-risk) is a fundamentally different kind of error than a false positive — this reframed how I think about which metric to optimize for.
-* **Deployment surfaces problems a notebook never will.** Getting the trained model and scaler into a Streamlit app — matching input formats, handling edge cases in user input — required a different kind of rigor than training the model itself.
-* **A working demo is worth more than a polished notebook.** Shipping something a non-technical person can actually use was, by far, the most valuable part of this project for understanding what "end-to-end" really means.
+# Access the frontend
+minikube service diabetes-frontend-service
+```
 
 ---
 
-## ✅ 18. Conclusion
+## 🔌 API Endpoints
 
-**Problem:** Manual diabetes risk screening is slow and inconsistent, while early detection meaningfully improves patient outcomes.
+| Endpoint | Method | Description |
+|---|---|---|
+| `/health` | GET | Returns backend health status |
+| `/predict` | POST | Accepts patient measurements, returns prediction + probability |
 
-**Approach:** This project builds a full machine learning pipeline — cleaning and exploring the PIMA Indians Diabetes Dataset, engineering and scaling features, and training and comparing Logistic Regression, Random Forest, and KNN classifiers.
+---
 
-**Results:** Logistic Regression and Random Forest tied at **75.32% accuracy** on this test split (with KNN behind at 69.48%), and Logistic Regression is the model currently serialized and deployed — its simplicity and reproducibility make it a defensible baseline, though the 0.67 Recall on the diabetic class (Section 8) shows clear room to improve before this could be trusted beyond a portfolio demo.
+## 🔮 Example Prediction
 
-**Deployment:** The trained model is served through a live Streamlit application, allowing anyone to input patient measurements and receive an instant risk prediction — no local setup required.
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Pregnancies": 2,
+    "Glucose": 130,
+    "BloodPressure": 70,
+    "SkinThickness": 25,
+    "Insulin": 90,
+    "BMI": 28.5,
+    "DiabetesPedigreeFunction": 0.45,
+    "Age": 33
+  }'
+```
 
-**Real-world impact:** As a first-pass screening aid, a tool like this could help clinics and telehealth platforms flag higher-risk patients earlier and more consistently than manual review alone.
+> Field names above should match whatever your Pydantic input schema actually defines — update this example if your schema differs.
 
-**Future scalability:** With explainability (SHAP), stronger models (XGBoost), and MLOps practices (Docker, CI/CD, monitoring) layered on top, this project's architecture is well-positioned to scale from a portfolio piece toward a genuinely deployable clinical screening tool.
+---
+
+## 🛠️ Technologies Used
+
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
+![Pydantic](https://img.shields.io/badge/Pydantic-Validation-E92063)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?logo=mlflow&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)
+![Minikube](https://img.shields.io/badge/Minikube-326CE5?logo=kubernetes&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
+
+---
+
+## 🔭 Future Improvements
+
+- Integrate the FastAPI backend directly with the MLflow Model Registry so it loads the current `champion` alias at startup instead of a locally saved artifact.
+- Add CI/CD (GitHub Actions) to automate build, test, and image publishing.
+- Deploy to a managed cloud Kubernetes cluster (EKS/GKE/AKS) instead of local Minikube.
+- Add Horizontal Pod Autoscaling and resource limits to the Kubernetes deployments.
+- Add monitoring/observability (Prometheus + Grafana) for the deployed services.
+- Add automated tests for the FastAPI endpoints.
+- Explore hyperparameter tuning and additional models (XGBoost/LightGBM) within the MLflow tracking workflow.
 
 ---
 
 ## 👨‍💻 Author
+
+⭐ If you found this project useful, please consider giving it a star.
 
 <div align="center">
 
 **Rizwan Ahmed**
 
 [![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?style=for-the-badge&logo=github)](https://github.com/rizwanahmed786508)
-[![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed78-181717?style=for-the-badge&logo=github)](https://linkedin.com/rizwanahmed78)
 [![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://kaggle.com/rizwanahmedlund)
 [![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
+
 </div>
-
-
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F260,100:0575E6&height=100&section=footer" alt="footer" width="100%"/>
