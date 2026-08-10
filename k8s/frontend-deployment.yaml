@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diabetes-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: diabetes-frontend
+  template:
+    metadata:
+      labels:
+        app: diabetes-frontend
+    spec:
+      containers:
+        - name: diabetes-frontend
+          image: diabetes-frontend:latest
+          imagePullPolicy: Never
+          env:
+            - name: BACKEND_URL
+              value: "http://diabetes-backend-service:8000"
+          ports:
+            - containerPort: 8501

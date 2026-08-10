@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diabetes-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: diabetes-backend
+  template:
+    metadata:
+      labels:
+        app: diabetes-backend
+    spec:
+      containers:
+        - name: diabetes-backend
+          image: diabetes-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
