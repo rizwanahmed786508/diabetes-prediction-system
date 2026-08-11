@@ -1,380 +1,312 @@
-<div align="center">
+You are an expert technical writer and MLOps engineer. I have built an end-to-end project called **“MLOps Diabetes Prediction System”** and I want you to create a **high-level, professional, production-style GitHub README.md** for this repository.
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0575E6,100:00F260&height=200&section=header&text=Diabetes%20Prediction%20System&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=End-to-End%20MLOps%20Case%20Study&descAlignY=58&descSize=18" alt="banner" width="100%"/>
+I will provide my current README and/or project files/details below. Analyze them carefully and rewrite/update the README based strictly on the actual implementation. **Do not invent technologies, features, commands, architecture components, metrics, or deployment steps that are not present in the project.**
 
-![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-Minikube-326CE5?logo=kubernetes&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-Tracking%20%26%20Registry-0194E2?logo=mlflow&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
-![Status](https://img.shields.io/badge/Status-Active-success)
+## Project Overview
 
-### An end-to-end Machine Learning system for predicting diabetes risk — from experiment tracking and model registry (MLflow) to a containerized FastAPI + Streamlit application deployed on Kubernetes (Minikube).
+The project is an automated end-to-end MLOps pipeline for diabetes prediction.
 
-<p>
-<a href="https://github.com/rizwanahmed786508/diabetes-prediction-system"><img src="https://img.shields.io/badge/📂_Repository-View_Code-181717?style=for-the-badge&logo=github" /></a>
-</p>
+The current architecture/workflow is approximately:
 
-</div>
+**Apache Airflow → train.py → MLflow Tracking → Model Evaluation → Best Model Selection → MLflow Model Registry → Champion Model → FastAPI → Streamlit Frontend**
 
----
+The project uses Docker/Docker Compose for containerized execution.
 
-## 📑 Table of Contents
+### Current functionality
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Machine Learning Models](#-machine-learning-models)
-- [Model Evaluation](#-model-evaluation)
-- [MLflow Experiment Tracking](#-mlflow-experiment-tracking)
-- [MLflow Model Registry](#-mlflow-model-registry)
-- [Backend](#-backend-fastapi)
-- [Frontend](#-frontend-streamlit)
-- [Docker](#-docker)
-- [Kubernetes / Minikube Deployment](#-kubernetes--minikube-deployment)
-- [Project Structure](#-project-structure)
-- [Installation / Setup](#%EF%B8%8F-installation--setup)
-- [Running Locally](#-running-locally)
-- [Running with Docker Compose](#-running-with-docker-compose)
-- [Running with Minikube](#-running-with-minikube)
-- [API Endpoints](#-api-endpoints)
-- [Example Prediction](#-example-prediction)
-- [Technologies Used](#%EF%B8%8F-technologies-used)
-- [Future Improvements](#-future-improvements)
-- [Author](#-author)
+* Apache Airflow orchestrates the ML pipeline.
+* `train.py` automatically trains multiple machine learning models.
+* Models are evaluated using appropriate classification metrics.
+* MLflow tracks experiments, parameters, metrics, and model artifacts.
+* The pipeline automatically compares trained models and identifies the best-performing model.
+* The best model is registered in the MLflow Model Registry.
+* A `champion` model alias is maintained for the selected production model.
+* FastAPI loads the Champion model from MLflow Model Registry.
+* FastAPI exposes a `/predict` REST API.
+* Streamlit provides the user-facing prediction interface.
+* Streamlit communicates with FastAPI through the Docker Compose service name.
+* Docker Compose runs the application components in containers.
+* MLflow, Airflow, PostgreSQL, Redis, FastAPI backend, and Streamlit frontend are part of the overall MLOps environment where applicable in the actual project.
+* The system supports automated model training, model selection, registration, and model serving.
 
----
+## README Goals
 
-## 📌 Overview
+The README should make the repository look like a **serious university/final-year/project portfolio MLOps project**, suitable for:
 
-Diabetes is one of the most common chronic conditions worldwide, and early risk screening can meaningfully improve patient outcomes. This project goes beyond a single training notebook and builds a **complete MLOps pipeline** around a diabetes risk classifier:
+* GitHub portfolio
+* ML/MLOps internship applications
+* Software/ML engineering interviews
+* University project evaluation
+* Technical presentations
 
-- Multiple models are trained and compared on clinical measurement data.
-- Every training run is tracked in **MLflow**, and the best-performing model is automatically promoted to the **MLflow Model Registry**.
-- A **FastAPI** backend serves predictions through a REST API.
-- A **Streamlit** frontend gives users a simple interface that talks to the backend.
-- Both services are **containerized with Docker** and orchestrated with **Docker Compose**.
-- The full application is deployed and verified on a local **Kubernetes cluster (Minikube)**, with separate deployments and services for the backend and frontend.
+The README should be **professional, technically accurate, clean, and visually organized**.
 
-> This project is intended to demonstrate the full lifecycle of a machine learning system — training, experiment tracking, model registry, API serving, containerization, and orchestration — not just a trained model.
+## Required README Structure
 
----
+Use a structure similar to:
 
-## ⭐ Key Features
+1. Project Title
+2. Short professional tagline
+3. Badges
+4. Project Overview
+5. Key Features
+6. Problem Statement
+7. MLOps Architecture
+8. End-to-End Workflow
+9. Technology Stack
+10. Project Structure
+11. Machine Learning Pipeline
+12. Model Training & Evaluation
+13. MLflow Tracking & Model Registry
+14. Champion Model Strategy
+15. FastAPI Backend
+16. Streamlit Frontend
+17. Docker / Docker Compose
+18. Apache Airflow Automation
+19. How to Run the Project
+20. API Usage / Prediction Example
+21. Example Output
+22. MLOps Workflow
+23. Future Improvements
+24. Project Highlights
+25. Author
+26. License
 
-- ✅ Three-model comparison (Logistic Regression, Random Forest, KNN)
-- ✅ Full evaluation suite: Accuracy, Precision, Recall, F1, Macro Precision/Recall/F1
-- ✅ MLflow experiment tracking with logged parameters, metrics, and model artifacts
-- ✅ Automatic best-model selection based on accuracy
-- ✅ Model registered and versioned in the MLflow Model Registry with a `champion` alias
-- ✅ FastAPI backend with `/predict` and `/health` endpoints and Pydantic input validation
-- ✅ Streamlit frontend consuming the FastAPI backend
-- ✅ Separate Docker images for backend and frontend, wired together with Docker Compose
-- ✅ Kubernetes deployments and services for both backend and frontend, verified running on Minikube
+You may adjust the structure if the actual repository contains better or more relevant sections.
 
----
+## Architecture Diagram
 
-## 🏗️ System Architecture
+Create a clean **Mermaid architecture diagram** showing the actual flow:
 
-```mermaid
-flowchart TD
-    A[📥 Data] --> B[🤖 Model Training]
-    B --> C[📊 MLflow Experiment Tracking]
-    C --> D[⚖️ Model Comparison]
-    D --> E[🏆 Best Model Selection]
-    E --> F[📦 MLflow Model Registry]
-    F --> G[⚙️ FastAPI Backend]
-    G --> H[🖥️ Streamlit Frontend]
-    H --> I[🐳 Docker]
-    I --> J[☸️ Kubernetes / Minikube]
+Dataset
+↓
+Apache Airflow
+↓
+train.py
+↓
+Multiple ML Models
+↓
+MLflow Tracking
+↓
+Model Evaluation
+↓
+Best Model Selection
+↓
+MLflow Model Registry
+↓
+Champion Model
+↓
+FastAPI Backend
+↓
+Streamlit Frontend
+
+Also show Docker/Docker Compose around the relevant services.
+
+Do not add components that do not actually exist.
+
+## Airflow Section
+
+Clearly explain:
+
+* What Airflow is doing in this project.
+* How the DAG triggers the training pipeline.
+* How `train.py` is executed.
+* How automation eliminates manual model training.
+* What happens after training.
+* How the pipeline connects training with MLflow.
+
+If the actual DAG contains specific tasks, explain those tasks based on the provided code.
+
+## MLflow Section
+
+Explain professionally:
+
+* Experiment tracking
+* Parameters
+* Metrics
+* Model artifacts
+* Model registration
+* Model versions
+* Champion alias
+* How the Champion model is consumed by FastAPI
+
+Mention the actual model name if present in the repository.
+
+## Model Selection
+
+Explain that multiple models are trained and evaluated.
+
+Document the actual models and metrics found in the project.
+
+For example, if the repository confirms these models, document them:
+
+* Logistic Regression
+* Random Forest
+* KNN
+
+Explain how the best model is selected based on the project's actual selection metric.
+
+Do not claim that one metric is used if the code does not confirm it.
+
+## FastAPI Section
+
+Explain:
+
+* API architecture
+* `/predict` endpoint
+* Request schema
+* Model loading from MLflow
+* Champion model usage
+* Prediction response
+* Probability output if implemented
+
+Include a real JSON request example based on the actual Pydantic schema.
+
+## Streamlit Section
+
+Explain:
+
+* User input interface
+* Communication with FastAPI
+* Prediction display
+* Probability/results display
+* Docker networking
+
+If the frontend uses:
+
+`http://backend:8000`
+
+explain why the Docker Compose service name is used instead of `localhost`.
+
+## Docker Section
+
+Explain the containerized architecture.
+
+Include actual Docker commands based on the repository configuration.
+
+For example, only if supported by the repository:
+
+```bash
+docker compose up -d
+docker compose ps
+docker compose logs -f
+docker compose down
 ```
 
-**Flow summary:** raw data is used to train three candidate models, every run is logged to MLflow, the highest-accuracy model is selected and registered in the MLflow Model Registry, the FastAPI backend serves predictions, the Streamlit frontend consumes the backend API, and both services are containerized with Docker and deployed to a local Kubernetes cluster via Minikube.
+Explain the relevant ports only after verifying them from the project files.
 
----
+## Project Structure
 
-## 🤖 Machine Learning Models
-
-Three models were trained and evaluated on the diabetes dataset:
-
-- **Logistic Regression**
-- **Random Forest**
-- **K-Nearest Neighbors (KNN)**
-
-Each model was evaluated using a full metric suite rather than accuracy alone, since the target classes are imbalanced.
-
----
-
-## 📊 Model Evaluation
-
-Each model was scored on:
-
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Macro Precision
-- Macro Recall
-- Macro F1
-
-The **current champion model is Random Forest, with an accuracy of 75.97%**, as selected automatically by the MLflow-based model comparison step described below.
-
----
-
-## 🧪 MLflow Experiment Tracking
-
-An MLflow Tracking Server runs through Docker and is used to track every training run.
-
-- Parameters and evaluation metrics are logged for all three models (Logistic Regression, Random Forest, KNN).
-- Model artifacts are logged for each run.
-- After training, the model with the highest accuracy is automatically selected as the best model.
-
-**Current best model (selected via MLflow):**
-
-| Model | Accuracy |
-|---|---|
-| **Random Forest** | **75.97%** |
-
----
-
-## 📦 MLflow Model Registry
-
-The best-performing model is registered in the MLflow Model Registry:
-
-- **Registered model name:** `DiabetesPredictionModel`
-- **Version:** `1`
-- **Alias:** `champion`
-
-This gives the project a versioned, trackable record of which model is the current production candidate, independent of the training code itself.
-
----
-
-## ⚙️ Backend (FastAPI)
-
-The backend is built with **FastAPI** and exposes:
-
-- **`/predict`** — accepts patient measurements and returns a diabetes prediction along with the model's probability output.
-- **`/health`** — health check endpoint for monitoring/orchestration.
-
-Input validation is handled with **Pydantic**, ensuring that malformed or out-of-range requests are rejected before reaching the model.
-
----
-
-## 🖥️ Frontend (Streamlit)
-
-The frontend is a **Streamlit** application that:
-
-- Collects patient measurements through a simple form.
-- Sends requests to the FastAPI backend's `/predict` endpoint.
-- Displays the prediction result and probability returned by the backend.
-
-The frontend does not perform prediction logic itself — all inference is delegated to the FastAPI backend.
-
----
-
-## 🐳 Docker
-
-The backend and frontend are containerized **separately**:
-
-- `diabetes-backend` — FastAPI service image
-- `diabetes-frontend` — Streamlit service image
-
-**Docker Compose** is used to run both containers together, with the backend and frontend communicating over the Docker network.
-
----
-
-## ☸️ Kubernetes / Minikube Deployment
-
-The application has been deployed and verified on a **local Kubernetes cluster using Minikube** (Docker driver, Windows).
-
-**Backend:**
-- Deployment: `diabetes-backend`
-- Service: `diabetes-backend-service` (ClusterIP)
-
-**Frontend:**
-- Deployment: `diabetes-frontend`
-- Service: `diabetes-frontend-service` (NodePort)
-
-**Verified status:**
-- Backend pod reached `READY: 1/1`, `STATUS: Running`.
-- Frontend was successfully accessed via `minikube service diabetes-frontend-service`.
-- The application successfully produced live diabetes predictions through the Minikube deployment.
-
-> 📝 Note: this project currently runs on **Minikube locally** — it has not been deployed to a cloud-managed Kubernetes cluster (e.g. EKS/GKE/AKS).
-
----
-
-## 📂 Project Structure
+Create a clean tree such as:
 
 ```text
-diabetes-prediction-system/
-│
+project-root/
+├── airflow/
 ├── backend/
-│   ├── app.py                # FastAPI app (/predict, /health)
-│   ├── Dockerfile
-│   └── requirements.txt
-│
 ├── frontend/
-│   ├── app.py                # Streamlit app
-│   ├── Dockerfile
-│   └── requirements.txt
-│
-├── k8s/
-│   ├── backend-deployment.yaml
-│   ├── backend-service.yaml
-│   ├── frontend-deployment.yaml
-│   └── frontend-service.yaml
-│
-├── mlflow/
-│   └── (MLflow tracking config / experiment scripts)
-│
-├── models/
-│   └── (serialized model artifacts)
-│
+├── src/
+├── dags/
 ├── docker-compose.yml
+├── Dockerfile
 ├── requirements.txt
 └── README.md
 ```
 
-> Adjust this tree to match your actual folder names if they differ — this reflects the components described above (FastAPI backend, Streamlit frontend, Kubernetes manifests, MLflow tracking).
+BUT **replace this with the actual repository structure** after analyzing the files I provide.
 
----
+Do not invent directories.
 
-## ⚙️ Installation / Setup
+## Installation / Setup
 
-```bash
-# Clone the repository
-git clone https://github.com/rizwanahmed786508/diabetes-prediction-system.git
-cd diabetes-prediction-system
+Provide a complete step-by-step setup guide for Windows/Linux where appropriate.
 
-# Install dependencies
-pip install -r requirements.txt
+Include:
+
+1. Prerequisites
+2. Clone repository
+3. Environment setup if required
+4. Docker Desktop requirements
+5. Starting services
+6. Accessing Airflow
+7. Accessing MLflow
+8. Accessing FastAPI Swagger UI
+9. Accessing Streamlit
+10. Running/testing a prediction
+11. Verifying Champion model
+
+Use actual ports and credentials only if they are present in the repository or provided information.
+
+Never expose real passwords, tokens, API keys, or secrets.
+
+Use placeholders for sensitive values.
+
+## API Example
+
+Provide a realistic `/predict` request based on the actual schema.
+
+Example format:
+
+```json
+{
+  "Pregnancies": 3,
+  "Glucose": 120,
+  "BloodPressure": 70,
+  "SkinThickness": 20,
+  "Insulin": 79,
+  "BMI": 25.5,
+  "DiabetesPedigreeFunction": 0.5,
+  "Age": 22
+}
 ```
 
----
+Only modify the fields if the actual API schema differs.
 
-## ▶️ Running Locally
+## Professional Presentation
 
-**Backend (FastAPI):**
-```bash
-cd backend
-uvicorn app:app --reload
-```
+Use:
 
-**Frontend (Streamlit):**
-```bash
-cd frontend
-streamlit run app.py
-```
+* Clear headings
+* Tables where useful
+* Mermaid diagrams
+* Code blocks
+* Short technical explanations
+* Consistent terminology
+* Professional GitHub formatting
+* Minimal unnecessary emojis
 
----
+Do not make the README unnecessarily verbose.
 
-## 🐳 Running with Docker Compose
+The README should feel like it was written by an **MLOps/ML Engineer**, not generated as generic documentation.
 
-```bash
-docker-compose up --build
-```
+## Important Accuracy Rules
 
-This builds and starts the `diabetes-backend` and `diabetes-frontend` containers together, connected over the Docker network.
+Before writing the README:
 
----
+1. Analyze all provided project files/details.
+2. Identify the actual architecture.
+3. Identify the actual technologies.
+4. Identify the actual model names.
+5. Identify actual metrics.
+6. Identify actual ports.
+7. Identify actual Docker services.
+8. Identify actual Airflow DAG/tasks.
+9. Identify actual MLflow model/registry configuration.
+10. Identify the actual project structure.
 
-## ☸️ Running with Minikube
+If information is missing, use a clearly marked placeholder such as:
 
-```bash
-# Start Minikube
-minikube start --driver=docker
+`<ADD_GITHUB_USERNAME>`
 
-# Apply Kubernetes manifests
-kubectl apply -f k8s/backend-deployment.yaml
-kubectl apply -f k8s/backend-service.yaml
-kubectl apply -f k8s/frontend-deployment.yaml
-kubectl apply -f k8s/frontend-service.yaml
+rather than inventing information.
 
-# Check pod status
-kubectl get pods
+Do not claim Kubernetes, Kubeflow, CI/CD, cloud deployment, monitoring, model drift detection, automated retraining, or production infrastructure unless the provided project actually implements them.
 
-# Access the frontend
-minikube service diabetes-frontend-service
-```
+## Final README Style
 
----
+The final README should immediately communicate:
 
-## 🔌 API Endpoints
+> This is an end-to-end automated MLOps system where machine learning models are trained and evaluated through Apache Airflow, experiments are tracked with MLflow, the best model is registered and promoted as the Champion model, and the model is served through FastAPI with a Streamlit frontend, all running through Docker-based infrastructure.
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/health` | GET | Returns backend health status |
-| `/predict` | POST | Accepts patient measurements, returns prediction + probability |
+Make the README **portfolio-ready, technically credible, and interview-ready**.
 
----
-
-## 🔮 Example Prediction
-
-```bash
-curl -X POST "http://localhost:8000/predict" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "Pregnancies": 2,
-    "Glucose": 130,
-    "BloodPressure": 70,
-    "SkinThickness": 25,
-    "Insulin": 90,
-    "BMI": 28.5,
-    "DiabetesPedigreeFunction": 0.45,
-    "Age": 33
-  }'
-```
-
-> Field names above should match whatever your Pydantic input schema actually defines — update this example if your schema differs.
-
----
-
-## 🛠️ Technologies Used
-
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
-![Pydantic](https://img.shields.io/badge/Pydantic-Validation-E92063)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
-![MLflow](https://img.shields.io/badge/MLflow-0194E2?logo=mlflow&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
-![Docker Compose](https://img.shields.io/badge/Docker%20Compose-2496ED?logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)
-![Minikube](https://img.shields.io/badge/Minikube-326CE5?logo=kubernetes&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
-
----
-
-## 🔭 Future Improvements
-
-- Integrate the FastAPI backend directly with the MLflow Model Registry so it loads the current `champion` alias at startup instead of a locally saved artifact.
-- Add CI/CD (GitHub Actions) to automate build, test, and image publishing.
-- Deploy to a managed cloud Kubernetes cluster (EKS/GKE/AKS) instead of local Minikube.
-- Add Horizontal Pod Autoscaling and resource limits to the Kubernetes deployments.
-- Add monitoring/observability (Prometheus + Grafana) for the deployed services.
-- Add automated tests for the FastAPI endpoints.
-- Explore hyperparameter tuning and additional models (XGBoost/LightGBM) within the MLflow tracking workflow.
-
----
-
-## 👨‍💻 Author
-
-⭐ If you found this project useful, please consider giving it a star.
-
-<div align="center">
-
-**Rizwan Ahmed**
-
-[![GitHub](https://img.shields.io/badge/GitHub-rizwanahmed786508-181717?style=for-the-badge&logo=github)](https://github.com/rizwanahmed786508)
-[![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://kaggle.com/rizwanahmedlund)
-[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rizwanmb310@gmail.com)
-
-</div>
-
-<div align="center">
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F260,100:0575E6&height=100&section=footer" alt="footer" width="100%"/>
-</div>
+I will now provide my current README and/or repository files. Use them as the primary source of truth and produce the **complete final `README.md`**, not an explanation of what should be written.
